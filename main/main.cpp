@@ -6,6 +6,7 @@
 #include "pidMain.cpp"
 #include "servoMain.cpp"
 #include "telemtryMain.cpp"
+#include "zBusMain.cpp"
 
 extern "C"  void app_main(void){
     //buttonMain();
@@ -13,5 +14,6 @@ extern "C"  void app_main(void){
     //imuMain();
     //pidMain();
     //servoMain();
-    telemetryMain();
+    //telemetryMain();
+    zBusMain();
 }

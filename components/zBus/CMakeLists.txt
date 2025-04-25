@@ -1,0 +1,20 @@
+idf_component_register(
+    SRCS
+        "zBus.cpp"
+        "espNow/init.cpp"
+        "espNow/callback.cpp"
+        "espNow/messageHandler.cpp"
+        "espNow/peerHandler.cpp"
+        "espNow/send.cpp"
+        "zBusUart.cpp"
+        "zBusHeadtracker.cpp"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        "nvs_flash"
+        "esp_wifi"
+        "esp_timer"
+        "driver"
+        "fmt"
+        "Fusion"
+)

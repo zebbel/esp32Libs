@@ -1,0 +1,12 @@
+dependencies:
+  espressif/fmt: "^10.1.0~1"
+
+  idf:
+    version: '>=4.4'
+
+  Fusion:
+    path: components/Fusion
+    git: https://github.com/zebbel/esp32Libs
+    
+description: zBus
+version: 1.0.0
