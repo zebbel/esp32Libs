@@ -4,4 +4,4 @@ dependencies:
 
   xyzFloat:
     path: components/xyzFloat
-    git: https://github.com/zebbel/IMU
+    git: https://github.com/zebbel/esp32Libs

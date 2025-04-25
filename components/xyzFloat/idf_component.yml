@@ -4,5 +4,5 @@ dependencies:
     version: '>=4.4'
 
     
-description: LowPassFilter
+description: xyzFloat
 version: 1.0.0
