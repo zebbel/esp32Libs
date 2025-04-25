@@ -5,6 +5,7 @@ idf_component_register(
         "crsfMain.cpp"
         "imuMain.cpp"
         "pidMain.cpp"
+        "servoMain.cpp"
     INCLUDE_DIRS
         "."
 )
