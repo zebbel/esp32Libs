@@ -1,0 +1,15 @@
+dependencies:
+  idf:
+    version: '>=4.4'
+
+  LSM9DS1:
+    path: components/LSM9DS1
+    git: https://github.com/zebbel/esp32Libs
+
+  LowPassFilter:
+    path: components/LowPassFilter
+    git: https://github.com/zebbel/esp32Libs
+
+  Fusion:
+    path: components/Fusion
+    git: https://github.com/zebbel/esp32Libs

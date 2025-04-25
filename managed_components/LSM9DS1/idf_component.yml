@@ -1,0 +1,7 @@
+dependencies:
+  idf:
+    version: '>=4.4'
+
+  xyzFloat:
+    path: components/xyzFloat
+    git: https://github.com/zebbel/IMU

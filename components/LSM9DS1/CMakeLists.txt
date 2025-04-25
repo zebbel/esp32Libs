@@ -1,0 +1,10 @@
+idf_component_register(
+    SRCS
+        "LSM9DS1.cpp"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        "esp_timer"
+        "driver"
+        "xyzFloat"
+)

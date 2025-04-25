@@ -1,0 +1,12 @@
+idf_component_register(
+    SRCS
+        "AHRS.cpp"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        "esp_timer"
+        "nvs_flash"
+        "LSM9DS1"
+        "Fusion"
+        "LowPassFilter"
+)

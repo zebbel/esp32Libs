@@ -1,0 +1,9 @@
+idf_component_register(
+    SRCS
+        "LowPassFilter.cpp"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        "esp_timer"
+        "xyzFloat"
+)

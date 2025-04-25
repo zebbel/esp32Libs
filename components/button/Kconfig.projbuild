@@ -1,0 +1,9 @@
+menu "Button Configuration"
+
+    config BUTTON_PIN
+        int "GPIO Num"
+        default 0
+        help
+            GPIO number for Button
+
+endmenu

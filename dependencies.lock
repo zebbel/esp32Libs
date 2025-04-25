@@ -1,0 +1,50 @@
+dependencies:
+  Fusion:
+    component_hash: 4a5733b76c6985059ce345e426e97b36cc53ca0bb3e69778f8c30bbdfb68f962
+    dependencies: []
+    source:
+      git: https://github.com/zebbel/IMU
+      path: components/Fusion
+      type: git
+    version: 4c32e35d829846552280ab86b875061a31209a44
+  LSM9DS1:
+    component_hash: df467f82987b8d5b3f2a41188a33d3db3ff36b56035346c018210d5d80c27367
+    dependencies:
+    - name: idf
+      version: '>=4.4'
+    - git: https://github.com/zebbel/IMU
+      name: xyzFloat
+      path: components/xyzFloat
+    source:
+      git: https://github.com/zebbel/IMU
+      path: components/LSM9DS1
+      type: git
+    version: 4c32e35d829846552280ab86b875061a31209a44
+  LowPassFilter:
+    component_hash: 9a61ab3bf0f6c51b36a2692e1c6e3086efacbabdc1aec2b58a412f4a0adb0353
+    dependencies: []
+    source:
+      git: https://github.com/zebbel/IMU
+      path: components/LowPassFilter
+      type: git
+    version: 4c32e35d829846552280ab86b875061a31209a44
+  idf:
+    source:
+      type: idf
+    version: 5.4.1
+  xyzFloat:
+    component_hash: d84de3e19e8d3973088ae4a6ba414932533700e49face21bb580af451c0706f5
+    dependencies: []
+    source:
+      git: https://github.com/zebbel/IMU
+      path: components/xyzFloat
+      type: git
+    version: 4c32e35d829846552280ab86b875061a31209a44
+direct_dependencies:
+- Fusion
+- LSM9DS1
+- LowPassFilter
+- idf
+manifest_hash: e35b9fe298a73e3a906ccc496e38cc605dc543d06faa2c85d1f73bbba22dd2f8
+target: esp32s3
+version: 2.0.0
