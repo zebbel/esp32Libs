@@ -3,6 +3,10 @@ dependencies:
   idf:
     version: '>=4.4'
 
+Sensor:
+    path: components/Sensor
+    git: https://github.com/zebbel/esp32Libs
+
     
 description: Hobbywing
 version: 1.0.0

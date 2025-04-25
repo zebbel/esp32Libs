@@ -56,7 +56,7 @@ void Sensor::setSensorConfig(const char *device, sensor_t *sensor){
 
 void Sensor::resetConfig(){
     // open nvs
-    esp_err_t err = nvs_open("sensorConfig", NVS_READWRITE, &configNVS);
+    nvs_open("sensorConfig", NVS_READWRITE, &configNVS);
     nvs_erase_all(configNVS);
     nvs_commit(configNVS);
 }

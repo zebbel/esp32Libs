@@ -9,7 +9,6 @@
 #include <map>
 #include "nvs_flash.h"
 
-//#include "typedef.h"
 #include "sensor.h"
 
 #define IBUS2_UART_BUFFER_SIZE 21

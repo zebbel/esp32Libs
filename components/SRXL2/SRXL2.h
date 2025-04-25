@@ -4,7 +4,6 @@
 #include "driver/uart.h"
 #include <string.h>
 
-#include "SRXL2Define.h"
 #include "sensor.h"
 #include "sBus.h"
 

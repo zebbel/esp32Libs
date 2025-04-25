@@ -7,7 +7,7 @@
 #include <string.h>
 #include "esp_log.h"
 
-#include "typedef.h"
+//#include "typedef.h"
 
 
 #define SBUS_UART_BUFFER_SIZE 30

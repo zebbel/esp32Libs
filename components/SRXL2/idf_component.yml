@@ -3,6 +3,14 @@ dependencies:
   idf:
     version: '>=4.4'
 
+Sensor:
+    path: components/Sensor
+    git: https://github.com/zebbel/esp32Libs
+
+sBus:
+    path: components/sBus
+    git: https://github.com/zebbel/esp32Libs
+
     
 description: SRXL2
 version: 1.0.0

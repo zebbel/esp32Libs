@@ -2,8 +2,9 @@ idf_component_register(
     SRCS
         "sensor.cpp"
     INCLUDE_DIRS
-        "includes"
+        "include"
         "."
     REQUIRES
         "driver"
+        "nvs_flash"
 )

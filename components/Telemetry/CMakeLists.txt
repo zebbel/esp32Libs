@@ -7,4 +7,9 @@ idf_component_register(
     REQUIRES
         "nvs_flash"
         "driver"
+        "Sensor"
+        "sBus"
+        "iBus2"
+        "SRXL2"
+        "Hobbywing"
 )

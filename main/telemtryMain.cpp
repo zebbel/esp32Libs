@@ -9,7 +9,7 @@ char sensorId[][12] = {"none", "battery V", "battery %", "battery mAh", "motor r
 char sensorUnit[][7] = {"none", "V", "A", "mA", "knots", "m/s", "f/s", "kmh", "mph", "m", "feet", "°C", "°F", "%", "mAh", "W", "mW", "dB", "u/min", "g", "°", "rad", "mL", "floz", "ml/min"};
 
 
-extern "C" void app_main(void){
+void telemetryMain(){
 
     while(1){
         //ESP_LOGI("main", "%d, %llu, %lu", telemetry.sBusData.failSave, telemetry.lastFrame, xTaskGetTickCount());
