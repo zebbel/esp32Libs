@@ -6,6 +6,7 @@ idf_component_register(
         "imuMain.cpp"
         "pidMain.cpp"
         "servoMain.cpp"
+        "telemtryMain.cpp"
     INCLUDE_DIRS
         "."
 )

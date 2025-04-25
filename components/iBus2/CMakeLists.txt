@@ -1,0 +1,13 @@
+idf_component_register(
+    SRCS
+        "callback.cpp"
+        "config.cpp"
+        "frameHandler.cpp"
+        "init.cpp"
+        "sensorHandler.cpp"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        "driver"
+        "nvs_flash"
+)

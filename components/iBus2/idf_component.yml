@@ -1,0 +1,12 @@
+dependencies:
+
+  idf:
+    version: '>=4.4'
+
+Sensor:
+    path: components/SRXL2
+    git: https://github.com/zebbel/Sensor
+
+    
+description: iBus2
+version: 1.0.0

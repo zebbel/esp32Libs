@@ -1,0 +1,28 @@
+dependencies:
+
+  idf:
+    version: '>=4.4'
+
+Hobbywing:
+    path: components/Hobbywing
+    git: https://github.com/zebbel/esp32Libs
+
+iBus2:
+    path: components/iBus2
+    git: https://github.com/zebbel/esp32Libs
+
+sBus:
+    path: components/sBus
+    git: https://github.com/zebbel/esp32Libs
+
+Sensor:
+    path: components/Sensor
+    git: https://github.com/zebbel/esp32Libs
+
+SRXL2:
+    path: components/SRXL2
+    git: https://github.com/zebbel/esp32Libs
+
+    
+description: Telemetry
+version: 1.0.0

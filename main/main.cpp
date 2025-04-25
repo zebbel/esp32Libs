@@ -5,11 +5,13 @@
 #include "imuMain.cpp"
 #include "pidMain.cpp"
 #include "servoMain.cpp"
+#include "telemtryMain.cpp"
 
 extern "C"  void app_main(void){
     //buttonMain();
     //crsfMain();
     //imuMain();
     //pidMain();
-    servoMain();
+    //servoMain();
+    telemetryMain();
 }
