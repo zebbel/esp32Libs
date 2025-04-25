@@ -1,9 +1,10 @@
 idf_component_register(
     SRCS 
         "main.cpp"
-        "imuMain.cpp"
         "buttonMain.cpp"
         "crsfMain.cpp"
+        "imuMain.cpp"
+        "pidMain.cpp"
     INCLUDE_DIRS
         "."
 )
