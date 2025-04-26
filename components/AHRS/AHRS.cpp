@@ -201,7 +201,7 @@ void AHRS::updateNoMag(){
         xyzFloat accData;
         LSM9DS1::getAccValues(&accData);
 
-        if(accFilterSettings.enabled) accValue = gyrFilter.update(accData);
+        if(accFilterSettings.enabled) accValue = accFilter.update(accData);
         else accValue = accData;
 
         accelerometerCalibrated = FusionCalibrationInertial({accValue.x, accValue.y, accValue.z}, accelerometerMisalignment, accelerometerSensitivity, accelerometerOffset);
