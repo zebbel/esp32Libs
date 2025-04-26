@@ -110,7 +110,7 @@ void CRSF::rx_task(void *pvParameter){
                                 xSemaphoreTake(crsf->xMutex, portMAX_DELAY);
                                 crsf->received_channels = *(crsf_channels_t*)frame.payload;
                                 xSemaphoreGive(crsf->xMutex);
-                                ESP_LOGI("main", "CH1: %d", crsf->channel_Mikroseconds(crsf->received_channels.ch1));
+                                //ESP_LOGI("main", "CH1: %d", crsf->channel_Mikroseconds(crsf->received_channels.ch1));
                             }else if(frame.type < 0x27){
                                 //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
                             }
