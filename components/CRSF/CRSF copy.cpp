@@ -87,45 +87,42 @@ void CRSF::rx_task(void *pvParameter){
     ESP_LOGI("crsf", "synced to receiver");
 
     while(1){
+        while(frame.sync != 0xC8) uart_read_bytes(crsf->uartNum, &frame.sync, 1, portMAX_DELAY);
+        uart_read_bytes(crsf->uartNum, &frame.len, 1, portMAX_DELAY);
+        uart_read_bytes(crsf->uartNum, &frame.type, frame.len, portMAX_DELAY);
+
         //Waiting for UART event.
         if (xQueueReceive(crsf->uart_queue, (void *)&event, (TickType_t)portMAX_DELAY)) {
-            if (event.type == UART_DATA ) {
-                //ESP_LOGI("crsf", "event size: %i", event.size);
-                uart_read_bytes(crsf->uartNum, &frame.sync, 2, portMAX_DELAY);
-                //uart_read_bytes(crsf->uartNum, &frame.len, 1, portMAX_DELAY);
-                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, event size: %i", frame.sync, frame.len, event.size);
+            uart_read_bytes(crsf->uartNum, &frame.sync, 1, portMAX_DELAY);
+            uart_read_bytes(crsf->uartNum, &frame.len, 1, portMAX_DELAY);
+            //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, event size: %i", frame.sync, frame.len, event.size);
 
-                if(frame.len < 62){
-                    uart_read_bytes(crsf->uartNum, &frame.type, frame.len, portMAX_DELAY);
+            if(frame.len < 62){
+                uart_read_bytes(crsf->uartNum, &frame.type, frame.len, portMAX_DELAY);
 
-                    //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, crc clac: 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
+                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, crc clac: 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
 
 
-                    if(frame.payload[frame.len-2] == crsf->crc8(&frame.type, frame.len-1)){
-                        //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
+                if(frame.payload[frame.len-2] == crsf->crc8(&frame.type, frame.len-1)){
+                    ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
 
-                        if(frame.type < 0x27){
-                            if(frame.type == CRSF_TYPE_CHANNELS){
-                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
-                                xSemaphoreTake(crsf->xMutex, portMAX_DELAY);
-                                crsf->received_channels = *(crsf_channels_t*)frame.payload;
-                                xSemaphoreGive(crsf->xMutex);
-                                ESP_LOGI("main", "CH1: %d", crsf->channel_Mikroseconds(crsf->received_channels.ch1));
-                            }else if(frame.type < 0x27){
-                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
-                            }
-                        }else{
-                            //ESP_LOGI("crsf", "put extended frame in queue");
+                    if(frame.type < 0x27){
+                        if(frame.type == CRSF_TYPE_CHANNELS){
                             //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
-                            xQueueSend(crsf->extendedQueue, &frame.type, 0);
-                            //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, calc crc 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
-                            //ESP_LOGI("crsf", "0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X", frame.payload[0], frame.payload[1], frame.payload[2], frame.payload[3], frame.payload[4], frame.payload[5], frame.payload[6], frame.payload[7], frame.payload[8]);
+                            xSemaphoreTake(crsf->xMutex, portMAX_DELAY);
+                            crsf->received_channels = *(crsf_channels_t*)frame.payload;
+                            xSemaphoreGive(crsf->xMutex);
+                        }else if(frame.type < 0x27){
+                            //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
                         }
+                    }else{
+                        //ESP_LOGI("crsf", "put extended frame in queue");
+                        //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
+                        //xQueueSend(crsf->extendedQueue, &frame.type, 0);
+                        //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, calc crc 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
+                        //ESP_LOGI("crsf", "0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X", frame.payload[0], frame.payload[1], frame.payload[2], frame.payload[3], frame.payload[4], frame.payload[5], frame.payload[6], frame.payload[7], frame.payload[8]);
                     }
                 }
-            }else if(event.type == UART_FIFO_OVF){
-                //ESP_LOGI("crsf", "flush fifo");
-                uart_flush_input(crsf->uartNum);
             }
         }
     }

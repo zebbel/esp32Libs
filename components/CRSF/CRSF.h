@@ -1,5 +1,5 @@
-#ifndef LED_H
-#define LED_H
+#ifndef CRSF_H
+#define CRSF_H
 
 #include "stdio.h"
 #include "freertos/FreeRTOS.h"
@@ -29,12 +29,18 @@ typedef enum{
 #define CRSF_PAYLOAD_SIZE 60
 
 typedef struct{
+    uint8_t sync;
     uint8_t len;
     uint8_t type;
-    uint8_t destAddr;
-    uint8_t srcAddr;
     uint8_t payload[60];
 } crsf_frame_t;
+
+typedef struct{
+    uint8_t type;
+    uint8_t dest;
+    uint8_t src;
+    uint8_t payload[58];
+} crsf_extended_t;
 
 class CRSF{
     private:
@@ -42,7 +48,6 @@ class CRSF{
 
         uart_port_t uartNum;
         QueueHandle_t uart_queue;
-        QueueHandle_t *extern_queue = NULL;
 
         crsf_channels_t received_channels;
 
@@ -53,15 +58,9 @@ class CRSF{
         void send_extended_packet(uint8_t payload_length, crsf_type_t type, uint8_t dest, uint8_t src, const void* payload);
 
     public:
-        CRSF();
+        QueueHandle_t extendedQueue = xQueueCreate(5, sizeof(crsf_extended_t));
 
-        /**
-         * @brief init crsf with queue handler for extended frames
-         *
-         * 
-         * @param uartNumVal: UARt number used for crsf communication
-         */
-        void init(uart_port_t uartNumVal, QueueHandle_t *queue);
+        CRSF();
 
         /**
          * @brief setup CRSF communication
