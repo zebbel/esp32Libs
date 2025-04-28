@@ -15,7 +15,6 @@
 #include "Fusion.h"
 #include "LowPassFilter.h"
 
-#define     AHRS_SAMPLE_RATE                        1500
 #define     AHRS_LPF_MAG_CUTOFFFREQUENCY            2.0
 
 typedef struct {
@@ -43,7 +42,6 @@ class AHRS: private LSM9DS1{
 
         FusionOffset offset;
         FusionAhrs fusion;
-        FusionAhrsSettings settings;
 
         FusionQuaternion zeroOffsetQuaternion;
 
@@ -72,7 +70,7 @@ class AHRS: private LSM9DS1{
         bool initialized;
 
         AHRS();
-        void init();
+        void init(unsigned int sampleRate, FusionAhrsSettings *settings);
 
         void setGyrFilter(float cutoffFrequency);
         filter_t getGyrFilter();

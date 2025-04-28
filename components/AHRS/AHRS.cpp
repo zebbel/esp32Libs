@@ -22,26 +22,17 @@ AHRS::AHRS(){
  * @param None
  * @return None
  */
-void AHRS::init(){
+void AHRS::init(unsigned int sampleRate, FusionAhrsSettings *settings){
     vTaskDelay(200 / portTICK_PERIOD_MS);
 
     LSM9DS1::init();
 
     loadSettings();
 
-    FusionOffsetInitialise(&offset, AHRS_SAMPLE_RATE);
+    FusionOffsetInitialise(&offset, sampleRate);
     FusionAhrsInitialise(&fusion);
-
-    // Set AHRS algorithm settings
-    settings = {
-            .convention = FusionConventionNwu,
-            .gain = 0.5f,
-            .gyroscopeRange = 245.0,
-            .accelerationRejection = 10.0f,
-            .magneticRejection = 10.0f,
-            .recoveryTriggerPeriod = 5 * AHRS_SAMPLE_RATE
-    };
-    FusionAhrsSetSettings(&fusion, &settings);
+    
+    FusionAhrsSetSettings(&fusion, settings);
     FusionAhrsReset(&fusion);
 }
 

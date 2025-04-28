@@ -10,7 +10,17 @@ void imuMain(){
     AHRS ahrs;
     Button button;
 
-    ahrs.init();
+    #define sampleRate 100
+    FusionAhrsSettings settings = {
+        .convention = FusionConventionNwu,
+        .gain = 0.5f,
+        .gyroscopeRange = 245.0,
+        .accelerationRejection = 10.0f,
+        .magneticRejection = 10.0f,
+        .recoveryTriggerPeriod = 5 * sampleRate
+    };
+
+    ahrs.init(sampleRate, &settings);
     //ahrs.accelerometerOffset.axis.x = -0.017814;
     //ahrs.accelerometerOffset.axis.y = -0.001174;
     //ahrs.accelerometerOffset.axis.z = -0.012282;
