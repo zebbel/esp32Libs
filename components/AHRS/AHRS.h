@@ -67,7 +67,9 @@ class AHRS: private LSM9DS1{
         FusionVector accelerometerCalibrated;
         FusionVector magnetometerCalibrated;
 
-        bool initialized;
+        bool callibrationNext;
+
+        bool *initialized = &fusion.initialising;
 
         AHRS();
         void init(unsigned int sampleRate, FusionAhrsSettings *settings);

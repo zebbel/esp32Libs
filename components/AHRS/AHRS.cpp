@@ -220,7 +220,6 @@ void AHRS::updateNoMag(){
  * @return None
  */
 void AHRS::zero(){
-    initialized = true;
     zeroOffsetQuaternion = fusion.quaternion;                                                                     // save actuall quaternion as zero offset
 }
 
@@ -322,55 +321,55 @@ void AHRS::doAccCalibration(void *pvParameter){
     uint16_t samples = 100;
 
     xyzFloat max, min;
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
 
     ESP_LOGI(ahrsTag, "\033[2J\033[H");
     ESP_LOGI(ahrsTag, "keep IMU steady with Z axis upward");
 
-    while(!ahrs->initialized) vTaskDelay(10 / portTICK_PERIOD_MS); 
+    while(!ahrs->callibrationNext) vTaskDelay(10 / portTICK_PERIOD_MS); 
     max.z = ahrs->getAverageAccValues(samples).z;
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
 
     ESP_LOGI(ahrsTag, "\033[2J\033[H");
     ESP_LOGI(ahrsTag, "keep IMU steady with Z axis downward");
 
-    while(!ahrs->initialized) vTaskDelay(10 / portTICK_PERIOD_MS); 
+    while(!ahrs->callibrationNext) vTaskDelay(10 / portTICK_PERIOD_MS); 
     min.z = ahrs->getAverageAccValues(samples).z;
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
 
     ESP_LOGI(ahrsTag, "\033[2J\033[H");
     ESP_LOGI(ahrsTag, "keep IMU steady with X axis upward");
 
-    while(!ahrs->initialized) vTaskDelay(10 / portTICK_PERIOD_MS); 
+    while(!ahrs->callibrationNext) vTaskDelay(10 / portTICK_PERIOD_MS); 
     max.x = ahrs->getAverageAccValues(samples).x;
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
 
     ESP_LOGI(ahrsTag, "\033[2J\033[H");
     ESP_LOGI(ahrsTag, "keep IMU steady with X axis downward");
 
-    while(!ahrs->initialized) vTaskDelay(10 / portTICK_PERIOD_MS); 
+    while(!ahrs->callibrationNext) vTaskDelay(10 / portTICK_PERIOD_MS); 
     min.x = ahrs->getAverageAccValues(samples).x;
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
 
     ESP_LOGI(ahrsTag, "\033[2J\033[H");
     ESP_LOGI(ahrsTag, "keep IMU steady with Y axis upward");
 
-    while(!ahrs->initialized) vTaskDelay(10 / portTICK_PERIOD_MS); 
+    while(!ahrs->callibrationNext) vTaskDelay(10 / portTICK_PERIOD_MS); 
     max.y = ahrs->getAverageAccValues(samples).y;
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
 
     ESP_LOGI(ahrsTag, "\033[2J\033[H");
     ESP_LOGI(ahrsTag, "keep IMU steady with Y axis downward");
 
-    while(!ahrs->initialized) vTaskDelay(10 / portTICK_PERIOD_MS); 
+    while(!ahrs->callibrationNext) vTaskDelay(10 / portTICK_PERIOD_MS); 
     min.y = ahrs->getAverageAccValues(samples).y;
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
     ahrs->accelerometerOffset.axis.x = (max.x+min.x)/2.f;
     ahrs->accelerometerOffset.axis.y = (max.y+min.y)/2.f;
@@ -418,9 +417,9 @@ void AHRS::doMagCalibration(void *pvParameter){
     xyzFloat magMax;
     xyzFloat magMid;
 
-    ahrs->initialized = false;
+    ahrs->callibrationNext = false;
 
-    while(!ahrs->initialized){
+    while(!ahrs->callibrationNext){
         while(!ahrs->LSM9DS1::dataAvailable());
         ahrs->LSM9DS1::getMagValues(&ahrs->magValue);
 
