@@ -69,7 +69,7 @@ class AHRS: private LSM9DS1{
 
         bool callibrationNext;
 
-        bool *initialized = &fusion.initialising;
+        bool *initialising = &fusion.initialising;
 
         AHRS();
         void init(unsigned int sampleRate, FusionAhrsSettings *settings);
