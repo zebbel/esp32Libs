@@ -21,11 +21,6 @@ void imuMain(){
     };
 
     ahrs.init(sampleRate, &settings);
-    //ahrs.accelerometerOffset.axis.x = -0.017814;
-    //ahrs.accelerometerOffset.axis.y = -0.001174;
-    //ahrs.accelerometerOffset.axis.z = -0.012282;
-    while(esp_timer_get_time() < lastPrint + 1000000) ahrs.updateNoMag();
-    ahrs.zero();
 
     /*
     ESP_LOGI("main", "init done");

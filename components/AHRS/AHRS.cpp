@@ -34,6 +34,10 @@ void AHRS::init(unsigned int sampleRate, FusionAhrsSettings *settings){
     
     FusionAhrsSetSettings(&fusion, settings);
     FusionAhrsReset(&fusion);
+
+    while(fusion.initialising) updateNoMag();
+    zero();
+    ESP_LOGI(ahrsTag, "initialization done");
 }
 
 /**
