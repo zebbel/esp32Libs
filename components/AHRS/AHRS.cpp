@@ -30,7 +30,6 @@ void AHRS::init(unsigned int sampleRate, FusionAhrsSettings *settings){
     loadSettings();
 
     FusionOffsetInitialise(&offset, sampleRate);
-    FusionAhrsInitialise(&fusion);
     
     FusionAhrsSetSettings(&fusion, settings);
     FusionAhrsReset(&fusion);
@@ -148,9 +147,6 @@ void AHRS::update(){
         else accValue = accData;
         accelerometerCalibrated = FusionCalibrationInertial({accValue.x, accValue.y, accValue.z}, accelerometerMisalignment, accelerometerSensitivity, accelerometerOffset);
         accelerometerCalibrated.axis.x = -accelerometerCalibrated.axis.x;
-
-        LSM9DS1::getMagValues(&magValue);
-        magnetometerCalibrated = FusionCalibrationMagnetic({magValue.x, magValue.y, magValue.z}, softIronMatrix, hardIronOffset);
 
         xyzFloat magData;
         LSM9DS1::getMagValues(&magValue);
