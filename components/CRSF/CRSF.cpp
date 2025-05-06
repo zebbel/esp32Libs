@@ -111,25 +111,23 @@ void CRSF::rx_task(void *pvParameter){
                                 //ESP_LOGI("main", "CH1: %d", crsf->channel_Mikroseconds(crsf->received_channels.ch1));
                             }
                         }else{
-                            if(frame.type == CRSF_TYPE_PING){
-                                if(frame.payload[0] == 0x00 || frame.payload[0] == 0xC8){
-                                    ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
-
-                                    //crsf_device_info_t info;
-                                    //strcpy(info.deviceName, "ZSM");
-                                    //info.firmwareId = 0;
-                                    //info.hardwareId = 0;
-                                    //info.parameterTotal = 0;
-                                    //info.parameterVersion = 0;
-                                    //info.serialNumber = 0;
-
-                                    //crsf->send_extended_packet(sizeof(info), CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, &info);
-
-                                    crsf->send_extended_packet(sizeof(crsf_device_info_t), CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, &crsf->deviceInfo);
-
-                                    //uint8_t buffer[] = {0xC8, 0x1C, 0x29, 0xEA, 0xEE, 0x53, 0x49, 0x59, 0x49, 0x20, 0x46, 0x4D, 0x33, 0x30, 0x00, 0x45, 0x4C, 0x52, 0x53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x00, 0xCA};
-                                    //uart_write_bytes(crsf->uartNum, &buffer, sizeof(buffer));
-                                }
+                            //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
+                            if(frame.type == CRSF_TYPE_PING && (frame.payload[0] == 0x00 || frame.payload[0] == 0xC8)){
+                                ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
+                                crsf->send_extended_packet(sizeof(crsf_device_info_t), CRSF_TYPE_DEVICE_INFO, frame.payload[1], 0xC8, &crsf->deviceInfo);
+                            }else if(frame.type == CRSF_FRAMETYPE_PARAMETER_READ){
+                                ESP_LOGI("crsf", "PARAMETER_READ: dest: 0x%X, src: 0x%X, parameterNum: 0x%X, chunkNum: 0x%X", frame.payload[0], frame.payload[1], frame.payload[2], frame.payload[3]);
+                                crsf_parameter_settings_t setting;
+                                setting.parameterNumber = 0x01;
+                                setting.chunksRemaining = 0;
+                                setting.payload[0] = 0;
+                                setting.payload[1] = 0x0C;
+                                setting.payload[2] = 0x5A;
+                                setting.payload[3] = 0x5A;
+                                setting.payload[4] = 0x00;
+                                setting.payload[5] = 0x5A;
+                                setting.payload[7] = 0x00;
+                                crsf->send_extended_packet(9, CRSF_TYPE_PARAMETER_SETTINGS, frame.payload[1], 0xC8, &setting);
                             }else{
                                 //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
                                 //ESP_LOGI("crsf", "put extended frame in queue");

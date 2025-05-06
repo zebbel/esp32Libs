@@ -224,6 +224,7 @@ typedef enum{
     CRSF_TYPE_ESP_NOW = 0x22,
     CRSF_TYPE_PING = 0x28,
     CRSF_TYPE_DEVICE_INFO = 0x29,
+    CRSF_TYPE_PARAMETER_SETTINGS = 0x2B,
     CRSF_FRAMETYPE_PARAMETER_READ = 0x2C,
     CRSF_FRAMETYPE_PARAMETER_WRITE = 0x2D
 } crsf_type_t;
@@ -242,12 +243,11 @@ typedef struct{
  * @brief structure for holding device info
  */
 typedef struct __attribute__((packed)){
-    //char deviceName[10];
-    uint8_t deviceName[10] = {0x5A, 0x53, 0x4D, 0x00};
+    uint8_t deviceName[4] = {0x5A, 0x53, 0x4D, 0x00};
     uint32_t serialNumber = 0;
     uint32_t hardwareId = 0;
     uint32_t firmwareId = 0;
-    uint8_t parameterTotal = 0;
+    uint8_t parameterTotal = 1;
     uint8_t parameterVersion = 0;
 } crsf_device_info_t;
 

@@ -5,15 +5,6 @@
 CRSF crsf;
 
 void crsfMain(){
-    crsf_device_info_t deviceInfo = {
-        .deviceName = {0x5A, 0x53, 0x4D, 0x00},
-        .serialNumber = 0,
-        .hardwareId = 0,
-        .firmwareId = 0,
-        .parameterTotal = 0,
-        .parameterVersion = 0
-    };
-
     crsf_channels_t channels;
     crsf_extended_t crsfExtendedFrame;
     crsf_altitude_t altitute = {1000, 0};
