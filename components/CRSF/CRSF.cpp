@@ -36,7 +36,7 @@ void CRSF::init(uart_port_t uartNumVal){
             uart_set_pin(uartNum, CONFIG_UART2_TX, CONFIG_UART2_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
             break;
         default:
-            ESP_LOGE(TAG_CRSF, "uart num error: %d", uartNum);
+            ESP_LOGE("crsf", "uart num error: %d", uartNum);
             break;
     }
     // Install UART driver
@@ -74,7 +74,7 @@ void CRSF::rx_task(void *pvParameter){
     CRSF* crsf = reinterpret_cast<CRSF*>(pvParameter); //obtain the instance pointer
 
     uart_event_t event;
-    crsf_frame_t frame;
+    crsf_broadcast_frame_t frame;
 
     // sync uart
     ESP_LOGI("crsf", "sync to receiver");
@@ -97,9 +97,7 @@ void CRSF::rx_task(void *pvParameter){
 
                 if(frame.len < 62){
                     uart_read_bytes(crsf->uartNum, &frame.type, frame.len, portMAX_DELAY);
-
                     //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, crc clac: 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
-
 
                     if(frame.payload[frame.len-2] == crsf->crc8(&frame.type, frame.len-1)){
                         //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
@@ -111,15 +109,35 @@ void CRSF::rx_task(void *pvParameter){
                                 crsf->received_channels = *(crsf_channels_t*)frame.payload;
                                 xSemaphoreGive(crsf->xMutex);
                                 //ESP_LOGI("main", "CH1: %d", crsf->channel_Mikroseconds(crsf->received_channels.ch1));
-                            }else if(frame.type < 0x27){
-                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
                             }
                         }else{
-                            //ESP_LOGI("crsf", "put extended frame in queue");
-                            //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
-                            xQueueSend(crsf->extendedQueue, &frame.type, 0);
-                            //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, calc crc 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
-                            //ESP_LOGI("crsf", "0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X", frame.payload[0], frame.payload[1], frame.payload[2], frame.payload[3], frame.payload[4], frame.payload[5], frame.payload[6], frame.payload[7], frame.payload[8]);
+                            if(frame.type == CRSF_TYPE_PING){
+                                if(frame.payload[0] == 0x00 || frame.payload[0] == 0xC8){
+                                    ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
+
+                                    //crsf_device_info_t info;
+                                    //strcpy(info.deviceName, "ZSM");
+                                    //info.firmwareId = 0;
+                                    //info.hardwareId = 0;
+                                    //info.parameterTotal = 0;
+                                    //info.parameterVersion = 0;
+                                    //info.serialNumber = 0;
+
+                                    //crsf->send_extended_packet(sizeof(info), CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, &info);
+
+                                    crsf->send_extended_packet(sizeof(crsf_device_info_t), CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, &crsf->deviceInfo);
+
+                                    //uint8_t buffer[] = {0xC8, 0x1C, 0x29, 0xEA, 0xEE, 0x53, 0x49, 0x59, 0x49, 0x20, 0x46, 0x4D, 0x33, 0x30, 0x00, 0x45, 0x4C, 0x52, 0x53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x00, 0xCA};
+                                    //uart_write_bytes(crsf->uartNum, &buffer, sizeof(buffer));
+                                }
+                            }else{
+                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
+                                //ESP_LOGI("crsf", "put extended frame in queue");
+                                xQueueSend(crsf->extendedQueue, &frame.type, 0);
+                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, calc crc 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
+                                //ESP_LOGI("crsf", "0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X", frame.payload[0], frame.payload[1], frame.payload[2], frame.payload[3], frame.payload[4], frame.payload[5], frame.payload[6], frame.payload[7], frame.payload[8]);
+                        
+                            }
                         }
                     }
                 }
@@ -195,7 +213,7 @@ void CRSF::send_extended_packet(uint8_t payload_length, crsf_type_t type, uint8_
     memcpy(&packet[5], payload, payload_length);
 
     //calculate crc
-    unsigned char checksum = crc8(&packet[2], payload_length+1);
+    unsigned char checksum = crc8(&packet[2], payload_length+3);
     
     packet[payload_length+5] = checksum;
 

@@ -16,31 +16,8 @@
 #include "include/typedefs.h"
 
 
-
-#define TAG_CRSF "CRSF"
-
-/*
-typedef enum{
-    CRSF_DEST_FC = 0xC8,
-    CRSF_DEST_RADIO = 0xEA
-} crsf_dest_t;
-*/
 #define CRSF_SYNC 0xC8
 #define CRSF_PAYLOAD_SIZE 60
-
-typedef struct{
-    uint8_t sync;
-    uint8_t len;
-    uint8_t type;
-    uint8_t payload[60];
-} crsf_frame_t;
-
-typedef struct{
-    uint8_t type;
-    uint8_t dest;
-    uint8_t src;
-    uint8_t payload[58];
-} crsf_extended_t;
 
 class CRSF{
     private:
@@ -58,6 +35,7 @@ class CRSF{
         void send_extended_packet(uint8_t payload_length, crsf_type_t type, uint8_t dest, uint8_t src, const void* payload);
 
     public:
+        crsf_device_info_t deviceInfo;
         QueueHandle_t extendedQueue = xQueueCreate(5, sizeof(crsf_extended_t));
 
         CRSF();

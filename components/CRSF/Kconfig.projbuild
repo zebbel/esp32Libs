@@ -1,12 +1,4 @@
-menu "CRSF Configuration"
 
-    config CRSF_DEVICE_ADDRESS
-        hex "crsf device address"
-        default 0XC8
-        help
-            crsf device address for handeling extended header frames
-
-endmenu
 
 menu "UART0 Configuration"
 

@@ -1,3 +1,12 @@
+/**
+ * @brief structure for holding Broadcast Frame
+ */
+typedef struct{
+    uint8_t sync;
+    uint8_t len;
+    uint8_t type;
+    uint8_t payload[60];
+} crsf_broadcast_frame_t;
 
 /**
  * @brief structure for handling 16 channels of data, 11 bits each. Which channel is used depends on transmitter setting
@@ -194,6 +203,9 @@ typedef struct __attribute__((packed)){
     int16_t yaw;   // vertical speed, m/s * 100 big endian
 } crsf_attitude_t;
 
+/**
+ * @brief enum with broadcast type
+ */
 typedef enum{
     CRSF_TYPE_GPS = 0x02,
     CRSF_TYPE_GPS_TIME = 0x03,
@@ -210,6 +222,40 @@ typedef enum{
     CRSF_TYPE_ATTITUDE = 0x1E,
     CRSF_TYPE_FLIGHT_MODE = 0x21,
     CRSF_TYPE_ESP_NOW = 0x22,
+    CRSF_TYPE_PING = 0x28,
+    CRSF_TYPE_DEVICE_INFO = 0x29,
     CRSF_FRAMETYPE_PARAMETER_READ = 0x2C,
     CRSF_FRAMETYPE_PARAMETER_WRITE = 0x2D
 } crsf_type_t;
+
+/**
+ * @brief structure for holding extended Frame
+ */
+typedef struct{
+    uint8_t type;
+    uint8_t dest;
+    uint8_t src;
+    uint8_t payload[58];
+} crsf_extended_t;
+
+/**
+ * @brief structure for holding device info
+ */
+typedef struct __attribute__((packed)){
+    //char deviceName[10];
+    uint8_t deviceName[10] = {0x5A, 0x53, 0x4D, 0x00};
+    uint32_t serialNumber = 0;
+    uint32_t hardwareId = 0;
+    uint32_t firmwareId = 0;
+    uint8_t parameterTotal = 0;
+    uint8_t parameterVersion = 0;
+} crsf_device_info_t;
+
+/**
+ * @brief structure for holding parameter settings (0x2B Parameter Settings (Entry))
+ */
+typedef struct __attribute__((packed)){
+    uint8_t parameterNumber;
+    uint8_t chunksRemaining;
+    uint8_t payload[56];
+} crsf_parameter_settings_t;
