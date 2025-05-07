@@ -251,6 +251,27 @@ typedef struct __attribute__((packed)){
     uint8_t parameterVersion = 0;
 } crsf_device_info_t;
 
+typedef enum : uint8_t
+{
+    CRSF_UINT8 = 0,
+    CRSF_INT8 = 1,
+    CRSF_UINT16 = 2,
+    CRSF_INT16 = 3,
+    CRSF_UINT32 = 4,
+    CRSF_INT32 = 5,
+    CRSF_UINT64 = 6,
+    CRSF_INT64 = 7,
+    CRSF_FLOAT = 8,
+    CRSF_TEXT_SELECTION = 9,
+    CRSF_STRING = 10,
+    CRSF_FOLDER = 11,
+    CRSF_INFO = 12,
+    CRSF_COMMAND = 13,
+    CRSF_VTX = 15,
+    CRSF_OUT_OF_RANGE = 127,
+} crsf_value_type_e;
+
+
 /**
  * @brief structure for holding parameter settings (0x2B Parameter Settings (Entry))
  */
@@ -261,3 +282,31 @@ typedef struct __attribute__((packed)){
     uint8_t dataType;
     uint8_t payload[54];
 } crsf_parameter_settings_t;
+
+
+
+
+
+
+typedef struct __attribute__((packed)){
+    uint8_t parameterNumber;
+    uint8_t chunksRemaining;
+    uint8_t parentFolder;
+    crsf_value_type_e dataType;
+    const char* name;   // display name
+} crsf_parameter_common_t;
+
+typedef struct __attribute__((packed)){
+    int32_t value;
+    const int32_t min;
+    const int32_t max;
+    const int32_t def; // default value
+    const uint8_t precision;
+    const int32_t step;
+} luaPropertiesFloat;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    luaPropertiesFloat properties;
+    const char* const units;
+} luaItem_float;

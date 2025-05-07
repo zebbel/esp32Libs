@@ -35,11 +35,12 @@ void CRSF::send_extended_packet(uint8_t payload_length, crsf_type_t type, uint8_
 * @param dest destination address
 */
 void CRSF::send_paramter_float(uint8_t dest){
+    /*
     crsf_parameter_settings_t setting;
     setting.parameterNumber = 0x01;
     setting.chunksRemaining = 0;
     setting.parentFolder = 0;
-    setting.dataType = 0x0C;
+    setting.dataType = CRSF_FLOAT;
 
     //name
     setting.payload[0] = 0x5A;
@@ -48,33 +49,50 @@ void CRSF::send_paramter_float(uint8_t dest){
 
     //value
     setting.payload[3] = 0;
-    setting.payload[4] = 5;
+    setting.payload[4] = 0;
+    setting.payload[5] = 0;
+    setting.payload[6] = 5;
 
     //min
-    setting.payload[5] = 0;
-    setting.payload[6] = 0;
+    setting.payload[7] = 0;
+    setting.payload[8] = 0;
+    setting.payload[9] = 0;
+    setting.payload[10] = 0;
 
     //max
-    setting.payload[5] = 0;
-    setting.payload[6] = 200;
+    setting.payload[11] = 0;
+    setting.payload[12] = 0;
+    setting.payload[13] = 0;
+    setting.payload[14] = 200;
 
     //default
-    setting.payload[7] = 0;
-    setting.payload[8] = 100;
+    setting.payload[15] = 0;
+    setting.payload[16] = 0;
+    setting.payload[17] = 0;
+    setting.payload[18] = 100;
 
     //decimal point
-    setting.payload[9] = 1;
+    setting.payload[19] = 1;
 
     //step size
-    setting.payload[10] = 0;
-    setting.payload[11] = 1;
+    setting.payload[20] = 0;
+    setting.payload[21] = 0;
+    setting.payload[22] = 0;
+    setting.payload[23] = 1;
 
     //unit
     setting.payload[12] = 0x48;
     setting.payload[13] = 0x7A;
     setting.payload[14] = 0x00;
+    */
 
-    send_extended_packet(21, CRSF_TYPE_PARAMETER_SETTINGS, dest, 0xC8, &setting);
+    luaItem_float testFloat = {
+        {1, 0, 0, CRSF_FLOAT, "ZZ"},
+        {__builtin_bswap32(5), __builtin_bswap32(0), __builtin_bswap32(200), __builtin_bswap32(100), 1, __builtin_bswap32(1)},
+        "Hz"
+    };
+
+    send_extended_packet(31, CRSF_TYPE_PARAMETER_SETTINGS, dest, 0xC8, &testFloat);
 }
 
 /**
@@ -87,7 +105,7 @@ void CRSF::send_parameter_info(uint8_t dest){
     setting.parameterNumber = 0x01;
     setting.chunksRemaining = 0;
     setting.parentFolder = 0;
-    setting.dataType = 0x0C;
+    setting.dataType = CRSF_INFO;
     setting.payload[0] = 0x5A;
     setting.payload[1] = 0x5A;
     setting.payload[2] = 0x00;
