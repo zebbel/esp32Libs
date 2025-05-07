@@ -31,7 +31,7 @@ class CRSF{
         void generate_CRC(uint8_t poly);
         uint8_t crc8(const uint8_t *data, uint8_t len);
         static void rx_task(void *pvParameter);
-        void send_packet(uint8_t payload_length, crsf_type_t type, const void* payload);
+        void send_broadcast_packet(uint8_t payload_length, crsf_type_t type, const void* payload);
         void send_extended_packet(uint8_t payload_length, crsf_type_t type, uint8_t dest, uint8_t src, const void* payload);
 
     public:
@@ -47,99 +47,22 @@ class CRSF{
          */
         void init(uart_port_t uartNumVal);
 
-        /**
-         * @brief copy latest 16 channel data received to the pointer
-         * 
-         * @param channels pointer to receiver buffer
-         */
         void receive_channels(crsf_channels_t *channels);
-
-        /**
-         * @brief convert crsf channel value to microseconds
-         * 
-         * @param value: channel value
-         * @returns channel value in microseconds
-         */
         uint16_t channel_Mikroseconds(uint16_t value);
 
-        /**
-         * @brief send gps data telemetry
-         * 
-         * @param payload pointer to the gps data
-         */
         void send_gps(crsf_gps_t* payload);
-
-        /**
-         * @brief send gps time data telemetry
-         * 
-         * @param payload pointer to the gps time
-         */
         void send_gps_time(crsf_gps_time_t* payload);
-
-        /**
-         * @brief send gps extended data telemetry
-         * 
-         * @param payload pointer to the gps extended data
-         */
         void send_gps_extended(crsf_gps_extended_t* payload);
-
-        /**
-         * @brief send vertical speed data telemetry
-         * 
-         * @param payload pointer to the vertical_speed data
-         */
         void send_vertical_speed(crsf_vario_t* payload);
-
-        /**
-         * @brief send battery data telemetry
-         * 
-         * @param payload pointer to the battery data
-         */
         void send_battery(crsf_battery_t* payload);
-
-        /**
-         * @brief send barometric altitude data telemetry
-         * 
-         * @param payload pointer to the barometric altitude data
-         */
         void send_altitute(crsf_altitude_t* payload);
-
-        /**
-         * @brief send airspeed
-         * 
-         * @param payload pointer to the send_airspeed data
-         */
         void send_airspeed(crsf_airspeed_t* payload);
-
-        /**
-         * @brief send heartbeat
-         * 
-         * @param payload pointer to Origin Device address
-         */
         void send_heartbeat(crsf_heartbeat_t* payload);
-
-        /**
-         * @brief send RPM data telemetry
-         * 
-         * @param payload pointer to the rpm data
-         * @param numSensors number of sensors to send
-         */
         void send_rpm(crsf_rmp_t* payload, uint8_t numSensors);
-
-        /**
-         * @brief send temperatur data telemetry
-         * 
-         * @param payload pointer to the temperatur data
-         * @param numSensors number of sensors to send
-         */
         void send_temp(crsf_temp_t* payload, uint8_t numSensors);
-
-        /**
-         * @brief send attitude data telemetry
-         * 
-         * @param payload pointer to the attitude data
-         */
         void send_attitude(crsf_attitude_t* payload);
+
+        void send_parameter_info(uint8_t dest);
 };
 
 #endif

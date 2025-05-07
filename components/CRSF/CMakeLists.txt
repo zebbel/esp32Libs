@@ -1,6 +1,8 @@
 idf_component_register(
     SRCS 
-        "CRSF.cpp"
+       "crsf.cpp"
+       "crsfBroadcast.cpp"
+       "crsfExtended.cpp"
     INCLUDE_DIRS 
         "."
         "include"
