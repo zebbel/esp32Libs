@@ -257,5 +257,7 @@ typedef struct __attribute__((packed)){
 typedef struct __attribute__((packed)){
     uint8_t parameterNumber;
     uint8_t chunksRemaining;
-    uint8_t payload[56];
+    uint8_t parentFolder;
+    uint8_t dataType;
+    uint8_t payload[54];
 } crsf_parameter_settings_t;

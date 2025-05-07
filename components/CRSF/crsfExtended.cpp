@@ -30,18 +30,68 @@ void CRSF::send_extended_packet(uint8_t payload_length, crsf_type_t type, uint8_
 }
 
 /**
+* @brief send paramter FLOAT
+*
+* @param dest destination address
+*/
+void CRSF::send_paramter_float(uint8_t dest){
+    crsf_parameter_settings_t setting;
+    setting.parameterNumber = 0x01;
+    setting.chunksRemaining = 0;
+    setting.parentFolder = 0;
+    setting.dataType = 0x0C;
+
+    //name
+    setting.payload[0] = 0x5A;
+    setting.payload[1] = 0x5A;
+    setting.payload[2] = 0x00;
+
+    //value
+    setting.payload[3] = 0;
+    setting.payload[4] = 5;
+
+    //min
+    setting.payload[5] = 0;
+    setting.payload[6] = 0;
+
+    //max
+    setting.payload[5] = 0;
+    setting.payload[6] = 200;
+
+    //default
+    setting.payload[7] = 0;
+    setting.payload[8] = 100;
+
+    //decimal point
+    setting.payload[9] = 1;
+
+    //step size
+    setting.payload[10] = 0;
+    setting.payload[11] = 1;
+
+    //unit
+    setting.payload[12] = 0x48;
+    setting.payload[13] = 0x7A;
+    setting.payload[14] = 0x00;
+
+    send_extended_packet(21, CRSF_TYPE_PARAMETER_SETTINGS, dest, 0xC8, &setting);
+}
+
+/**
 * @brief send paramter INFO
+*
+* @param dest destination address
 */
 void CRSF::send_parameter_info(uint8_t dest){
     crsf_parameter_settings_t setting;
     setting.parameterNumber = 0x01;
     setting.chunksRemaining = 0;
-    setting.payload[0] = 0;
-    setting.payload[1] = 0x0C;
-    setting.payload[2] = 0x5A;
+    setting.parentFolder = 0;
+    setting.dataType = 0x0C;
+    setting.payload[0] = 0x5A;
+    setting.payload[1] = 0x5A;
+    setting.payload[2] = 0x00;
     setting.payload[3] = 0x5A;
     setting.payload[4] = 0x00;
-    setting.payload[5] = 0x5A;
-    setting.payload[7] = 0x00;
     send_extended_packet(9, CRSF_TYPE_PARAMETER_SETTINGS, dest, 0xC8, &setting);
 }

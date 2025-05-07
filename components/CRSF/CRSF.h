@@ -63,6 +63,7 @@ class CRSF{
         void send_attitude(crsf_attitude_t* payload);
 
         void send_parameter_info(uint8_t dest);
+        void send_paramter_float(uint8_t dest);
 };
 
 #endif
