@@ -108,8 +108,12 @@ void CRSF::rx_task(void *pvParameter){
                                 crsf->send_extended_packet(sizeof(crsf_device_info_t), CRSF_TYPE_DEVICE_INFO, frame.payload[1], 0xC8, &crsf->deviceInfo);
                             }else if(frame.type == CRSF_FRAMETYPE_PARAMETER_READ){
                                 ESP_LOGI("crsf", "PARAMETER_READ: dest: 0x%X, src: 0x%X, parameterNum: 0x%X, chunkNum: 0x%X", frame.payload[0], frame.payload[1], frame.payload[2], frame.payload[3]);
-                                //crsf->send_parameter_info(frame.payload[1]);
-                                crsf->send_paramter_float(frame.payload[1]);
+
+                                crsf_paramter_float testFloat = {
+                                    {1, 0, 0, CRSF_FLOAT},
+                                    {"ZZ", 5, 0, 200, 100, 1, 1, "Hz"},
+                                };
+                                crsf->send_paramter_float(frame.payload[1], &testFloat);
                             }else{
                                 xQueueSend(crsf->extendedQueue, &frame.type, 0);
                             }

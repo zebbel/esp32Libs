@@ -1,8 +1,38 @@
+#define CRSF_SYNC 0xC8
+#define CRSF_PAYLOAD_SIZE 60
+
+
+/**
+ * @brief enum with broadcast type
+ */
+typedef enum{
+    CRSF_TYPE_GPS = 0x02,
+    CRSF_TYPE_GPS_TIME = 0x03,
+    CRSF_TYPE_GPS_EXT = 0x06,
+    CRSF_TYPE_VARIO = 0x07,
+    CRSF_TYPE_BATTERY = 0x08,
+    CRSF_TYPE_ALTITUDE = 0x09,
+    CRSF_TYPE_AIRSPEED = 0x0A,
+    CRSF_TYPE_HEARTBEAT = 0X0B,
+    CRSF_TYPE_RPM = 0x0C,
+    CRSF_TYPE_TEMP = 0X0D,
+    CRSF_TYPE_LINK_STATS = 0x14,
+    CRSF_TYPE_CHANNELS = 0x16,
+    CRSF_TYPE_ATTITUDE = 0x1E,
+    CRSF_TYPE_FLIGHT_MODE = 0x21,
+    CRSF_TYPE_ESP_NOW = 0x22,
+    CRSF_TYPE_PING = 0x28,
+    CRSF_TYPE_DEVICE_INFO = 0x29,
+    CRSF_TYPE_PARAMETER_SETTINGS = 0x2B,
+    CRSF_FRAMETYPE_PARAMETER_READ = 0x2C,
+    CRSF_FRAMETYPE_PARAMETER_WRITE = 0x2D
+} crsf_type_t;
+
 /**
  * @brief structure for holding Broadcast Frame
  */
 typedef struct{
-    uint8_t sync;
+    uint8_t sync = CRSF_SYNC;
     uint8_t len;
     uint8_t type;
     uint8_t payload[60];
@@ -202,111 +232,3 @@ typedef struct __attribute__((packed)){
     int16_t roll;   // vertical speed, m/s * 100 big endian
     int16_t yaw;   // vertical speed, m/s * 100 big endian
 } crsf_attitude_t;
-
-/**
- * @brief enum with broadcast type
- */
-typedef enum{
-    CRSF_TYPE_GPS = 0x02,
-    CRSF_TYPE_GPS_TIME = 0x03,
-    CRSF_TYPE_GPS_EXT = 0x06,
-    CRSF_TYPE_VARIO = 0x07,
-    CRSF_TYPE_BATTERY = 0x08,
-    CRSF_TYPE_ALTITUDE = 0x09,
-    CRSF_TYPE_AIRSPEED = 0x0A,
-    CRSF_TYPE_HEARTBEAT = 0X0B,
-    CRSF_TYPE_RPM = 0x0C,
-    CRSF_TYPE_TEMP = 0X0D,
-    CRSF_TYPE_LINK_STATS = 0x14,
-    CRSF_TYPE_CHANNELS = 0x16,
-    CRSF_TYPE_ATTITUDE = 0x1E,
-    CRSF_TYPE_FLIGHT_MODE = 0x21,
-    CRSF_TYPE_ESP_NOW = 0x22,
-    CRSF_TYPE_PING = 0x28,
-    CRSF_TYPE_DEVICE_INFO = 0x29,
-    CRSF_TYPE_PARAMETER_SETTINGS = 0x2B,
-    CRSF_FRAMETYPE_PARAMETER_READ = 0x2C,
-    CRSF_FRAMETYPE_PARAMETER_WRITE = 0x2D
-} crsf_type_t;
-
-/**
- * @brief structure for holding extended Frame
- */
-typedef struct{
-    uint8_t type;
-    uint8_t dest;
-    uint8_t src;
-    uint8_t payload[58];
-} crsf_extended_t;
-
-/**
- * @brief structure for holding device info
- */
-typedef struct __attribute__((packed)){
-    uint8_t deviceName[4] = {0x5A, 0x53, 0x4D, 0x00};
-    uint32_t serialNumber = 0;
-    uint32_t hardwareId = 0;
-    uint32_t firmwareId = 0;
-    uint8_t parameterTotal = 1;
-    uint8_t parameterVersion = 0;
-} crsf_device_info_t;
-
-typedef enum : uint8_t
-{
-    CRSF_UINT8 = 0,
-    CRSF_INT8 = 1,
-    CRSF_UINT16 = 2,
-    CRSF_INT16 = 3,
-    CRSF_UINT32 = 4,
-    CRSF_INT32 = 5,
-    CRSF_UINT64 = 6,
-    CRSF_INT64 = 7,
-    CRSF_FLOAT = 8,
-    CRSF_TEXT_SELECTION = 9,
-    CRSF_STRING = 10,
-    CRSF_FOLDER = 11,
-    CRSF_INFO = 12,
-    CRSF_COMMAND = 13,
-    CRSF_VTX = 15,
-    CRSF_OUT_OF_RANGE = 127,
-} crsf_value_type_e;
-
-
-/**
- * @brief structure for holding parameter settings (0x2B Parameter Settings (Entry))
- */
-typedef struct __attribute__((packed)){
-    uint8_t parameterNumber;
-    uint8_t chunksRemaining;
-    uint8_t parentFolder;
-    uint8_t dataType;
-    uint8_t payload[54];
-} crsf_parameter_settings_t;
-
-
-
-
-
-
-typedef struct __attribute__((packed)){
-    uint8_t parameterNumber;
-    uint8_t chunksRemaining;
-    uint8_t parentFolder;
-    crsf_value_type_e dataType;
-    const char* name;   // display name
-} crsf_parameter_common_t;
-
-typedef struct __attribute__((packed)){
-    int32_t value;
-    const int32_t min;
-    const int32_t max;
-    const int32_t def; // default value
-    const uint8_t precision;
-    const int32_t step;
-} luaPropertiesFloat;
-
-typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
-    luaPropertiesFloat properties;
-    const char* const units;
-} luaItem_float;

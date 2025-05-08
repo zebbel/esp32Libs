@@ -13,11 +13,8 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 
-#include "include/typedefs.h"
-
-
-#define CRSF_SYNC 0xC8
-#define CRSF_PAYLOAD_SIZE 60
+#include "include/typedefsBroadcast.h"
+#include "include/typedefsExtended.h"
 
 class CRSF{
     private:
@@ -62,8 +59,7 @@ class CRSF{
         void send_temp(crsf_temp_t* payload, uint8_t numSensors);
         void send_attitude(crsf_attitude_t* payload);
 
-        void send_parameter_info(uint8_t dest);
-        void send_paramter_float(uint8_t dest);
+        void send_paramter_float(uint8_t dest, crsf_paramter_float *data);
 };
 
 #endif
