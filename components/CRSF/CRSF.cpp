@@ -82,61 +82,33 @@ void CRSF::rx_task(void *pvParameter){
     uart_read_bytes(crsf->uartNum, &frame.len, 1, portMAX_DELAY);
     uart_read_bytes(crsf->uartNum, &frame.type, frame.len, portMAX_DELAY);
 
-    //xQueueReceive(crsf->uart_queue, (void *)&event, (TickType_t)portMAX_DELAY);
-
     ESP_LOGI("crsf", "synced to receiver");
 
     while(1){
         //Waiting for UART event.
         if (xQueueReceive(crsf->uart_queue, (void *)&event, (TickType_t)portMAX_DELAY)) {
             if (event.type == UART_DATA ) {
-                //ESP_LOGI("crsf", "event size: %i", event.size);
                 uart_read_bytes(crsf->uartNum, &frame.sync, 2, portMAX_DELAY);
-                //uart_read_bytes(crsf->uartNum, &frame.len, 1, portMAX_DELAY);
-                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, event size: %i", frame.sync, frame.len, event.size);
 
                 if(frame.len < 62){
                     uart_read_bytes(crsf->uartNum, &frame.type, frame.len, portMAX_DELAY);
-                    //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, crc clac: 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
 
                     if(frame.payload[frame.len-2] == crsf->crc8(&frame.type, frame.len-1)){
-                        //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
 
                         if(frame.type < 0x27){
                             if(frame.type == CRSF_TYPE_CHANNELS){
-                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
                                 xSemaphoreTake(crsf->xMutex, portMAX_DELAY);
                                 crsf->received_channels = *(crsf_channels_t*)frame.payload;
                                 xSemaphoreGive(crsf->xMutex);
-                                //ESP_LOGI("main", "CH1: %d", crsf->channel_Mikroseconds(crsf->received_channels.ch1));
                             }
                         }else{
                             if(frame.type == CRSF_TYPE_PING){
                                 if(frame.payload[0] == 0x00 || frame.payload[0] == 0xC8){
                                     ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
-
-                                    //crsf_device_info_t info;
-                                    //strcpy(info.deviceName, "ZSM");
-                                    //info.firmwareId = 0;
-                                    //info.hardwareId = 0;
-                                    //info.parameterTotal = 0;
-                                    //info.parameterVersion = 0;
-                                    //info.serialNumber = 0;
-
-                                    //crsf->send_extended_packet(sizeof(info), CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, &info);
-
                                     crsf->send_extended_packet(sizeof(crsf_device_info_t), CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, &crsf->deviceInfo);
-
-                                    //uint8_t buffer[] = {0xC8, 0x1C, 0x29, 0xEA, 0xEE, 0x53, 0x49, 0x59, 0x49, 0x20, 0x46, 0x4D, 0x33, 0x30, 0x00, 0x45, 0x4C, 0x52, 0x53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x13, 0x00, 0xCA};
-                                    //uart_write_bytes(crsf->uartNum, &buffer, sizeof(buffer));
                                 }
                             }else{
-                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X", frame.sync, frame.len, frame.type);
-                                //ESP_LOGI("crsf", "put extended frame in queue");
                                 xQueueSend(crsf->extendedQueue, &frame.type, 0);
-                                //ESP_LOGI("crsf", "sync: 0x%X, len: 0x%X, type: 0x%X, crc: 0x%X, calc crc 0x%X", frame.sync, frame.len, frame.type, frame.payload[frame.len-2], crsf->crc8(&frame.type, frame.len-1));
-                                //ESP_LOGI("crsf", "0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X", frame.payload[0], frame.payload[1], frame.payload[2], frame.payload[3], frame.payload[4], frame.payload[5], frame.payload[6], frame.payload[7], frame.payload[8]);
-                        
                             }
                         }
                     }
