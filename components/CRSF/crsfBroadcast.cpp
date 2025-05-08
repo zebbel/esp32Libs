@@ -8,7 +8,7 @@
  * @param type type of data contained in payload
  * @param payload pointer to payload of given crsf_type_t
  */
-void CRSF::send_broadcast_packet(uint8_t payload_length, crsf_type_t type, const void* payload){
+void CRSF::send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t type, const void* payload){
     uint8_t packet[payload_length+4]; //payload + dest + len + type + crc
 
     packet[0] = CRSF_SYNC;

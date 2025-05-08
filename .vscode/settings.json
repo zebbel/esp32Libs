@@ -20,6 +20,7 @@
         "type_traits": "cpp",
         "cmath": "cpp",
         "limits": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "regex": "cpp"
     }
 }

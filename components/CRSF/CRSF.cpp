@@ -105,7 +105,8 @@ void CRSF::rx_task(void *pvParameter){
                             if(frame.type == CRSF_TYPE_PING){
                                 if(frame.payload[0] == 0x00 || frame.payload[0] == 0xC8){
                                     ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
-                                    crsf->send_extended_packet(sizeof(crsf_device_info_t), CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, &crsf->deviceInfo);
+                                    //ESP_LOGI("crsf", "0x%X, 0x%X, 0x%X, 0x%X", crsf->deviceInfo.deviceName[0], crsf->deviceInfo.deviceName[1], crsf->deviceInfo.deviceName[2], crsf->deviceInfo.deviceName[3]);
+                                    crsf->send_extended_packet(CRSF_TYPE_DEVICE_INFO, 0xEA, 0xC8, crsf->deviceInfo);
                                 }
                             }else{
                                 xQueueSend(crsf->extendedQueue, &frame.type, 0);

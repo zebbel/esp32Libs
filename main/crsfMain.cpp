@@ -6,10 +6,19 @@ CRSF crsf;
 
 void crsfMain(){
     crsf_channels_t channels;
-    crsf_extended_t crsfExtendedFrame;
+    crsf_extended_data_t crsfExtendedFrame;
     crsf_altitude_t altitute = {1000, 0};
 
     crsf.init(UART_NUM_1);
+    crsf_device_info_t deviceInfo;
+    deviceInfo.deviceName = "ZSM";
+    deviceInfo.serialNumber = 1;
+    deviceInfo.hardwareId = 0;
+    deviceInfo.firmwareId = 0;
+    deviceInfo.parameterTotal = 1;
+    deviceInfo.parameterVersion = 0;
+
+    crsf.deviceInfo = &deviceInfo;
 
     uint64_t lastSend = esp_timer_get_time();
 

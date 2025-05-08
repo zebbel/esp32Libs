@@ -20,13 +20,8 @@ typedef enum{
     CRSF_TYPE_CHANNELS = 0x16,
     CRSF_TYPE_ATTITUDE = 0x1E,
     CRSF_TYPE_FLIGHT_MODE = 0x21,
-    CRSF_TYPE_ESP_NOW = 0x22,
-    CRSF_TYPE_PING = 0x28,
-    CRSF_TYPE_DEVICE_INFO = 0x29,
-    CRSF_TYPE_PARAMETER_SETTINGS = 0x2B,
-    CRSF_FRAMETYPE_PARAMETER_READ = 0x2C,
-    CRSF_FRAMETYPE_PARAMETER_WRITE = 0x2D
-} crsf_type_t;
+    CRSF_TYPE_ESP_NOW = 0x22
+} crsf_broadcast_type_t;
 
 /**
  * @brief structure for holding Broadcast Frame

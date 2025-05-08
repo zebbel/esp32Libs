@@ -28,12 +28,12 @@ class CRSF{
         void generate_CRC(uint8_t poly);
         uint8_t crc8(const uint8_t *data, uint8_t len);
         static void rx_task(void *pvParameter);
-        void send_broadcast_packet(uint8_t payload_length, crsf_type_t type, const void* payload);
-        void send_extended_packet(uint8_t payload_length, crsf_type_t type, uint8_t dest, uint8_t src, const void* payload);
+        void send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t type, const void* payload);
+        void send_extended_packet(crsf_extended_type_t type, uint8_t dest, uint8_t src, void* payload);
 
     public:
-        crsf_device_info_t deviceInfo;
-        QueueHandle_t extendedQueue = xQueueCreate(5, sizeof(crsf_extended_t));
+        crsf_device_info_t *deviceInfo;
+        QueueHandle_t extendedQueue = xQueueCreate(5, sizeof(crsf_extended_data_t));
 
         CRSF();
 
@@ -58,8 +58,6 @@ class CRSF{
         void send_rpm(crsf_rmp_t* payload, uint8_t numSensors);
         void send_temp(crsf_temp_t* payload, uint8_t numSensors);
         void send_attitude(crsf_attitude_t* payload);
-
-        void send_paramter_float(uint8_t dest, crsf_paramter_float *data);
 };
 
 #endif
