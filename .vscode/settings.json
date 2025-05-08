@@ -11,5 +11,15 @@
     "idf.customExtraVars": {
         "IDF_TARGET": "esp32s3"
     },
-    "idf.flashType": "UART"
+    "idf.flashType": "UART",
+    "files.associations": {
+        "cstdint": "cpp",
+        "bit": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "type_traits": "cpp",
+        "cmath": "cpp",
+        "limits": "cpp",
+        "new": "cpp"
+    }
 }
