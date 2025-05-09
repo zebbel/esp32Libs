@@ -18,6 +18,8 @@
 
 class CRSF{
     private:
+        #define CRSF_MAX_PARAMS 64
+
         SemaphoreHandle_t xMutex;
 
         uart_port_t uartNum;
@@ -25,15 +27,20 @@ class CRSF{
 
         crsf_channels_t received_channels;
 
+        crsf_parameter_t parameters[CRSF_MAX_PARAMS];
+
         void generate_CRC(uint8_t poly);
         uint8_t crc8(const uint8_t *data, uint8_t len);
         static void rx_task(void *pvParameter);
         void send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t type, const void* payload);
-        void send_extended_packet(crsf_extended_type_t type, uint8_t dest, uint8_t src, void* payload);
+        void send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* payload);
+
+        void handleDeviceInfo(crsf_extended_t *packet, void *payload);
+        void handleParamterSettings(crsf_extended_t *packet, void *payload);
+        void handelParameterWrite(crsf_parameter_t *parameter, void *payload);
 
     public:
-        crsf_device_info_t *deviceInfo;
-        QueueHandle_t extendedQueue = xQueueCreate(5, sizeof(crsf_extended_data_t));
+        crsf_device_info_t deviceInfo;
 
         CRSF();
 
@@ -42,7 +49,7 @@ class CRSF{
          * 
          * @param uartNumVal: UARt number used for crsf communication
          */
-        void init(uart_port_t uartNumVal);
+        void init(uart_port_t uartNumVal, const char* name);
 
         void receive_channels(crsf_channels_t *channels);
         uint16_t channel_Mikroseconds(uint16_t value);
@@ -58,6 +65,8 @@ class CRSF{
         void send_rpm(crsf_rmp_t* payload, uint8_t numSensors);
         void send_temp(crsf_temp_t* payload, uint8_t numSensors);
         void send_attitude(crsf_attitude_t* payload);
+
+        void registerParameter(crsf_value_type_e dataType, int *parameterPointer);
 };
 
 #endif

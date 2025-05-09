@@ -2,6 +2,17 @@
 #include "byteswap.h"
 
 /**
+ * @brief register a parameter
+ *
+ * @param dataType data type of paramter
+ * @param parameterPointer pointer to parameter structure
+ */
+void CRSF::registerParameter(crsf_value_type_e dataType, int *parameterPointer){
+    parameters[deviceInfo.parameterTotal] = {dataType, parameterPointer};
+    deviceInfo.parameterTotal ++;
+}
+
+/**
  * @brief function sends extended packet
  *
  * @param payload_length length of the payload type
@@ -10,41 +21,164 @@
  * @param src source device
  * @param payload pointer to payload of given crsf_type_t
  */
-void CRSF::send_extended_packet(crsf_extended_type_t type, uint8_t dest, uint8_t src, void* payload){
+void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* payload){
     crsf_extended_t packet;
 
     packet.type = type;
     packet.dest = dest;
     packet.src = src;
 
-    switch(type){
-        case CRSF_TYPE_PING:
-            break;
-        case CRSF_TYPE_PARAMETER_SETTINGS:
-            break;
-        case CRSF_FRAMETYPE_PARAMETER_READ:
-            break;
-        case CRSF_FRAMETYPE_PARAMETER_WRITE:
-            break;
-        case CRSF_TYPE_DEVICE_INFO:
-            crsf_device_info_t* info = reinterpret_cast<crsf_device_info_t*>(payload);
-            uint8_t nameLen = strlen(info->deviceName)+1;
-            packet.len = nameLen + CRSF_DEVICE_INFO_LEN + 4;
-            strcpy((char*)&packet.payload, info->deviceName);
-            uint32_t value = __bswap32(info->serialNumber);
-            memcpy(&packet.payload[nameLen], &value, sizeof(uint32_t));
-            nameLen += 4;
-            value = __bswap32(info->hardwareId);
-            memcpy(&packet.payload[nameLen], &value, sizeof(uint32_t));
-            nameLen += 4;
-            value = __bswap32(info->firmwareId);
-            memcpy(&packet.payload[nameLen], &value, sizeof(uint32_t));
-            nameLen += 4;
-            memcpy(&packet.payload[nameLen], &info->parameterTotal, 2);
-            break;
+    if(type == CRSF_TYPE_DEVICE_INFO){
+        handleDeviceInfo(&packet, payload);
+    }else if(type == CRSF_TYPE_PARAMETER_SETTINGS){
+        handleParamterSettings(&packet, payload);
     }
 
     packet.payload[packet.len-4] = crc8(&packet.type, packet.len - 1);
 
+    /*
+    ESP_LOGI("crsf", "type: 0x%X, dest: 0x%X, src: 0x%x, len: 0x%X", packet.type, packet.dest, packet.src, packet.len);
+    ESP_LOGI("crsf", "parNum: 0x%X, chunkRem: 0x%X, parent: 0x%x, dataType: 0x%X", packet.payload[0], packet.payload[1], packet.payload[2], packet.payload[3]);
+    ESP_LOGI("crsf", "name: 0x%X, 0x%X, 0x%x, 0x%X, 0x%X, 0x%X", packet.payload[4], packet.payload[5], packet.payload[6], packet.payload[7], packet.payload[8], packet.payload[9]);
+    ESP_LOGI("crsf", "value: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[10], packet.payload[11], packet.payload[12], packet.payload[13]);
+    ESP_LOGI("crsf", "min: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[14], packet.payload[15], packet.payload[16], packet.payload[17]);
+    ESP_LOGI("crsf", "max: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[18], packet.payload[19], packet.payload[20], packet.payload[21]);
+    ESP_LOGI("crsf", "unit: 0x%X, 0x%X, 0x%x", packet.payload[22], packet.payload[23], packet.payload[24]);
+    ESP_LOGI("crsf", "crc: 0x%X", packet.payload[25]);
+    */
+
     uart_write_bytes(uartNum, &packet, packet.len + 2);
+}
+
+
+void CRSF::handleDeviceInfo(crsf_extended_t *packet, void *payload){
+    crsf_device_info_t* info = reinterpret_cast<crsf_device_info_t*>(payload);
+    uint8_t nameLen = strlen(info->deviceName)+1;
+    packet->len = nameLen + 18;
+    strcpy((char*)packet->payload, info->deviceName);
+    uint32_t value = __bswap32(info->serialNumber);
+    memcpy(&packet->payload[nameLen], &value, sizeof(uint32_t));
+    nameLen += 4;
+    value = __bswap32(info->hardwareId);
+    memcpy(&packet->payload[nameLen], &value, sizeof(uint32_t));
+    nameLen += 4;
+    value = __bswap32(info->firmwareId);
+    memcpy(&packet->payload[nameLen], &value, sizeof(uint32_t));
+    nameLen += 4;
+    memcpy(&packet->payload[nameLen], &info->parameterTotal, 2);
+}
+
+void CRSF::handleParamterSettings(crsf_extended_t *packet, void *payload){
+    crsf_parameter_t* parameter = reinterpret_cast<crsf_parameter_t*>(payload);
+
+    if(parameter->dataType == CRSF_INT8 || parameter->dataType == CRSF_UINT8){
+        crsf_parameter_int8_t* data = reinterpret_cast<crsf_parameter_int8_t*>(parameter->parameterPointer);
+        uint8_t len = 0;
+        memcpy(&packet->payload, &data->common, 4);
+        len += 4;
+        strcpy((char*)&packet->payload[len], data->common.name);
+        len += strlen(data->common.name)+1;
+        memcpy(&packet->payload[len], &data->value, 3);
+        len += 3;
+        strcpy((char*)&packet->payload[len], data->unit);
+        len += strlen(data->unit)+1;
+        packet->len = len + 4;
+    }else if(parameter->dataType == CRSF_INT16 || parameter->dataType == CRSF_UINT16){
+        crsf_parameter_int16_t* data = reinterpret_cast<crsf_parameter_int16_t*>(parameter->parameterPointer);
+        uint8_t len = 0;
+        memcpy(&packet->payload, &data->common, 4);
+        len += 4;
+        strcpy((char*)&packet->payload[len], data->common.name);
+        len += strlen(data->common.name)+1;
+        uint16_t value = __bswap16(data->value);
+        memcpy(&packet->payload[len], &value, 2);
+        len += 2;
+        value = __bswap16(data->min);
+        memcpy(&packet->payload[len], &value, 2);
+        len += 2;
+        value = __bswap16(data->max);
+        memcpy(&packet->payload[len], &value, 2);
+        len += 2;
+        strcpy((char*)&packet->payload[len], data->unit);
+        len += strlen(data->unit)+1;
+        packet->len = len + 4;
+    }else if(parameter->dataType == CRSF_INT32 || parameter->dataType == CRSF_UINT32){
+        crsf_parameter_int32_t* data = reinterpret_cast<crsf_parameter_int32_t*>(parameter->parameterPointer);
+        uint8_t len = 0;
+        memcpy(&packet->payload, &data->common, 4);
+        len += 4;
+        strcpy((char*)&packet->payload[len], data->common.name);
+        len += strlen(data->common.name)+1;
+        uint32_t value = __bswap32(data->value);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        value = __bswap32(data->min);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        value = __bswap32(data->max);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        strcpy((char*)&packet->payload[len], data->unit);
+        len += strlen(data->unit)+1;
+        packet->len = len + 4;
+    }else if(parameter->dataType == CRSF_FLOAT){
+        crsf_parameter_float_t* data = reinterpret_cast<crsf_parameter_float_t*>(parameter->parameterPointer);
+        uint8_t len = 0;
+        memcpy(&packet->payload, &data->common, 4);
+        len += 4;
+        strcpy((char*)&packet->payload[len], data->common.name);
+        len += strlen(data->common.name)+1;
+        uint32_t value = __bswap32(data->value);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        value = __bswap32(data->min);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        value = __bswap32(data->max);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        value = __bswap32(data->def);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        memcpy(&packet->payload[len], &data->decPoint, 1);
+        len += 1;
+        value = __bswap32(data->stepSize);
+        memcpy(&packet->payload[len], &value, 4);
+        len += 4;
+        strcpy((char*)&packet->payload[len], data->unit);
+        len += strlen(data->unit)+1;
+        packet->len = len + 4;
+    }else if(parameter->dataType == CRSF_INFO){
+        crsf_parameter_info_t* data = reinterpret_cast<crsf_parameter_info_t*>(parameter->parameterPointer);
+        uint8_t len = 0;
+        memcpy(&packet->payload, &data->common, 4);
+        len += 4;
+        strcpy((char*)&packet->payload[len], data->common.name);
+        len = strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->info);
+        len = strlen(data->info)+1;
+        packet->len = len + 4;
+    }
+}
+
+void CRSF::handelParameterWrite(crsf_parameter_t *parameter, void *payload){
+    if(parameter->dataType == CRSF_UINT8 || parameter->dataType == CRSF_INT8){
+        crsf_parameter_int8_t* data = reinterpret_cast<crsf_parameter_int8_t*>(parameter->parameterPointer);
+        memcpy(&data->value, payload, 1);
+    }else if(parameter->dataType == CRSF_UINT16 || parameter->dataType == CRSF_INT16){
+        crsf_parameter_int16_t* data = reinterpret_cast<crsf_parameter_int16_t*>(parameter->parameterPointer);
+        int16_t* value = reinterpret_cast<int16_t*>(payload);
+        int16_t valueSwapped = __bswap16(*value);
+        memcpy(&data->value, &valueSwapped, 2);
+    }else if(parameter->dataType == CRSF_UINT32 || parameter->dataType == CRSF_INT32){
+        crsf_parameter_int32_t* data = reinterpret_cast<crsf_parameter_int32_t*>(parameter->parameterPointer);
+        int32_t* value = reinterpret_cast<int32_t*>(payload);
+        int32_t valueSwapped = __bswap32(*value);
+        memcpy(&data->value, &valueSwapped, 4);
+    }else if(parameter->dataType == CRSF_FLOAT){
+        crsf_parameter_float_t* data = reinterpret_cast<crsf_parameter_float_t*>(parameter->parameterPointer);
+        int32_t* value = reinterpret_cast<int32_t*>(payload);
+        int32_t valueSwapped = __bswap32(*value);
+        memcpy(&data->value, &valueSwapped, 4);
+    }
 }

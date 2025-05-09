@@ -24,29 +24,20 @@ typedef struct __attribute__((packed)){
 } crsf_extended_t;
 
 /**
- * @brief structure for holding extended data
- */
-typedef struct __attribute__((packed)){
-    uint8_t type;
-    uint8_t dest;
-    uint8_t src = 0xC8;
-    uint8_t payload[58];
-} crsf_extended_data_t;
-
-/**
  * @brief structure for holding device info
  */
 typedef struct __attribute__((packed)){
     const char* deviceName;   // display name
-    uint32_t serialNumber;
-    uint32_t hardwareId;
-    uint32_t firmwareId;
-    uint8_t parameterTotal;
-    uint8_t parameterVersion;
+    uint32_t serialNumber = 0;
+    uint32_t hardwareId = 0;
+    uint32_t firmwareId = 0;
+    uint8_t parameterTotal = 0;
+    uint8_t parameterVersion = 0;
 } crsf_device_info_t;
 
-#define CRSF_DEVICE_INFO_LEN 14
-
+/**
+ * enum for parameter value types
+ */
 typedef enum : uint8_t{
     CRSF_UINT8 = 0,
     CRSF_INT8 = 1,
@@ -65,3 +56,120 @@ typedef enum : uint8_t{
     CRSF_VTX = 15,
     CRSF_OUT_OF_RANGE = 127,
 } crsf_value_type_e;
+
+typedef struct __attribute__((packed)){
+    uint8_t dataType;
+    int *parameterPointer;
+} crsf_parameter_t;
+
+typedef struct __attribute__((packed)){
+    uint8_t parameterNumber;
+    uint8_t chunksRemaining;
+    uint8_t parent;
+    crsf_value_type_e dataType;
+    const char* name;
+}crsf_parameter_common_t;
+
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    uint8_t value;
+    const uint8_t min;
+    const uint8_t max;
+    const char* const unit;
+}crsf_parameter_uint8_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    int8_t value;
+    const int8_t min;
+    const int8_t max;
+    const char* const unit;
+}crsf_parameter_int8_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    uint16_t value;
+    const uint16_t min;
+    const uint16_t max;
+    const char* const unit;
+}crsf_parameter_uint16_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    int16_t value;
+    const int16_t min;
+    const int16_t max;
+    const char* const unit;
+}crsf_parameter_int16_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    uint32_t value;
+    const uint32_t min;
+    const uint32_t max;
+    const char* const unit;
+}crsf_parameter_uint32_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    int32_t value;
+    const int32_t min;
+    const int32_t max;
+    const char* const unit;
+}crsf_parameter_int32_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    int32_t value;
+    const int32_t min;
+    const int32_t max;
+    const int32_t def;
+    const uint8_t decPoint;
+    const uint32_t stepSize;
+    const char* const unit;
+}crsf_parameter_float_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    const char* const options;
+    uint8_t value;
+    const uint8_t min;
+    const uint8_t max;
+    const uint8_t def;
+    const char* const unit;
+}crsf_parameter_text_selection_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    const char* const options;
+    const char* const value;
+    const uint8_t strLen;
+}crsf_parameter_string_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    uint8_t* children;
+}crsf_parameter_folder_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    const char* const info;
+}crsf_parameter_info_t;
+
+typedef enum : uint8_t{
+    READY               = 0, //--> feedback
+    START               = 1, //<-- input
+    PROGRESS            = 2, //--> feedback
+    CONFIRMATION_NEEDED = 3, //--> feedback
+    CONFIRM             = 4, //<-- input
+    CANCEL              = 5, //<-- input
+    POLL                = 6  //<-- input
+}crsf_parameter_command_status_t;
+
+typedef struct __attribute__((packed)){
+    crsf_parameter_common_t common;
+    crsf_parameter_command_status_t status;
+    uint8_t timeout;
+    const char* const info;
+}crsf_parameter_command_t;
