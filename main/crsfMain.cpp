@@ -10,36 +10,33 @@ void crsfMain(){
 
     crsf.init(UART_NUM_1, "ZSM");
 
-    crsf_parameter_uint8_t testParamter = {
-        .common = {1, 0, 0, CRSF_UINT8, "Test"},
-        .value = 50,
+    crsf_parameter_text_selection_t testParamter = {
+        .common = {1, 0, 2, CRSF_TEXT_SELECTION, "Test"},
+        .options = "ja;nein",
+        .value = 0,
         .min = 0,
-        .max = 100,
-        .unit = "Hz"
+        .max = 1,
+        .def = 0,
+        .unit = "t"
     };
+
     crsf.registerParameter(testParamter.common.dataType, (int*)&testParamter);
 
-    
-    crsf_parameter_int16_t testParamter2 = {
-        .common = {2, 0, 0, CRSF_INT16, "Test2"},
-        .value = 0,
-        .min = -10,
-        .max = 10,
-        .unit = "Hz"
+    uint8_t folderList[2] = {1, 0XFF};
+    crsf_parameter_folder_t folder = {
+        .common = {2, 0, 0, CRSF_FOLDER, "Folder"},
+        .children = folderList
     };
-    crsf.registerParameter(testParamter2.common.dataType, (int*)&testParamter2);
 
-    crsf_parameter_float_t testParamter3 = {
-        .common = {3, 0, 0, CRSF_FLOAT, "Test3"},
-        .value = 0,
-        .min = -10,
-        .max = 10,
-        .def = 0,
-        .decPoint = 1,
-        .stepSize = 1,
-        .unit = "Hz"
+    crsf.registerParameter(folder.common.dataType, (int*)&folder);
+
+    crsf_parameter_string_t testParamter2 = {
+        .common = {3, 0, 0, CRSF_STRING, "Test2"},
+        .value = "Test string",
+        .strLen = 100
     };
-    crsf.registerParameter(testParamter3.common.dataType, (int*)&testParamter3);
+
+    crsf.registerParameter(testParamter2.common.dataType, (int*)&testParamter2);
     
 
     uint64_t lastSend = esp_timer_get_time();

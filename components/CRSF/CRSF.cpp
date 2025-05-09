@@ -114,8 +114,8 @@ void CRSF::rx_task(void *pvParameter){
                                 //ESP_LOGI("crsf", "respond to parameter read from: 0x%X, parameter: %i, chunk: %i", frame.payload[1], frame.payload[2], frame.payload[3]);
                                 crsf->send_extended_packet(CRSF_TYPE_PARAMETER_SETTINGS, frame.payload[1], 0xC8, &crsf->parameters[frame.payload[2]-1]);
                             }else if(frame.type == CRSF_FRAMETYPE_PARAMETER_WRITE && frame.payload[0] == 0xC8){
-                                if(frame.payload[2] > 1 && frame.payload[2] <= crsf->deviceInfo.parameterTotal+1){
-                                    //ESP_LOGI("crsf", "parameter write: parameter: 0x%X, value: %i", frame.payload[2], frame.payload[3]);
+                                //ESP_LOGI("crsf", "parameter write: parameter: 0x%X, value: %i", frame.payload[2], frame.payload[3]);
+                                if(frame.payload[2] >= 1 && frame.payload[2] <= crsf->deviceInfo.parameterTotal+1){
                                     crsf->handelParameterWrite(&crsf->parameters[frame.payload[2]-1], &frame.payload[3]);
                                 }
                             }else{
