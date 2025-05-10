@@ -164,11 +164,13 @@ typedef enum : uint8_t{
     CRSF_COMMAND_CONFIRM             = 4, //<-- input
     CRSF_COMMAND_CANCEL              = 5, //<-- input
     CRSF_COMMAND_POLL                = 6  //<-- input
-}crsf_parameter_command_status_t;
+}crsf_command_status_t;
+
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    uint8_t status;
+    crsf_command_status_t status;
     uint8_t timeout;
     const char* const info;
+    crsf_command_status_t (*callback)();
 }crsf_parameter_command_t;

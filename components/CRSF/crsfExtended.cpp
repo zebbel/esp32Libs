@@ -222,15 +222,16 @@ void CRSF::handelParameterWrite(uint8_t src, crsf_parameter_t *parameter, void *
         crsf_parameter_text_selection_t* data = reinterpret_cast<crsf_parameter_text_selection_t*>(parameter->parameterPointer);
         memcpy(&data->value, payload, 1);
     }else if(parameter->dataType == CRSF_COMMAND){
-        handelCommand((crsf_parameter_command_t*)parameter, (uint8_t*)payload, src);
+        handelCommand(parameter, (uint8_t*)payload, src);
     }
 }
 
-void CRSF::handelCommand(crsf_parameter_command_t *command, uint8_t *value, uint8_t src){
-    if(*value == CRSF_COMMAND_START){
-        uint8_t value = CRSF_COMMAND_READY;
+void CRSF::handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t src){
+    crsf_parameter_command_t* command = reinterpret_cast<crsf_parameter_command_t*>(parameter->parameterPointer);
+    if(*status == CRSF_COMMAND_START){
+        uint8_t value = command->callback();
         memcpy(&command->status, &value, 1);
     }
 
-    send_extended_packet(CRSF_TYPE_PARAMETER_SETTINGS, src, 0xC8, command);
+    send_extended_packet(CRSF_TYPE_PARAMETER_SETTINGS, src, 0xC8, parameter);
 }

@@ -4,6 +4,11 @@
 
 CRSF crsf;
 
+crsf_command_status_t testCallback(){
+    ESP_LOGI("testCallback", "juup");
+    return CRSF_COMMAND_READY;
+}
+
 void crsfMain(){
     crsf_channels_t channels;
     crsf_altitude_t altitute = {1000, 0};
@@ -24,7 +29,8 @@ void crsfMain(){
         .common = {2, 0, 0, CRSF_COMMAND, "Wifi"},
         .status = CRSF_COMMAND_READY,
         .timeout = 100,
-        .info = ""
+        .info = "",
+        .callback = testCallback
     };
     crsf.registerParameter(testParamter.common.dataType, (int*)&testParamter);
     
