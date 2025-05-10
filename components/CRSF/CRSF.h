@@ -22,6 +22,8 @@ class CRSF{
 
         SemaphoreHandle_t xMutex;
 
+        crsf_device_info_t deviceInfo;
+
         uart_port_t uartNum;
         QueueHandle_t uart_queue;
 
@@ -33,23 +35,16 @@ class CRSF{
         uint8_t crc8(const uint8_t *data, uint8_t len);
         static void rx_task(void *pvParameter);
         void send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t type, const void* payload);
-        void send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* payload);
+        void send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* paramter);
 
-        void handleDeviceInfo(crsf_extended_t *packet, void *payload);
+        void handleDeviceInfo(crsf_extended_t *packet, void *paramter);
         void handleParamterSettings(crsf_extended_t *packet, void *payload);
-        void handelParameterWrite(uint8_t src, crsf_parameter_t *parameter, void *payload);
-        void handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t src);
+        void handelParameterWrite(uint8_t dest, crsf_parameter_t *parameter, void *payload);
+        void handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t dest);
 
     public:
-        crsf_device_info_t deviceInfo;
-
         CRSF();
 
-        /**
-         * @brief setup CRSF communication
-         * 
-         * @param uartNumVal: UARt number used for crsf communication
-         */
         void init(uart_port_t uartNumVal, const char* name);
 
         void receive_channels(crsf_channels_t *channels);
