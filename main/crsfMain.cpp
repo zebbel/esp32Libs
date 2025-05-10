@@ -4,6 +4,8 @@
 
 CRSF crsf;
 
+uint8_t testData = 5;
+
 crsf_command_status_t testCallback(){
     ESP_LOGI("testCallback", "juup");
     return CRSF_COMMAND_READY;
@@ -16,23 +18,25 @@ void crsfMain(){
     crsf.init(UART_NUM_1, "ZSM");
 
     crsf_parameter_uint8_t valParameter = {
-        .common = {1, 0, 0, CRSF_UINT8, "Test"},
-        .value = 5,
+        .common = {1, 0, 0, CRSF_UINT8},
+        .name = "Test",
+        .value = &testData,
         .min = 0,
         .max = 10,
         .unit = "%"
     };
-    crsf.registerParameter(valParameter.common.dataType, (int*)&valParameter);
+    crsf.register_parameter(valParameter.common.dataType, (int*)&valParameter);
 
     
     crsf_parameter_command_t testParamter = {
-        .common = {2, 0, 0, CRSF_COMMAND, "Wifi"},
+        .common = {2, 0, 0, CRSF_COMMAND},
+        .name = "Wifi",
         .status = CRSF_COMMAND_READY,
         .timeout = 100,
         .info = "",
         .callback = testCallback
     };
-    crsf.registerParameter(testParamter.common.dataType, (int*)&testParamter);
+    crsf.register_parameter(testParamter.common.dataType, (int*)&testParamter);
     
     
 
