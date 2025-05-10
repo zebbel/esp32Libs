@@ -16,6 +16,11 @@
 #include "include/typedefsBroadcast.h"
 #include "include/typedefsExtended.h"
 
+const static crsf_parameter_folder_t rootFolder = {
+            .common = {0, 0, 0, CRSF_FOLDER},
+            .name = "ROOT"
+        };
+
 class CRSF{
     private:
         #define CRSF_MAX_PARAMS 64
@@ -64,18 +69,18 @@ class CRSF{
         void send_temp(crsf_temp_t* payload, uint8_t numSensors);
         void send_attitude(crsf_attitude_t* payload);
 
-        void register_parameter(crsf_parameter_uint8_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_int8_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_uint16_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_int16_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_uint32_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_int32_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_float_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_text_selection_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_string_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_folder_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_info_t *parameter, uint8_t parent);
-        void register_parameter(crsf_parameter_command_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_uint8_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_int8_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_uint16_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_int16_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_uint32_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_int32_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_float_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_text_selection_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_string_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_folder_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_info_t *parameter, crsf_parameter_folder_t folder=rootFolder);
+        void register_parameter(crsf_parameter_command_t *parameter, crsf_parameter_folder_t folder=rootFolder);
 };
 
 #endif

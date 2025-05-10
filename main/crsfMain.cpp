@@ -17,6 +17,19 @@ void crsfMain(){
 
     crsf.init(UART_NUM_1, "ZSM");
 
+    
+    crsf_parameter_folder_t folder = {
+        .common = {},
+        .name = "Folder"
+    };
+    crsf.register_parameter(&folder);
+
+    crsf_parameter_folder_t subFolder = {
+        .common = {},
+        .name = "Sub Folder"
+    };
+    crsf.register_parameter(&subFolder, folder);
+
     crsf_parameter_uint8_t valParameter = {
         .common = {},
         .name = "Test",
@@ -25,7 +38,7 @@ void crsfMain(){
         .max = 10,
         .unit = "%"
     };
-    crsf.register_parameter(&valParameter, 0);
+    crsf.register_parameter(&valParameter, subFolder);
 
     
     crsf_parameter_command_t testParamter = {
@@ -36,7 +49,7 @@ void crsfMain(){
         .info = "",
         .callback = testCallback
     };
-    crsf.register_parameter(&testParamter, 0);
+    crsf.register_parameter(&testParamter, folder);
     
     
 

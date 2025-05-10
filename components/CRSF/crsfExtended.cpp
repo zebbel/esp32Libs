@@ -175,8 +175,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
-        memcpy(&packet->payload[len], &data->children, sizeof(data->children));
-        len += sizeof(data->children);
+        //memcpy(&packet->payload[len], &data->children, sizeof(data->children));
+        //len += sizeof(data->children);
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_INFO){
         crsf_parameter_info_t* data = reinterpret_cast<crsf_parameter_info_t*>(parameter->parameterPointer);

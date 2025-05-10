@@ -157,7 +157,7 @@ typedef struct __attribute__((packed)){
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
     const char* name;
-    uint8_t *children;
+    //uint8_t *children;
 }crsf_parameter_folder_t;
 
 typedef struct __attribute__((packed)){
