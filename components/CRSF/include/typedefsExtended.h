@@ -73,7 +73,7 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    uint8_t value;
+    uint8_t *value;
     const uint8_t min;
     const uint8_t max;
     const char* const unit;
@@ -81,7 +81,7 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    int8_t value;
+    int8_t *value;
     const int8_t min;
     const int8_t max;
     const char* const unit;
@@ -89,7 +89,7 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    uint16_t value;
+    uint16_t *value;
     const uint16_t min;
     const uint16_t max;
     const char* const unit;
@@ -97,7 +97,7 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    int16_t value;
+    int16_t *value;
     const int16_t min;
     const int16_t max;
     const char* const unit;
@@ -105,7 +105,7 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    uint32_t value;
+    uint32_t *value;
     const uint32_t min;
     const uint32_t max;
     const char* const unit;
@@ -113,7 +113,7 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    int32_t value;
+    int32_t *value;
     const int32_t min;
     const int32_t max;
     const char* const unit;
@@ -121,7 +121,7 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    int32_t value;
+    int32_t *value;
     const int32_t min;
     const int32_t max;
     const int32_t def;
@@ -133,7 +133,7 @@ typedef struct __attribute__((packed)){
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
     const char* const options;
-    uint8_t value;
+    uint8_t *value;
     const uint8_t min;
     const uint8_t max;
     const uint8_t def;

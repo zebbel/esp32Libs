@@ -4,9 +4,10 @@
 
 CRSF crsf;
 
+uint8_t testData = 5;
 
 crsf_command_status_t testCallback(){
-    ESP_LOGI("testCallback", "juup");
+    ESP_LOGI("testCallback", "juup, %i", testData);
     return CRSF_COMMAND_READY;
 }
 
@@ -18,7 +19,7 @@ void crsfMain(){
 
     crsf_parameter_uint8_t valParameter = {
         .common = {1, 0, 0, CRSF_UINT8, "Test"},
-        .value = 5,
+        .value = &testData,
         .min = 0,
         .max = 10,
         .unit = "%"
