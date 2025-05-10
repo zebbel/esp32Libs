@@ -10,6 +10,12 @@ static uint8_t crc8_table[256] = {0};
 CRSF::CRSF(){
 }
 
+/**
+ * @brief setup CRSF communication
+ * 
+ * @param uartNumVal: UART number used for crsf communication
+ * @param name: the device shows this name over crsf
+ */
 void CRSF::init(uart_port_t uartNumVal, const char* name){
     generate_CRC(0xd5);
 
@@ -51,6 +57,9 @@ void CRSF::init(uart_port_t uartNumVal, const char* name){
     xTaskCreate(rx_task, "uart_rx_task", 1024*4, this, configMAX_PRIORITIES-1, NULL);
 }
 
+/**
+ * @brief generate crc table
+ */
 void CRSF::generate_CRC(uint8_t poly){
     for (int idx=0; idx<256; ++idx)
     {
@@ -62,7 +71,12 @@ void CRSF::generate_CRC(uint8_t poly){
     }
 }
 
-// Function to calculate CRC8 checksum
+/**
+ * @brief calculate crc checksum
+ * 
+ * @param data: pointer to data
+ * @param len: number of bytes to calculate checksum
+ */
 uint8_t CRSF::crc8(const uint8_t *data, uint8_t len) {
     uint8_t crc = 0;
     while (len--){
@@ -72,7 +86,11 @@ uint8_t CRSF::crc8(const uint8_t *data, uint8_t len) {
     return crc;
 }
 
-
+/**
+ * @brief task that handels incomming uart data
+ * 
+ * @param pvParameter: pointer to crsf class
+ */
 void CRSF::rx_task(void *pvParameter){
     CRSF* crsf = reinterpret_cast<CRSF*>(pvParameter); //obtain the instance pointer
 

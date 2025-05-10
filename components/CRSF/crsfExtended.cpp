@@ -19,9 +19,9 @@ void CRSF::registerParameter(crsf_value_type_e dataType, int *parameterPointer){
  * @param type type of data contained in payload
  * @param dest destination device
  * @param src source device
- * @param payload pointer to payload of given crsf_type_t
+ * @param paramter pointer to parameter entry in paramterArray
  */
-void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* payload){
+void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* paramter){
     crsf_extended_t packet;
 
     packet.type = type;
@@ -29,9 +29,9 @@ void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* p
     packet.src = src;
 
     if(type == CRSF_TYPE_DEVICE_INFO){
-        handleDeviceInfo(&packet, payload);
+        handleDeviceInfo(&packet, paramter);
     }else if(type == CRSF_TYPE_PARAMETER_SETTINGS){
-        handleParamterSettings(&packet, payload);
+        handleParamterSettings(&packet, paramter);
     }
 
     packet.payload[packet.len-4] = crc8(&packet.type, packet.len - 1);
@@ -48,9 +48,14 @@ void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* p
     uart_write_bytes(uartNum, &packet, packet.len + 2);
 }
 
-
-void CRSF::handleDeviceInfo(crsf_extended_t *packet, void *payload){
-    crsf_device_info_t* info = reinterpret_cast<crsf_device_info_t*>(payload);
+/**
+ * @brief copy device info to payload array
+ * 
+ * @param packet: pointer to packet
+ * @param paramter: pointer to paramter entry in parameterArray
+ */
+void CRSF::handleDeviceInfo(crsf_extended_t *packet, void *paramter){
+    crsf_device_info_t* info = reinterpret_cast<crsf_device_info_t*>(paramter);
     uint8_t nameLen = strlen(info->deviceName)+1;
     packet->len = nameLen + 18;
     strcpy((char*)packet->payload, info->deviceName);
@@ -66,8 +71,14 @@ void CRSF::handleDeviceInfo(crsf_extended_t *packet, void *payload){
     memcpy(&packet->payload[nameLen], &info->parameterTotal, 2);
 }
 
-void CRSF::handleParamterSettings(crsf_extended_t *packet, void *payload){
-    crsf_parameter_t* parameter = reinterpret_cast<crsf_parameter_t*>(payload);
+/**
+ * @brief copy parameter values to frame array
+ * 
+ * @param packet: pointer to packet
+ * @param paramter: pointer to paramter entry in parameterArray
+ */
+void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
+    crsf_parameter_t* parameter = reinterpret_cast<crsf_parameter_t*>(paramter);
     uint8_t len = 0;
 
     if(parameter->dataType == CRSF_INT8 || parameter->dataType == CRSF_UINT8){
@@ -199,7 +210,14 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *payload){
     }
 }
 
-void CRSF::handelParameterWrite(uint8_t src, crsf_parameter_t *parameter, void *payload){
+/**
+ * @brief handle paramter writes received from remote
+ * 
+ * @param dest: destination address for command response
+ * @param parameter: pointer to paramter entry in parameterArray
+ * @param payload: value send by remote
+ */
+void CRSF::handelParameterWrite(uint8_t dest, crsf_parameter_t *parameter, void *payload){
     if(parameter->dataType == CRSF_UINT8 || parameter->dataType == CRSF_INT8){
         crsf_parameter_int8_t* data = reinterpret_cast<crsf_parameter_int8_t*>(parameter->parameterPointer);
         memcpy(&data->value, payload, 1);
@@ -222,16 +240,23 @@ void CRSF::handelParameterWrite(uint8_t src, crsf_parameter_t *parameter, void *
         crsf_parameter_text_selection_t* data = reinterpret_cast<crsf_parameter_text_selection_t*>(parameter->parameterPointer);
         memcpy(&data->value, payload, 1);
     }else if(parameter->dataType == CRSF_COMMAND){
-        handelCommand(parameter, (uint8_t*)payload, src);
+        handelCommand(parameter, (uint8_t*)payload, dest);
     }
 }
 
-void CRSF::handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t src){
+/**
+ * @brief handle command request from remote
+ * 
+ * @param parameter: pointer to paramter entry in parameterArray
+ * @param status: status send by remote
+ * @param dest: destination address for command response
+ */
+void CRSF::handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t dest){
     crsf_parameter_command_t* command = reinterpret_cast<crsf_parameter_command_t*>(parameter->parameterPointer);
     if(*status == CRSF_COMMAND_START){
         uint8_t value = command->callback();
         memcpy(&command->status, &value, 1);
     }
 
-    send_extended_packet(CRSF_TYPE_PARAMETER_SETTINGS, src, 0xC8, parameter);
+    send_extended_packet(CRSF_TYPE_PARAMETER_SETTINGS, dest, 0xC8, parameter);
 }
