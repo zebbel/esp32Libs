@@ -157,18 +157,18 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_info_t;
 
 typedef enum : uint8_t{
-    READY               = 0, //--> feedback
-    START               = 1, //<-- input
-    PROGRESS            = 2, //--> feedback
-    CONFIRMATION_NEEDED = 3, //--> feedback
-    CONFIRM             = 4, //<-- input
-    CANCEL              = 5, //<-- input
-    POLL                = 6  //<-- input
+    CRSF_COMMAND_READY               = 0, //--> feedback
+    CRSF_COMMAND_START               = 1, //<-- input
+    CRSF_COMMAND_PROGRESS            = 2, //--> feedback
+    CRSF_COMMAND_CONFIRMATION_NEEDED = 3, //--> feedback
+    CRSF_COMMAND_CONFIRM             = 4, //<-- input
+    CRSF_COMMAND_CANCEL              = 5, //<-- input
+    CRSF_COMMAND_POLL                = 6  //<-- input
 }crsf_parameter_command_status_t;
 
 typedef struct __attribute__((packed)){
     crsf_parameter_common_t common;
-    crsf_parameter_command_status_t status;
+    uint8_t status;
     uint8_t timeout;
     const char* const info;
 }crsf_parameter_command_t;

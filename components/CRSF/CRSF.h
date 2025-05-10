@@ -37,7 +37,8 @@ class CRSF{
 
         void handleDeviceInfo(crsf_extended_t *packet, void *payload);
         void handleParamterSettings(crsf_extended_t *packet, void *payload);
-        void handelParameterWrite(crsf_parameter_t *parameter, void *payload);
+        void handelParameterWrite(uint8_t src, crsf_parameter_t *parameter, void *payload);
+        void handelCommand(crsf_parameter_command_t *command, uint8_t *value, uint8_t src);
 
     public:
         crsf_device_info_t deviceInfo;
