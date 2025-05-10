@@ -17,9 +17,7 @@
 #include "include/typedefsBroadcast.h"
 #include "include/typedefsExtended.h"
 
-const static crsf_parameter_folder_t rootFolder = {
-            .name = "ROOT"
-        };
+static crsf_parameter_folder_t rootFolder = {.name = "ROOT"};
 
 class CRSF{
     private:
@@ -35,7 +33,7 @@ class CRSF{
         crsf_channels_t received_channels;
 
         crsf_parameter_t parameters[CRSF_MAX_PARAMS];
-        std::map<const char*, uint8_t> folders = {{rootFolder.name, 0}};
+        std::map<const char*, uint8_t> folders = {{"ROOT", 0}};
 
         void generate_CRC(uint8_t poly);
         uint8_t crc8(const uint8_t *data, uint8_t len);

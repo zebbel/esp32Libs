@@ -47,7 +47,10 @@ void CRSF::handleDeviceInfo(crsf_extended_t *packet, void *paramter){
     value = __bswap32(info->firmwareId);
     memcpy(&packet->payload[nameLen], &value, sizeof(uint32_t));
     nameLen += 4;
-    memcpy(&packet->payload[nameLen], &info->parameterTotal, 2);
+    uint8_t parameterTotal = info->parameterTotal - 1;
+    memcpy(&packet->payload[nameLen], &parameterTotal, 1);
+    nameLen += 1;
+    memcpy(&packet->payload[nameLen], &info->parameterVersion, 1);
 }
 
 /**
