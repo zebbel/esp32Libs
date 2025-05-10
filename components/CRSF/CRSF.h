@@ -12,12 +12,12 @@
 #include <string.h>
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
+#include <map>
 
 #include "include/typedefsBroadcast.h"
 #include "include/typedefsExtended.h"
 
 const static crsf_parameter_folder_t rootFolder = {
-            .common = {0, 0, 0, CRSF_FOLDER},
             .name = "ROOT"
         };
 
@@ -35,6 +35,7 @@ class CRSF{
         crsf_channels_t received_channels;
 
         crsf_parameter_t parameters[CRSF_MAX_PARAMS];
+        std::map<const char*, uint8_t> folders = {{rootFolder.name, 0}};
 
         void generate_CRC(uint8_t poly);
         uint8_t crc8(const uint8_t *data, uint8_t len);

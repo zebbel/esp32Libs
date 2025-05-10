@@ -24,16 +24,6 @@ void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* p
     }
 
     packet.payload[packet.len-4] = crc8(&packet.type, packet.len - 1);
-
-    /*
-    ESP_LOGI("crsf", "type: 0x%X, dest: 0x%X, src: 0x%x, len: 0x%X", packet.type, packet.dest, packet.src, packet.len);
-    ESP_LOGI("crsf", "parNum: 0x%X, chunkRem: 0x%X, parent: 0x%x, dataType: 0x%X", packet.payload[0], packet.payload[1], packet.payload[2], packet.payload[3]);
-    ESP_LOGI("crsf", "name: 0x%X, 0x%X, 0x%x, 0x%X, 0x%X", packet.payload[4], packet.payload[5], packet.payload[6], packet.payload[7], packet.payload[8]);
-    ESP_LOGI("crsf", "status: 0x%X, timeout: 0x%X", packet.payload[9], packet.payload[10]);
-    ESP_LOGI("crsf", "info: 0x%X, 0x%X", packet.payload[11], packet.payload[12]);
-    ESP_LOGI("crsf", "crc: 0x%X", packet.payload[13]);
-    */
-
     uart_write_bytes(uartNum, &packet, packet.len + 2);
 }
 
@@ -71,8 +61,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
     uint8_t len = 0;
 
     if(parameter->dataType == CRSF_INT8 || parameter->dataType == CRSF_UINT8){
-        crsf_parameter_int8_t* data = reinterpret_cast<crsf_parameter_int8_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        crsf_parameter_uint8_t* data = reinterpret_cast<crsf_parameter_uint8_t*>(parameter->parameterPointer);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -85,7 +75,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_INT16 || parameter->dataType == CRSF_UINT16){
         crsf_parameter_int16_t* data = reinterpret_cast<crsf_parameter_int16_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -103,7 +93,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_INT32 || parameter->dataType == CRSF_UINT32){
         crsf_parameter_int32_t* data = reinterpret_cast<crsf_parameter_int32_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -121,7 +111,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_FLOAT){
         crsf_parameter_float_t* data = reinterpret_cast<crsf_parameter_float_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -147,7 +137,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_TEXT_SELECTION){
         crsf_parameter_text_selection_t* data = reinterpret_cast<crsf_parameter_text_selection_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -160,7 +150,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_STRING){
         crsf_parameter_string_t* data = reinterpret_cast<crsf_parameter_string_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -171,7 +161,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_FOLDER){
         crsf_parameter_folder_t* data = reinterpret_cast<crsf_parameter_folder_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -180,7 +170,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_INFO){
         crsf_parameter_info_t* data = reinterpret_cast<crsf_parameter_info_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
@@ -189,7 +179,7 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_COMMAND){
         crsf_parameter_command_t* data = reinterpret_cast<crsf_parameter_command_t*>(parameter->parameterPointer);
-        memcpy(&packet->payload, &data->common, 4);
+        memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;

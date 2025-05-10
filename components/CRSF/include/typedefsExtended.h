@@ -58,20 +58,14 @@ typedef enum : uint8_t{
 } crsf_value_type_e;
 
 typedef struct __attribute__((packed)){
-    uint8_t dataType;
-    int *parameterPointer;
-} crsf_parameter_t;
-
-typedef struct __attribute__((packed)){
     uint8_t parameterNumber;
     uint8_t chunksRemaining;
     uint8_t parent;
     crsf_value_type_e dataType;
-}crsf_parameter_common_t;
-
+    int *parameterPointer;
+}crsf_parameter_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     uint8_t *value;
     const uint8_t min;
@@ -80,7 +74,6 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_uint8_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     int8_t *value;
     const int8_t min;
@@ -89,7 +82,6 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_int8_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     uint16_t *value;
     const uint16_t min;
@@ -98,7 +90,6 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_uint16_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     int16_t *value;
     const int16_t min;
@@ -107,7 +98,6 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_int16_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     uint32_t *value;
     const uint32_t min;
@@ -116,7 +106,6 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_uint32_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     int32_t *value;
     const int32_t min;
@@ -125,7 +114,6 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_int32_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     int32_t *value;
     const int32_t min;
@@ -137,7 +125,6 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_float_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     const char* const options;
     uint8_t *value;
@@ -148,20 +135,17 @@ typedef struct __attribute__((packed)){
 }crsf_parameter_text_selection_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     const char* const value;
     const uint8_t strLen;
 }crsf_parameter_string_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     //uint8_t *children;
 }crsf_parameter_folder_t;
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     const char* const info;
 }crsf_parameter_info_t;
@@ -178,7 +162,6 @@ typedef enum : uint8_t{
 
 
 typedef struct __attribute__((packed)){
-    crsf_parameter_common_t common;
     const char* name;
     crsf_command_status_t status;
     uint8_t timeout;

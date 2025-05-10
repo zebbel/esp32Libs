@@ -23,7 +23,6 @@ void CRSF::init(uart_port_t uartNumVal, const char* name){
 
     deviceInfo.deviceName = name;
 
-
     uart_config_t uart_config;
     uart_config.baud_rate = 420000;
     uart_config.data_bits = UART_DATA_8_BITS;

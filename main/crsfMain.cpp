@@ -17,21 +17,17 @@ void crsfMain(){
 
     crsf.init(UART_NUM_1, "ZSM");
 
-    
     crsf_parameter_folder_t folder = {
-        .common = {},
         .name = "Folder"
     };
     crsf.register_parameter(&folder);
 
     crsf_parameter_folder_t subFolder = {
-        .common = {},
         .name = "Sub Folder"
     };
     crsf.register_parameter(&subFolder, folder);
 
     crsf_parameter_uint8_t valParameter = {
-        .common = {},
         .name = "Test",
         .value = &testData,
         .min = 0,
@@ -42,7 +38,6 @@ void crsfMain(){
 
     
     crsf_parameter_command_t testParamter = {
-        .common = {},
         .name = "Wifi",
         .status = CRSF_COMMAND_READY,
         .timeout = 100,
@@ -51,7 +46,14 @@ void crsfMain(){
     };
     crsf.register_parameter(&testParamter, folder);
     
-    
+    crsf_parameter_uint8_t valParameter2 = {
+        .name = "Test",
+        .value = &testData,
+        .min = 0,
+        .max = 10,
+        .unit = "%"
+    };
+    crsf.register_parameter(&valParameter2);
 
     uint64_t lastSend = esp_timer_get_time();
 
