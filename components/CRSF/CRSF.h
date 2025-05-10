@@ -42,6 +42,8 @@ class CRSF{
         void handelParameterWrite(uint8_t dest, crsf_parameter_t *parameter, void *payload);
         void handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t dest);
 
+        void register_parameter(crsf_value_type_e dataType, int *parameterPointer);
+
     public:
         CRSF();
 
@@ -62,7 +64,18 @@ class CRSF{
         void send_temp(crsf_temp_t* payload, uint8_t numSensors);
         void send_attitude(crsf_attitude_t* payload);
 
-        void registerParameter(crsf_value_type_e dataType, int *parameterPointer);
+        void register_parameter(crsf_parameter_uint8_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_int8_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_uint16_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_int16_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_uint32_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_int32_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_float_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_text_selection_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_string_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_folder_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_info_t *parameter, uint8_t parent);
+        void register_parameter(crsf_parameter_command_t *parameter, uint8_t parent);
 };
 
 #endif

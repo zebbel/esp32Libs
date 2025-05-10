@@ -3,6 +3,7 @@ idf_component_register(
        "crsf.cpp"
        "crsfBroadcast.cpp"
        "crsfExtended.cpp"
+       "crsfRegisterParameter.cpp"
     INCLUDE_DIRS 
         "."
         "include"

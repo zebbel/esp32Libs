@@ -2,17 +2,6 @@
 #include "byteswap.h"
 
 /**
- * @brief register a parameter
- *
- * @param dataType data type of paramter
- * @param parameterPointer pointer to parameter structure
- */
-void CRSF::registerParameter(crsf_value_type_e dataType, int *parameterPointer){
-    parameters[deviceInfo.parameterTotal] = {dataType, parameterPointer};
-    deviceInfo.parameterTotal ++;
-}
-
-/**
  * @brief function sends extended packet
  *
  * @param payload_length length of the payload type
@@ -85,8 +74,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_int8_t* data = reinterpret_cast<crsf_parameter_int8_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         memcpy(&packet->payload[len], data->value, 1);
         len += 1;
         memcpy(&packet->payload[len], &data->min, 2);
@@ -98,8 +87,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_int16_t* data = reinterpret_cast<crsf_parameter_int16_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         uint16_t value = __bswap16(*data->value);
         memcpy(&packet->payload[len], &value, 2);
         len += 2;
@@ -116,8 +105,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_int32_t* data = reinterpret_cast<crsf_parameter_int32_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         uint32_t value = __bswap32(*data->value);
         memcpy(&packet->payload[len], &value, 4);
         len += 4;
@@ -134,8 +123,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_float_t* data = reinterpret_cast<crsf_parameter_float_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         uint32_t value = __bswap32(*data->value);
         memcpy(&packet->payload[len], &value, 4);
         len += 4;
@@ -160,8 +149,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_text_selection_t* data = reinterpret_cast<crsf_parameter_text_selection_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         strcpy((char*)&packet->payload[len], data->options);
         len += strlen(data->options)+1;
         memcpy(&packet->payload[len], data->value, 4);
@@ -173,8 +162,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_string_t* data = reinterpret_cast<crsf_parameter_string_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         strcpy((char*)&packet->payload[len], data->value);
         len += strlen(data->value)+1;
         memcpy(&packet->payload[len], &data->strLen, 1);
@@ -184,8 +173,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_folder_t* data = reinterpret_cast<crsf_parameter_folder_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         memcpy(&packet->payload[len], &data->children, sizeof(data->children));
         len += sizeof(data->children);
         packet->len = len + 4;
@@ -193,8 +182,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_info_t* data = reinterpret_cast<crsf_parameter_info_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         strcpy((char*)&packet->payload[len], data->info);
         len += strlen(data->info)+1;
         packet->len = len + 4;
@@ -202,8 +191,8 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         crsf_parameter_command_t* data = reinterpret_cast<crsf_parameter_command_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &data->common, 4);
         len += 4;
-        strcpy((char*)&packet->payload[len], data->common.name);
-        len += strlen(data->common.name)+1;
+        strcpy((char*)&packet->payload[len], data->name);
+        len += strlen(data->name)+1;
         memcpy(&packet->payload[len], &data->status, 2);
         len += 2;
         strcpy((char*)&packet->payload[len], data->info);

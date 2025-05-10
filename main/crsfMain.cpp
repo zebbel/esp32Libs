@@ -18,23 +18,25 @@ void crsfMain(){
     crsf.init(UART_NUM_1, "ZSM");
 
     crsf_parameter_uint8_t valParameter = {
-        .common = {1, 0, 0, CRSF_UINT8, "Test"},
+        .common = {},
+        .name = "Test",
         .value = &testData,
         .min = 0,
         .max = 10,
         .unit = "%"
     };
-    crsf.registerParameter(valParameter.common.dataType, (int*)&valParameter);
+    crsf.register_parameter(&valParameter, 0);
 
     
     crsf_parameter_command_t testParamter = {
-        .common = {2, 0, 0, CRSF_COMMAND, "Wifi"},
+        .common = {},
+        .name = "Wifi",
         .status = CRSF_COMMAND_READY,
         .timeout = 100,
         .info = "",
         .callback = testCallback
     };
-    crsf.registerParameter(testParamter.common.dataType, (int*)&testParamter);
+    crsf.register_parameter(&testParamter, 0);
     
     
 
