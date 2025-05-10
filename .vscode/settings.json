@@ -21,17 +21,6 @@
         "cmath": "cpp",
         "limits": "cpp",
         "new": "cpp",
-        "regex": "cpp",
-        "array": "cpp",
-        "chrono": "cpp",
-        "deque": "cpp",
-        "list": "cpp",
-        "string": "cpp",
-        "unordered_map": "cpp",
-        "vector": "cpp",
-        "iterator": "cpp",
-        "string_view": "cpp",
-        "format": "cpp",
-        "span": "cpp"
+        "regex": "cpp"
     }
 }
