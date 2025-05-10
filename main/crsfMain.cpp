@@ -4,7 +4,6 @@
 
 CRSF crsf;
 
-uint8_t testData = 5;
 
 crsf_command_status_t testCallback(){
     ESP_LOGI("testCallback", "juup");
