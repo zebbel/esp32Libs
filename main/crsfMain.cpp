@@ -13,8 +13,8 @@ int32_t int32Data = 51;
 float floatData = 6.4;
 uint8_t textSelelctData = 0;
 
-crsf_command_status_t testCallback(){
-    //ESP_LOGI("testCallback", "juup, %f", testData);
+crsf_command_status_t commandCallback(){
+    ESP_LOGI("testCallback", "juup, %f", floatData);
     return CRSF_COMMAND_READY;
 }
 
@@ -120,6 +120,20 @@ void crsfMain(){
         .info = "juup"
     };
     crsf.register_parameter(&infoParameter, folderParameter);
+
+    crsf_parameter_folder_t subFolderParameter = {
+        .name = "Sub Folder"
+    };
+    crsf.register_parameter(&subFolderParameter, folderParameter);
+
+    crsf_parameter_command_t commandParameter = {
+        .name = "Print ",
+        .status = CRSF_COMMAND_READY,
+        .timeout = 100,
+        .info = "print Data",
+        .callback = &commandCallback
+    };
+    crsf.register_parameter(&commandParameter, subFolderParameter);
 
     uint64_t lastSend = esp_timer_get_time();
 
