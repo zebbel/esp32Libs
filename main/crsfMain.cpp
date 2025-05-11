@@ -11,6 +11,7 @@ int16_t int16Data = 51;
 uint32_t uint32Data = 51;
 int32_t int32Data = 51;
 float floatData = 6.4;
+uint8_t textSelelctData = 0;
 
 crsf_command_status_t testCallback(){
     //ESP_LOGI("testCallback", "juup, %f", testData);
@@ -90,6 +91,35 @@ void crsfMain(){
         .unit = "Hz"
     };
     crsf.register_parameter(&floatParameter);
+
+    crsf_parameter_folder_t folderParameter = {
+        .name = "Folder"
+    };
+    crsf.register_parameter(&folderParameter);
+
+    crsf_parameter_text_selection_t textSelectParamter = {
+        .name = "TextSe",
+        .options = "ja;nein",
+        .value = &textSelelctData,
+        .min = 0,
+        .max = 1,
+        .def = 0,
+        .unit = "  "
+    };
+    crsf.register_parameter(&textSelectParamter, folderParameter);
+
+    crsf_parameter_string_t stringParameter = {
+        .name = "String",
+        .value = "Test",
+        .strLen = 30
+    };
+    crsf.register_parameter(&stringParameter, folderParameter);
+
+    crsf_parameter_info_t infoParameter = {
+        .name = "Info  ",
+        .info = "juup"
+    };
+    crsf.register_parameter(&infoParameter, folderParameter);
 
     uint64_t lastSend = esp_timer_get_time();
 
