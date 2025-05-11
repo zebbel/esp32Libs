@@ -4,10 +4,16 @@
 
 CRSF crsf;
 
-uint8_t testData = 5;
+uint8_t uint8Data = 51;
+int8_t int8Data = 51;
+uint16_t uint16Data = 51;
+int16_t int16Data = 51;
+uint32_t uint32Data = 51;
+int32_t int32Data = 51;
+int32_t floatData = 51;
 
 crsf_command_status_t testCallback(){
-    ESP_LOGI("testCallback", "juup, %i", testData);
+    //ESP_LOGI("testCallback", "juup, %f", testData);
     return CRSF_COMMAND_READY;
 }
 
@@ -17,43 +23,73 @@ void crsfMain(){
 
     crsf.init(UART_NUM_1, "ZSM");
 
-    crsf_parameter_folder_t folder = {
-        .name = "Folder"
-    };
-    crsf.register_parameter(&folder);
-
-    crsf_parameter_folder_t subFolder = {
-        .name = "Sub Folder"
-    };
-    crsf.register_parameter(&subFolder, folder);
-
-    crsf_parameter_uint8_t valParameter = {
-        .name = "Test",
-        .value = &testData,
+    crsf_parameter_uint8_t uint8Parameter = {
+        .name = "uint8 ",
+        .value = &uint8Data,
         .min = 0,
-        .max = 10,
-        .unit = "%"
+        .max = 100,
+        .unit = "Hz"
     };
-    crsf.register_parameter(&valParameter, subFolder);
+    crsf.register_parameter(&uint8Parameter);
 
-    
-    crsf_parameter_command_t testParamter = {
-        .name = "Wifi",
-        .status = CRSF_COMMAND_READY,
-        .timeout = 100,
-        .info = "",
-        .callback = testCallback
+    crsf_parameter_int8_t int8Parameter = {
+        .name = "int8  ",
+        .value = &int8Data,
+        .min = -100,
+        .max = 100,
+        .unit = "Hz"
     };
-    crsf.register_parameter(&testParamter, folder);
-    
-    crsf_parameter_uint8_t valParameter2 = {
-        .name = "Test",
-        .value = &testData,
+    crsf.register_parameter(&int8Parameter);
+
+    crsf_parameter_uint16_t uint16Parameter = {
+        .name = "uint16",
+        .value = &uint16Data,
         .min = 0,
-        .max = 10,
-        .unit = "%"
+        .max = 100,
+        .unit = "Hz"
     };
-    crsf.register_parameter(&valParameter2);
+    crsf.register_parameter(&uint16Parameter);
+
+    crsf_parameter_int16_t int16Parameter = {
+        .name = "int16 ",
+        .value = &int16Data,
+        .min = -100,
+        .max = 100,
+        .unit = "Hz"
+    };
+    crsf.register_parameter(&int16Parameter);
+
+    /* expressLRS lua doesn´t support 32bit
+    crsf_parameter_uint32_t uint32Parameter = {
+        .name = "uint32",
+        .value = &uint32Data,
+        .min = 0,
+        .max = 100,
+        .unit = "Hz"
+    };
+    crsf.register_parameter(&uint32Parameter);
+
+    crsf_parameter_int32_t int32Parameter = {
+        .name = "int32",
+        .value = &int32Data,
+        .min = -100,
+        .max = 100,
+        .unit = "Hz"
+    };
+    crsf.register_parameter(&int32Parameter);
+    */
+
+    crsf_parameter_float_t floatParameter = {
+        .name = "float ",
+        .value = &int32Data,
+        .min = -100,
+        .max = 100,
+        .def = 0,
+        .decPoint = 1,
+        .stepSize = 1,
+        .unit = "Hz"
+    };
+    crsf.register_parameter(&floatParameter);
 
     uint64_t lastSend = esp_timer_get_time();
 

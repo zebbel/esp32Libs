@@ -24,6 +24,27 @@ void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* p
     }
 
     packet.payload[packet.len-4] = crc8(&packet.type, packet.len - 1);
+
+    if(type != CRSF_TYPE_DEVICE_INFO){
+        ESP_LOGI("crsf", "type: 0x%X, dest: 0x%X, src: 0x%x, len: 0x%X", packet.type, packet.dest, packet.src, packet.len);
+        ESP_LOGI("crsf", "parNum: 0x%X, chunkRem: 0x%X, parent: 0x%x, dataType: 0x%X", packet.payload[0], packet.payload[1], packet.payload[2], packet.payload[3]);
+        ESP_LOGI("crsf", "name: 0x%X, 0x%X, 0x%x, 0x%X, 0x%X, 0x%X, 0x%X", packet.payload[4], packet.payload[5], packet.payload[6], packet.payload[7], packet.payload[8], packet.payload[9], packet.payload[10]);
+        ESP_LOGI("crsf", "value: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[11], packet.payload[12], packet.payload[13], packet.payload[14]);
+        ESP_LOGI("crsf", "min: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[15], packet.payload[16], packet.payload[17], packet.payload[18]);
+        ESP_LOGI("crsf", "max: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[19], packet.payload[20], packet.payload[21], packet.payload[22]);
+        if(packet.payload[3] == CRSF_FLOAT){
+            ESP_LOGI("crsf", "default: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[23], packet.payload[24], packet.payload[25], packet.payload[26]);
+            ESP_LOGI("crsf", "dec: 0x%X", packet.payload[27]);
+            ESP_LOGI("crsf", "step: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[28], packet.payload[29], packet.payload[30], packet.payload[31]);
+            ESP_LOGI("crsf", "unit: 0x%X, 0x%X, 0x%x", packet.payload[32], packet.payload[33], packet.payload[34]);
+            ESP_LOGI("crsf", "crc: 0x%X", packet.payload[35]);
+        }else{
+            ESP_LOGI("crsf", "step: 0x%X, 0x%X, 0x%x, 0x%x", packet.payload[23], packet.payload[24], packet.payload[25], packet.payload[26]);
+            ESP_LOGI("crsf", "unit: 0x%X, 0x%X, 0x%x", packet.payload[27], packet.payload[28], packet.payload[29]);
+            ESP_LOGI("crsf", "crc: 0x%X", packet.payload[30]);
+        }
+    }
+
     uart_write_bytes(uartNum, &packet, packet.len + 2);
 }
 
@@ -113,12 +134,17 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         len += strlen(data->unit)+1;
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_FLOAT){
+        ESP_LOGI("CRSF", "juup");
         crsf_parameter_float_t* data = reinterpret_cast<crsf_parameter_float_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
-        uint32_t value = __bswap32(*data->value);
+        int32_t value = __bswap32(*data->value);
+        //float floatVal = *data->value * (10 * data->decPoint);
+        //uint32_t value = __bswap32((uint32_t)floatVal);
+        //uint32_t value = (uint32_t)(*data->value * (10 * data->decPoint));
+        //ESP_LOGI("CRSF", "%lu", value);
         memcpy(&packet->payload[len], &value, 4);
         len += 4;
         value = __bswap32(data->min);
