@@ -10,7 +10,7 @@ uint16_t uint16Data = 51;
 int16_t int16Data = 51;
 uint32_t uint32Data = 51;
 int32_t int32Data = 51;
-int32_t floatData = 51;
+float floatData = 6.4;
 
 crsf_command_status_t testCallback(){
     //ESP_LOGI("testCallback", "juup, %f", testData);
@@ -81,7 +81,7 @@ void crsfMain(){
 
     crsf_parameter_float_t floatParameter = {
         .name = "float ",
-        .value = &int32Data,
+        .value = &floatData,
         .min = -100,
         .max = 100,
         .def = 0,

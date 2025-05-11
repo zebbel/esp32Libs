@@ -1,5 +1,6 @@
 #include "crsf.h"
 #include "byteswap.h"
+#include <cmath>
 
 /**
  * @brief function sends extended packet
@@ -25,6 +26,7 @@ void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* p
 
     packet.payload[packet.len-4] = crc8(&packet.type, packet.len - 1);
 
+    /*
     if(type != CRSF_TYPE_DEVICE_INFO){
         ESP_LOGI("crsf", "type: 0x%X, dest: 0x%X, src: 0x%x, len: 0x%X", packet.type, packet.dest, packet.src, packet.len);
         ESP_LOGI("crsf", "parNum: 0x%X, chunkRem: 0x%X, parent: 0x%x, dataType: 0x%X", packet.payload[0], packet.payload[1], packet.payload[2], packet.payload[3]);
@@ -44,6 +46,7 @@ void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* p
             ESP_LOGI("crsf", "crc: 0x%X", packet.payload[30]);
         }
     }
+    */
 
     uart_write_bytes(uartNum, &packet, packet.len + 2);
 }
@@ -134,17 +137,12 @@ void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
         len += strlen(data->unit)+1;
         packet->len = len + 4;
     }else if(parameter->dataType == CRSF_FLOAT){
-        ESP_LOGI("CRSF", "juup");
         crsf_parameter_float_t* data = reinterpret_cast<crsf_parameter_float_t*>(parameter->parameterPointer);
         memcpy(&packet->payload, &parameter->parameterNumber, 4);
         len += 4;
         strcpy((char*)&packet->payload[len], data->name);
         len += strlen(data->name)+1;
-        int32_t value = __bswap32(*data->value);
-        //float floatVal = *data->value * (10 * data->decPoint);
-        //uint32_t value = __bswap32((uint32_t)floatVal);
-        //uint32_t value = (uint32_t)(*data->value * (10 * data->decPoint));
-        //ESP_LOGI("CRSF", "%lu", value);
+        int32_t value = __bswap32(*data->value * pow(10, data->decPoint));
         memcpy(&packet->payload[len], &value, 4);
         len += 4;
         value = __bswap32(data->min);
@@ -244,7 +242,7 @@ void CRSF::handelParameterWrite(uint8_t dest, crsf_parameter_t *parameter, void 
     }else if(parameter->dataType == CRSF_FLOAT){
         crsf_parameter_float_t* data = reinterpret_cast<crsf_parameter_float_t*>(parameter->parameterPointer);
         int32_t* value = reinterpret_cast<int32_t*>(payload);
-        int32_t valueSwapped = __bswap32(*value);
+        float valueSwapped = __bswap32(*value) / pow(10, data->decPoint);
         memcpy(data->value, &valueSwapped, 4);
     }else if(parameter->dataType == CRSF_TEXT_SELECTION){
         crsf_parameter_text_selection_t* data = reinterpret_cast<crsf_parameter_text_selection_t*>(parameter->parameterPointer);

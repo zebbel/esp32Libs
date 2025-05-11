@@ -115,12 +115,12 @@ typedef struct __attribute__((packed)){
 
 typedef struct __attribute__((packed)){
     const char* name;
-    int32_t *value;
+    float *value;
     const int32_t min;
     const int32_t max;
     const int32_t def;
     const uint8_t decPoint;
-    const uint32_t stepSize;
+    const int32_t stepSize;
     const char* const unit;
 }crsf_parameter_float_t;
 
