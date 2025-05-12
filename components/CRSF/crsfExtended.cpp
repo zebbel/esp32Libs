@@ -3,6 +3,41 @@
 #include <cmath>
 
 /**
+ * @brief send device info to remote
+ * 
+ * @param dest: destination address
+ * @param src: source address
+ */
+void CRSF::send_device_info(uint8_t dest, uint8_t src){
+    crsf_extended_t packet;
+
+    packet.type = CRSF_TYPE_DEVICE_INFO;
+    packet.dest = dest;
+    packet.src = src;
+
+    uint8_t nameLen = strlen(deviceInfo.deviceName)+1;
+    packet.len = nameLen + 18;
+    strcpy((char*)packet.payload, deviceInfo.deviceName);
+    uint32_t value = __bswap32(deviceInfo.serialNumber);
+    memcpy(&packet.payload[nameLen], &value, sizeof(uint32_t));
+    nameLen += 4;
+    value = __bswap32(deviceInfo.hardwareId);
+    memcpy(&packet.payload[nameLen], &value, sizeof(uint32_t));
+    nameLen += 4;
+    value = __bswap32(deviceInfo.firmwareId);
+    memcpy(&packet.payload[nameLen], &value, sizeof(uint32_t));
+    nameLen += 4;
+    uint8_t parameterTotal = deviceInfo.parameterTotal - 1;
+    memcpy(&packet.payload[nameLen], &parameterTotal, 1);
+    nameLen += 1;
+    memcpy(&packet.payload[nameLen], &deviceInfo.parameterVersion, 1);
+
+    packet.payload[packet.len-4] = crc8(&packet.type, packet.len - 1);
+
+    uart_write_bytes(uartNum, &packet, packet.len + 2);
+}
+
+/**
  * @brief function sends extended packet
  *
  * @param payload_length length of the payload type
@@ -11,20 +46,14 @@
  * @param src source device
  * @param paramter pointer to parameter entry in paramterArray
  */
-void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* paramter){
+void CRSF::send_parameter(uint8_t dest, uint8_t src, crsf_parameter_t* parameter){
     crsf_extended_t packet;
-
-    packet.type = type;
+    packet.type = CRSF_TYPE_PARAMETER_SETTINGS;
     packet.dest = dest;
     packet.src = src;
-
-    if(type == CRSF_TYPE_DEVICE_INFO){
-        handleDeviceInfo(&packet, paramter);
-    }else if(type == CRSF_TYPE_PARAMETER_SETTINGS){
-        handleParamterSettings(&packet, paramter);
-    }
-
+    handleParamterSettings(&packet, parameter);
     packet.payload[packet.len-4] = crc8(&packet.type, packet.len - 1);
+    uart_write_bytes(uartNum, &packet, packet.len + 2);
 
     /*
     if(type != CRSF_TYPE_DEVICE_INFO){
@@ -47,34 +76,6 @@ void CRSF::send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* p
         }
     }
     */
-
-    uart_write_bytes(uartNum, &packet, packet.len + 2);
-}
-
-/**
- * @brief copy device info to payload array
- * 
- * @param packet: pointer to packet
- * @param paramter: pointer to paramter entry in parameterArray
- */
-void CRSF::handleDeviceInfo(crsf_extended_t *packet, void *paramter){
-    crsf_device_info_t* info = reinterpret_cast<crsf_device_info_t*>(paramter);
-    uint8_t nameLen = strlen(info->deviceName)+1;
-    packet->len = nameLen + 18;
-    strcpy((char*)packet->payload, info->deviceName);
-    uint32_t value = __bswap32(info->serialNumber);
-    memcpy(&packet->payload[nameLen], &value, sizeof(uint32_t));
-    nameLen += 4;
-    value = __bswap32(info->hardwareId);
-    memcpy(&packet->payload[nameLen], &value, sizeof(uint32_t));
-    nameLen += 4;
-    value = __bswap32(info->firmwareId);
-    memcpy(&packet->payload[nameLen], &value, sizeof(uint32_t));
-    nameLen += 4;
-    uint8_t parameterTotal = info->parameterTotal - 1;
-    memcpy(&packet->payload[nameLen], &parameterTotal, 1);
-    nameLen += 1;
-    memcpy(&packet->payload[nameLen], &info->parameterVersion, 1);
 }
 
 /**
@@ -83,8 +84,7 @@ void CRSF::handleDeviceInfo(crsf_extended_t *packet, void *paramter){
  * @param packet: pointer to packet
  * @param paramter: pointer to paramter entry in parameterArray
  */
-void CRSF::handleParamterSettings(crsf_extended_t *packet, void *paramter){
-    crsf_parameter_t* parameter = reinterpret_cast<crsf_parameter_t*>(paramter);
+void CRSF::handleParamterSettings(crsf_extended_t *packet, crsf_parameter_t *parameter){
     uint8_t len = 0;
 
     if(parameter->dataType == CRSF_INT8 || parameter->dataType == CRSF_UINT8){
@@ -266,5 +266,5 @@ void CRSF::handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t d
         memcpy(&command->status, &value, 1);
     }
 
-    send_extended_packet(CRSF_TYPE_PARAMETER_SETTINGS, dest, 0xC8, parameter);
+    send_parameter(dest, 0xC8, parameter);
 }

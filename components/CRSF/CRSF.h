@@ -37,10 +37,10 @@ class CRSF{
         uint8_t crc8(const uint8_t *data, uint8_t len);
         static void rx_task(void *pvParameter);
         void send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t type, const void* payload);
-        void send_extended_packet(uint8_t type, uint8_t dest, uint8_t src, void* paramter);
+        void send_device_info(uint8_t dest, uint8_t src);
+        void send_parameter(uint8_t dest, uint8_t src, crsf_parameter_t* parameter);
 
-        void handleDeviceInfo(crsf_extended_t *packet, void *paramter);
-        void handleParamterSettings(crsf_extended_t *packet, void *payload);
+        void handleParamterSettings(crsf_extended_t *packet, crsf_parameter_t *parameter);
         void handelParameterWrite(uint8_t dest, crsf_parameter_t *parameter, void *payload);
         void handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t dest);
 
