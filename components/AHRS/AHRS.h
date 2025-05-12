@@ -18,7 +18,7 @@
 #define     AHRS_LPF_MAG_CUTOFFFREQUENCY            2.0
 
 typedef struct {
-    bool enabled = false;
+    uint8_t enabled = false;
     float cutoffFrequency = 100;
 } filter_t;
 

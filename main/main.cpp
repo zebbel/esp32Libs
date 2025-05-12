@@ -1,8 +1,8 @@
 #include <stdio.h>
 
 //#include "buttonMain.cpp"
-#include "crsfMain.cpp"
-//#include "imuMain.cpp"
+//#include "crsfMain.cpp"
+#include "imuMain.cpp"
 //#include "pidMain.cpp"
 //#include "servoMain.cpp"
 //#include "telemtryMain.cpp"
@@ -10,8 +10,8 @@
 
 extern "C"  void app_main(void){
     //buttonMain();
-    crsfMain();
-    //imuMain();
+    //crsfMain();
+    imuMain();
     //pidMain();
     //servoMain();
     //telemetryMain();
