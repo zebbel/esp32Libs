@@ -27,17 +27,6 @@ void CRSF::send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t t
 }
 
 /**
- * @brief copy latest 16 channel data received to the pointer
- * 
- * @param channels pointer to receiver buffer
- */
-void CRSF::receive_channels(crsf_channels_t *channels){
-    xSemaphoreTake(xMutex, portMAX_DELAY);
-    *channels = received_channels;
-    xSemaphoreGive(xMutex);
-}
-
-/**
 * @brief convert crsf channel value to microseconds
 * 
 * @param value: channel value

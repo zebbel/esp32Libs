@@ -58,6 +58,18 @@ void CRSF::init(uart_port_t uartNumVal, const char* name){
 }
 
 /**
+ * @brief setup CRSF communication
+ * 
+ * @param uartNumVal: UART number used for crsf communication
+ * @param name: the device shows this name over crsf
+ * @param extern_channels: pointer to channel variable
+ */
+void CRSF::init(uart_port_t uartNumVal, const char* name, crsf_channels_t *extern_channels){
+    channels = extern_channels;
+    init(uartNumVal, name);
+}
+
+/**
  * @brief generate crc table
  */
 void CRSF::generate_CRC(uint8_t poly){
@@ -119,7 +131,7 @@ void CRSF::rx_task(void *pvParameter){
                         if(frame.type < 0x27){
                             if(frame.type == CRSF_TYPE_CHANNELS){
                                 xSemaphoreTake(crsf->xMutex, portMAX_DELAY);
-                                crsf->received_channels = *(crsf_channels_t*)frame.payload;
+                                crsf->channels = (crsf_channels_t*)frame.payload;
                                 xSemaphoreGive(crsf->xMutex);
                             }
                         }else{

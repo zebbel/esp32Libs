@@ -3,6 +3,7 @@
 #include "crsf.h"
 
 CRSF crsf;
+crsf_channels_t channels;
 
 uint8_t uint8Data = 51;
 int8_t int8Data = 51;
@@ -22,7 +23,7 @@ void crsfMain(){
     crsf_channels_t channels;
     crsf_altitude_t altitute = {1000, 0};
 
-    crsf.init(UART_NUM_1, "ZSM");
+    crsf.init(UART_NUM_1, "ZSM", &channels);
 
     crsf_parameter_uint8_t uint8Parameter = {
         .name = "uint8 ",
@@ -138,7 +139,6 @@ void crsfMain(){
     uint64_t lastSend = esp_timer_get_time();
 
     while(1){
-        crsf.receive_channels(&channels);
         //ESP_LOGI("main", "CH1: %d", crsf.channel_Mikroseconds(channels.ch1));
 
         if((lastSend + 1000) < esp_timer_get_time()){

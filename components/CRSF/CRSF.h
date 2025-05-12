@@ -30,8 +30,6 @@ class CRSF{
         uart_port_t uartNum;
         QueueHandle_t uart_queue;
 
-        crsf_channels_t received_channels;
-
         crsf_parameter_t parameters[CRSF_MAX_PARAMS];
         std::map<const char*, uint8_t> folders = {{"ROOT", 0}};
 
@@ -49,11 +47,13 @@ class CRSF{
         void register_parameter(crsf_value_type_e dataType, int *parameterPointer);
 
     public:
+        crsf_channels_t *channels;
+
         CRSF();
 
         void init(uart_port_t uartNumVal, const char* name);
+        void init(uart_port_t uartNumVal, const char* name, crsf_channels_t *extern_channels);
 
-        void receive_channels(crsf_channels_t *channels);
         uint16_t channel_Mikroseconds(uint16_t value);
 
         void send_gps(crsf_gps_t* payload);
