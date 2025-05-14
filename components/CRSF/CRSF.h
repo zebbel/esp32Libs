@@ -65,8 +65,8 @@ class CRSF{
         void send_altitute(crsf_altitude_t* payload);
         void send_airspeed(crsf_airspeed_t* payload);
         void send_heartbeat(crsf_heartbeat_t* payload);
-        void send_rpm(crsf_rmp_t* payload, uint8_t numSensors);
-        void send_temp(crsf_temp_t* payload, uint8_t numSensors);
+        void send_rpm(crsf_rmp_t* payload);
+        void send_temp(crsf_temp_t* payload);
         void send_attitude(crsf_attitude_t* payload);
 
         void register_parameter(crsf_parameter_uint8_t *parameter, crsf_parameter_folder_t folder=rootFolder);

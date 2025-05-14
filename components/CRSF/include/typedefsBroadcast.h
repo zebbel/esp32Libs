@@ -200,6 +200,7 @@ typedef struct __attribute__((packed)){
 typedef struct __attribute__((packed)){
     uint8_t rpm_source_id;  // Identifies the source of the RPM data (e.g., 0 = Motor 1, 1 = Motor 2, etc.)
     int32_t rpm[20];      // 1 - 19 RPM values with negative ones representing the motor spinning in reverse
+    uint8_t num_sensors;
 } crsf_rmp_t;
 
 /**
@@ -207,11 +208,13 @@ typedef struct __attribute__((packed)){
  * 
  * @param temp_source_id uint8 Identifies the source of the temperature data
  * @param temperature[20] int16 up to 20 temperature values in deci-degree (tenths of a degree)
+ * @param num_sensors number of sensors
  * 
  */
 typedef struct __attribute__((packed)){
     uint8_t temp_source_id;  // Identifies the source of the temperature data (e.g., 0 = FC including all ESCs, 1 = Ambient, etc.)
     int16_t temperature[20];   // up to 20 temperature values in deci-degree (tenths of a degree) Celsius (e.g., 250 = 25.0°C, -50 = -5.0°C)
+    uint8_t num_sensors;
 } crsf_temp_t;
 
 /**

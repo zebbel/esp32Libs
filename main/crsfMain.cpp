@@ -4,6 +4,7 @@
 
 CRSF crsf;
 crsf_channels_t channels;
+int16_t temperatur = 255;
 
 uint8_t uint8Data = 51;
 int8_t int8Data = 51;
@@ -23,7 +24,8 @@ void crsfMain(){
     crsf_channels_t channels;
     crsf_temp_t tempSensor = {
         .temp_source_id = 0,
-        .temperature = {255}
+        .temperature = {255},
+        .num_sensors = 1
     };
 
     crsf.init(UART_NUM_1, "ZSM", &channels);
@@ -159,7 +161,7 @@ void crsfMain(){
 
         if((lastSend + 1000) < esp_timer_get_time()){
             lastSend = esp_timer_get_time();
-            crsf.send_temp(&tempSensor, 1);
+            crsf.send_temp(&tempSensor);
         }
 
         folderParameter.hidden = textSelelctData;

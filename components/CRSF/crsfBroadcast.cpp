@@ -42,15 +42,13 @@ uint16_t CRSF::channel_Mikroseconds(uint16_t value){
  * @param payload pointer to the gps data
  */
 void CRSF::send_gps(crsf_gps_t* payload){
-    crsf_gps_t* payload_proc = payload;
-    //processed payload
-    payload_proc->latitude = __bswap32(payload_proc->latitude);
-    payload_proc->longitude = __bswap32(payload_proc->longitude);
-    payload_proc->groundspeed = __bswap16(payload_proc->groundspeed);
-    payload_proc->heading = __bswap16(payload_proc->heading);
-    payload_proc->altitude = __bswap16(payload_proc->altitude);
+    payload->latitude = __bswap32(payload->latitude);
+    payload->longitude = __bswap32(payload->longitude);
+    payload->groundspeed = __bswap16(payload->groundspeed);
+    payload->heading = __bswap16(payload->heading);
+    payload->altitude = __bswap16(payload->altitude);
 
-    send_broadcast_packet(sizeof(crsf_gps_t), CRSF_TYPE_GPS, payload_proc);
+    send_broadcast_packet(sizeof(crsf_gps_t), CRSF_TYPE_GPS, payload);
 }
 
 /**
@@ -59,12 +57,10 @@ void CRSF::send_gps(crsf_gps_t* payload){
  * @param payload pointer to the gps time
  */
 void CRSF::send_gps_time(crsf_gps_time_t* payload){
-    crsf_gps_time_t* payload_proc = payload;
-    //processed payload
-    payload_proc->year = __bswap16(payload_proc->year);
-    payload_proc->millisecond = __bswap16(payload_proc->millisecond);
+    payload->year = __bswap16(payload->year);
+    payload->millisecond = __bswap16(payload->millisecond);
 
-    send_broadcast_packet(sizeof(crsf_gps_time_t), CRSF_TYPE_GPS_TIME, payload_proc);
+    send_broadcast_packet(sizeof(crsf_gps_time_t), CRSF_TYPE_GPS_TIME, payload);
 }
 
 /**
@@ -73,18 +69,16 @@ void CRSF::send_gps_time(crsf_gps_time_t* payload){
  * @param payload pointer to the gps extended data
  */
 void CRSF::send_gps_extended(crsf_gps_extended_t* payload){
-    crsf_gps_extended_t* payload_proc = payload;
-    //processed payload
-    payload_proc->n_speed = __bswap16(payload_proc->n_speed);
-    payload_proc->e_speed = __bswap16(payload_proc->e_speed);
-    payload_proc->v_speed = __bswap16(payload_proc->v_speed);
-    payload_proc->h_speed_acc = __bswap16(payload_proc->h_speed_acc);
-    payload_proc->track_acc = __bswap16(payload_proc->track_acc);
-    payload_proc->alt_ellipsoid = __bswap16(payload_proc->alt_ellipsoid);
-    payload_proc->h_acc = __bswap16(payload_proc->h_acc);
-    payload_proc->v_acc = __bswap16(payload_proc->v_acc);
+    payload->n_speed = __bswap16(payload->n_speed);
+    payload->e_speed = __bswap16(payload->e_speed);
+    payload->v_speed = __bswap16(payload->v_speed);
+    payload->h_speed_acc = __bswap16(payload->h_speed_acc);
+    payload->track_acc = __bswap16(payload->track_acc);
+    payload->alt_ellipsoid = __bswap16(payload->alt_ellipsoid);
+    payload->h_acc = __bswap16(payload->h_acc);
+    payload->v_acc = __bswap16(payload->v_acc);
 
-    send_broadcast_packet(sizeof(crsf_gps_extended_t), CRSF_TYPE_GPS_EXT, payload_proc);
+    send_broadcast_packet(sizeof(crsf_gps_extended_t), CRSF_TYPE_GPS_EXT, payload);
 }
 
 /**
@@ -93,11 +87,9 @@ void CRSF::send_gps_extended(crsf_gps_extended_t* payload){
  * @param payload pointer to the vertical_speed data
  */
 void CRSF::send_vertical_speed(crsf_vario_t* payload){
-    crsf_vario_t* payload_proc = 0;
-    //processed payload
-    payload_proc->v_speed = __bswap16(payload_proc->v_speed);
+    payload->v_speed = __bswap16(payload->v_speed);
 
-    send_broadcast_packet(sizeof(crsf_vario_t), CRSF_TYPE_VARIO, payload_proc);
+    send_broadcast_packet(sizeof(crsf_vario_t), CRSF_TYPE_VARIO, payload);
 }
 
 /**
@@ -106,13 +98,11 @@ void CRSF::send_vertical_speed(crsf_vario_t* payload){
  * @param payload pointer to the battery data
  */
 void CRSF::send_battery(crsf_battery_t* payload){
-    crsf_battery_t* payload_proc = payload;
-    //processed payload
-    payload_proc->voltage = __bswap16(payload_proc->voltage);
-    payload_proc->current = __bswap16(payload_proc->current);
-    payload_proc->capacity_used = __bswap16(payload_proc->capacity_used) << 8;
+    payload->voltage = __bswap16(payload->voltage);
+    payload->current = __bswap16(payload->current);
+    payload->capacity_used = __bswap16(payload->capacity_used) << 8;
 
-    send_broadcast_packet(sizeof(crsf_battery_t), CRSF_TYPE_BATTERY, payload_proc);
+    send_broadcast_packet(sizeof(crsf_battery_t), CRSF_TYPE_BATTERY, payload);
 }
 
 /**
@@ -121,12 +111,10 @@ void CRSF::send_battery(crsf_battery_t* payload){
  * @param payload pointer to the barometric altitude data
  */
 void CRSF::send_altitute(crsf_altitude_t* payload){
-    crsf_altitude_t* payload_proc = payload;
-    //processed payload
-    payload_proc->altitude = __bswap16(payload_proc->altitude);
-    payload_proc->verticalSpeed = __bswap16(payload_proc->verticalSpeed);
+    payload->altitude = __bswap16(payload->altitude);
+    payload->verticalSpeed = __bswap16(payload->verticalSpeed);
 
-    send_broadcast_packet(sizeof(crsf_altitude_t), CRSF_TYPE_ALTITUDE, payload_proc);
+    send_broadcast_packet(sizeof(crsf_altitude_t), CRSF_TYPE_ALTITUDE, payload);
 }
 
 /**
@@ -135,11 +123,9 @@ void CRSF::send_altitute(crsf_altitude_t* payload){
  * @param payload pointer to the send_airspeed data
  */
 void CRSF::send_airspeed(crsf_airspeed_t* payload){
-    crsf_airspeed_t* payload_proc = payload;
-    //processed payload
-    payload_proc->speed = __bswap16(payload_proc->speed);
+    payload->speed = __bswap16(payload->speed);
 
-    send_broadcast_packet(sizeof(crsf_airspeed_t), CRSF_TYPE_AIRSPEED, payload_proc);
+    send_broadcast_packet(sizeof(crsf_airspeed_t), CRSF_TYPE_AIRSPEED, payload);
 }
 
 /**
@@ -148,11 +134,9 @@ void CRSF::send_airspeed(crsf_airspeed_t* payload){
  * @param payload pointer to Origin Device address
  */
 void CRSF::send_heartbeat(crsf_heartbeat_t* payload){
-    crsf_heartbeat_t* payload_proc = payload;
-    //processed payload
-    payload_proc->origin_address = __bswap16(payload_proc->origin_address);
+    payload->origin_address = __bswap16(payload->origin_address);
 
-    send_broadcast_packet(sizeof(crsf_heartbeat_t), CRSF_TYPE_HEARTBEAT, payload_proc);
+    send_broadcast_packet(sizeof(crsf_heartbeat_t), CRSF_TYPE_HEARTBEAT, payload);
 }
 
 /**
@@ -161,16 +145,14 @@ void CRSF::send_heartbeat(crsf_heartbeat_t* payload){
  * @param payload pointer to the rpm data
  * @param numSensors number of sensors to send
  */
-void CRSF::send_rpm(crsf_rmp_t* payload, uint8_t numSensors){
-    crsf_rmp_t* payload_proc = payload;
-    //processed payload
-    payload_proc->rpm_source_id = __bswap16(payload_proc->rpm_source_id);
+void CRSF::send_rpm(crsf_rmp_t* payload){
+    payload->rpm_source_id = __bswap16(payload->rpm_source_id);
 
-    for(uint8_t i=0; i<numSensors; i++){
-        payload_proc->rpm[i] = __bswap32(payload_proc->rpm[i]);
+    for(uint8_t i=0; i<payload->num_sensors; i++){
+        payload->rpm[i] = __bswap32(payload->rpm[i]);
     }
 
-    send_broadcast_packet(sizeof(crsf_rmp_t), CRSF_TYPE_RPM, payload_proc);
+    send_broadcast_packet((payload->num_sensors*4)+1, CRSF_TYPE_RPM, payload);
 }
 
 /**
@@ -179,17 +161,15 @@ void CRSF::send_rpm(crsf_rmp_t* payload, uint8_t numSensors){
  * @param payload pointer to the temperatur data
  * @param numSensors number of sensors to send
  */
-void CRSF::send_temp(crsf_temp_t* payload, uint8_t numSensors){
-    crsf_temp_t* payload_proc = payload;
-    //processed payload
-    payload_proc->temp_source_id = __bswap16(payload_proc->temp_source_id);
+void CRSF::send_temp(crsf_temp_t* payload){
+    payload->temp_source_id = __bswap16(payload->temp_source_id);
 
-    for(uint8_t i=0; i<numSensors; i++){
-        payload_proc->temperature[i] = __bswap16(payload_proc->temperature[i]);
+    for(uint8_t i=0; i<payload->num_sensors; i++){
+        payload->temperature[i] = __bswap16(payload->temperature[i]);
     }
 
-    //CRSF_send_packet(sizeof(crsf_temp_t), CRSF_TYPE_TEMP, payload_proc);
-    send_broadcast_packet((numSensors*2)+1, CRSF_TYPE_TEMP, payload_proc);
+    //CRSF_send_packet(sizeof(crsf_temp_t), CRSF_TYPE_TEMP, payload);
+    send_broadcast_packet((payload->num_sensors*2)+1, CRSF_TYPE_TEMP, payload);
 }
 
 /**
@@ -198,11 +178,9 @@ void CRSF::send_temp(crsf_temp_t* payload, uint8_t numSensors){
  * @param payload pointer to the attitude data
  */
 void CRSF::send_attitude(crsf_attitude_t* payload){
-    crsf_attitude_t* payload_proc = payload;
-    //processed payload
-    payload_proc->pitch = __bswap16(payload_proc->pitch);
-    payload_proc->roll = __bswap16(payload_proc->roll);
-    payload_proc->yaw = __bswap16(payload_proc->yaw);
+    payload->pitch = __bswap16(payload->pitch);
+    payload->roll = __bswap16(payload->roll);
+    payload->yaw = __bswap16(payload->yaw);
 
-    send_broadcast_packet(sizeof(crsf_attitude_t), CRSF_TYPE_ATTITUDE, payload_proc);
+    send_broadcast_packet(sizeof(crsf_attitude_t), CRSF_TYPE_ATTITUDE, payload);
 }
