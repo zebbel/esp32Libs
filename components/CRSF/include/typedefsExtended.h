@@ -71,6 +71,7 @@ typedef struct __attribute__((packed)){
     const uint8_t min;
     const uint8_t max;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_uint8_t;
 
 typedef struct __attribute__((packed)){
@@ -79,6 +80,7 @@ typedef struct __attribute__((packed)){
     const int8_t min;
     const int8_t max;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_int8_t;
 
 typedef struct __attribute__((packed)){
@@ -87,6 +89,7 @@ typedef struct __attribute__((packed)){
     const uint16_t min;
     const uint16_t max;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_uint16_t;
 
 typedef struct __attribute__((packed)){
@@ -95,6 +98,7 @@ typedef struct __attribute__((packed)){
     const int16_t min;
     const int16_t max;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_int16_t;
 
 typedef struct __attribute__((packed)){
@@ -103,6 +107,7 @@ typedef struct __attribute__((packed)){
     const uint32_t min;
     const uint32_t max;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_uint32_t;
 
 typedef struct __attribute__((packed)){
@@ -111,6 +116,7 @@ typedef struct __attribute__((packed)){
     const int32_t min;
     const int32_t max;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_int32_t;
 
 typedef struct __attribute__((packed)){
@@ -122,6 +128,7 @@ typedef struct __attribute__((packed)){
     const uint8_t decPoint;
     const int32_t stepSize;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_float_t;
 
 typedef struct __attribute__((packed)){
@@ -132,22 +139,26 @@ typedef struct __attribute__((packed)){
     const uint8_t max;
     const uint8_t def;
     const char* const unit;
+    bool hidden;
 }crsf_parameter_text_selection_t;
 
 typedef struct __attribute__((packed)){
     const char* name;
     const char* const value;
     const uint8_t strLen;
+    bool hidden;
 }crsf_parameter_string_t;
 
 typedef struct __attribute__((packed)){
     const char* name;
     //uint8_t *children;
+    bool hidden;
 }crsf_parameter_folder_t;
 
 typedef struct __attribute__((packed)){
     const char* name;
     const char* const info;
+    bool hidden;
 }crsf_parameter_info_t;
 
 typedef enum : uint8_t{
@@ -167,4 +178,5 @@ typedef struct __attribute__((packed)){
     uint8_t timeout;
     const char* const info;
     crsf_command_status_t (*callback)();
+    bool hidden;
 }crsf_parameter_command_t;

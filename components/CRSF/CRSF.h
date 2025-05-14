@@ -17,7 +17,7 @@
 #include "include/typedefsBroadcast.h"
 #include "include/typedefsExtended.h"
 
-static crsf_parameter_folder_t rootFolder = {.name = "ROOT"};
+static crsf_parameter_folder_t rootFolder = {.name = "ROOT", .hidden = 0};
 
 class CRSF{
     private:
@@ -40,9 +40,10 @@ class CRSF{
         void send_device_info(uint8_t dest, uint8_t src);
         void send_parameter(uint8_t dest, uint8_t src, crsf_parameter_t* parameter);
 
-        void handleParamterSettings(crsf_extended_t *packet, crsf_parameter_t *parameter);
-        void handelParameterWrite(uint8_t dest, crsf_parameter_t *parameter, void *payload);
-        void handelCommand(crsf_parameter_t *parameter, uint8_t *status, uint8_t dest);
+        void handle_parameter_common(crsf_extended_t *packet, crsf_parameter_t *parameter, bool hidden);
+        void handle_paramter_settings(crsf_extended_t *packet, crsf_parameter_t *parameter);
+        void handel_parameter_write(uint8_t dest, crsf_parameter_t *parameter, void *payload);
+        void handel_command(crsf_parameter_t *parameter, uint8_t *status, uint8_t dest);
 
         void register_parameter(crsf_value_type_e dataType, int *parameterPointer);
 

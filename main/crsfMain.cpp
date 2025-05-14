@@ -21,7 +21,10 @@ crsf_command_status_t commandCallback(){
 
 void crsfMain(){
     crsf_channels_t channels;
-    crsf_altitude_t altitute = {1000, 0};
+    crsf_temp_t tempSensor = {
+        .temp_source_id = 0,
+        .temperature = {255}
+    };
 
     crsf.init(UART_NUM_1, "ZSM", &channels);
 
@@ -30,7 +33,8 @@ void crsfMain(){
         .value = &uint8Data,
         .min = 0,
         .max = 100,
-        .unit = "Hz"
+        .unit = "Hz",
+        .hidden = 0
     };
     crsf.register_parameter(&uint8Parameter);
 
@@ -39,7 +43,8 @@ void crsfMain(){
         .value = &int8Data,
         .min = -100,
         .max = 100,
-        .unit = "Hz"
+        .unit = "Hz",
+        .hidden = 0
     };
     crsf.register_parameter(&int8Parameter);
 
@@ -48,7 +53,8 @@ void crsfMain(){
         .value = &uint16Data,
         .min = 0,
         .max = 100,
-        .unit = "Hz"
+        .unit = "Hz",
+        .hidden = 0
     };
     crsf.register_parameter(&uint16Parameter);
 
@@ -57,7 +63,8 @@ void crsfMain(){
         .value = &int16Data,
         .min = -100,
         .max = 100,
-        .unit = "Hz"
+        .unit = "Hz",
+        .hidden = 0
     };
     crsf.register_parameter(&int16Parameter);
 
@@ -67,7 +74,8 @@ void crsfMain(){
         .value = &uint32Data,
         .min = 0,
         .max = 100,
-        .unit = "Hz"
+        .unit = "Hz",
+        .hidden = 0
     };
     crsf.register_parameter(&uint32Parameter);
 
@@ -76,7 +84,8 @@ void crsfMain(){
         .value = &int32Data,
         .min = -100,
         .max = 100,
-        .unit = "Hz"
+        .unit = "Hz",
+        .hidden = 0
     };
     crsf.register_parameter(&int32Parameter);
     */
@@ -89,41 +98,47 @@ void crsfMain(){
         .def = 0,
         .decPoint = 1,
         .stepSize = 1,
-        .unit = "Hz"
+        .unit = "Hz",
+        .hidden = 0
     };
     crsf.register_parameter(&floatParameter);
 
-    crsf_parameter_folder_t folderParameter = {
-        .name = "Folder"
-    };
-    crsf.register_parameter(&folderParameter);
-
     crsf_parameter_text_selection_t textSelectParamter = {
-        .name = "TextSe",
-        .options = "ja;nein",
+        .name = "choose",
+        .options = "show;hide",
         .value = &textSelelctData,
         .min = 0,
         .max = 1,
         .def = 0,
-        .unit = "  "
+        .unit = " ",
+        .hidden = 0
     };
-    crsf.register_parameter(&textSelectParamter, folderParameter);
+    crsf.register_parameter(&textSelectParamter);
+
+    crsf_parameter_folder_t folderParameter = {
+        .name = "Folder",
+        .hidden = 0
+    };
+    crsf.register_parameter(&folderParameter);
 
     crsf_parameter_string_t stringParameter = {
         .name = "String",
         .value = "Test",
-        .strLen = 30
+        .strLen = 30,
+        .hidden = 0
     };
     crsf.register_parameter(&stringParameter, folderParameter);
 
     crsf_parameter_info_t infoParameter = {
         .name = "Info  ",
-        .info = "juup"
+        .info = "juup",
+        .hidden = 0
     };
     crsf.register_parameter(&infoParameter, folderParameter);
 
     crsf_parameter_folder_t subFolderParameter = {
-        .name = "Sub Folder"
+        .name = "Sub Folder",
+        .hidden = 0
     };
     crsf.register_parameter(&subFolderParameter, folderParameter);
 
@@ -132,7 +147,8 @@ void crsfMain(){
         .status = CRSF_COMMAND_READY,
         .timeout = 100,
         .info = "print Data",
-        .callback = &commandCallback
+        .callback = &commandCallback,
+        .hidden = 0
     };
     crsf.register_parameter(&commandParameter, subFolderParameter);
 
@@ -143,8 +159,10 @@ void crsfMain(){
 
         if((lastSend + 1000) < esp_timer_get_time()){
             lastSend = esp_timer_get_time();
-            crsf.send_altitute(&altitute);
+            crsf.send_temp(&tempSensor, 1);
         }
+
+        folderParameter.hidden = textSelelctData;
 
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }

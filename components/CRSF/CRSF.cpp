@@ -32,6 +32,8 @@ void CRSF::init(uart_port_t uartNumVal, const char* name){
     uart_config.flow_ctrl = UART_HW_FLOWCTRL_DISABLE;
     uart_config.rx_flow_ctrl_thresh = 0;
     uart_config.source_clk = UART_SCLK_DEFAULT;
+    uart_config.flags.allow_pd = 0;
+    uart_config.flags.backup_before_sleep = 0;
     uart_param_config(uartNum, &uart_config);
 
     switch (uartNum){
@@ -135,20 +137,18 @@ void CRSF::rx_task(void *pvParameter){
                                 xSemaphoreGive(crsf->xMutex);
                             }
                         }else{
-                            if(frame.type == CRSF_TYPE_PING){
-                                if(frame.payload[0] == 0x00 || frame.payload[0] == 0xC8){
-                                    //ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
-                                    crsf->send_device_info(frame.payload[1], 0xC8);
-                                }
+                            if(frame.type == CRSF_TYPE_PING && (frame.payload[0] == 0x00 || frame.payload[0] == 0xC8)){
+                                //ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
+                                crsf->send_device_info(frame.payload[1], 0xC8);
                             }else if(frame.type == CRSF_FRAMETYPE_PARAMETER_READ && frame.payload[0] == 0xC8){
-                                //ESP_LOGI("crsf", "respond to parameter read from: 0x%X, parameter: %i, chunk: %i", frame.payload[1], frame.payload[2], frame.payload[3]);
+                                ESP_LOGI("crsf", "respond to parameter read from: 0x%X, parameter: %i, chunk: %i", frame.payload[1], frame.payload[2], frame.payload[3]);
                                 if(frame.payload[2] < crsf->deviceInfo.parameterTotal){
                                     crsf->send_parameter(frame.payload[1], 0xC8, &crsf->parameters[frame.payload[2]]);
                                 }
                             }else if(frame.type == CRSF_FRAMETYPE_PARAMETER_WRITE && frame.payload[0] == 0xC8){
                                 //ESP_LOGI("crsf", "parameter write: parameter: 0x%X, value: %i", frame.payload[2], frame.payload[3]);
                                 if(frame.payload[2] >= 1 && frame.payload[2] < crsf->deviceInfo.parameterTotal){
-                                    crsf->handelParameterWrite(frame.payload[1], &crsf->parameters[frame.payload[2]], &frame.payload[3]);
+                                    crsf->handel_parameter_write(frame.payload[1], &crsf->parameters[frame.payload[2]], &frame.payload[3]);
                                 }
                             }else{
                                 ESP_LOGI("crsf", "type: 0x%X, dest: 0x%X, src: 0x%X", frame.type, frame.payload[0], frame.payload[1]);
