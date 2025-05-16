@@ -1,19 +1,21 @@
 #include <stdio.h>
 
 //#include "buttonMain.cpp"
-#include "crsfMain.cpp"
+//#include "crsfMain.cpp"
 //#include "imuMain.cpp"
 //#include "pidMain.cpp"
 //#include "servoMain.cpp"
+#include "SRXL2Main.cpp"
 //#include "telemtryMain.cpp"
 //#include "zBusMain.cpp"
 
 extern "C"  void app_main(void){
     //buttonMain();
-    crsfMain();
+    //crsfMain();
     //imuMain();
     //pidMain();
     //servoMain();
+    SRXL2Main();
     //telemetryMain();
     //zBusMain();
 }

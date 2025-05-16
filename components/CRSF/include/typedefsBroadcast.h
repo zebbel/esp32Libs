@@ -191,7 +191,7 @@ typedef struct __attribute__((packed)){
 
 
 /**
- * @brief struct for tempertur data telemetry
+ * @brief struct for rpm data telemetry
  * 
  * @param rpm_source_id uint8 Identifies the source of the RPM data (e.g., 0 = Motor 1, 1 = Motor 2, etc.)
  * @param rpm[20] int32 1 - 19 RPM values with negative ones representing the motor spinning in reverse
@@ -204,7 +204,7 @@ typedef struct __attribute__((packed)){
 } crsf_rmp_t;
 
 /**
- * @brief struct for tempertur data telemetry
+ * @brief struct for temperatur data telemetry
  * 
  * @param temp_source_id uint8 Identifies the source of the temperature data
  * @param temperature[20] int16 up to 20 temperature values in deci-degree (tenths of a degree)

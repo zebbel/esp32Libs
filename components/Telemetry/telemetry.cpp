@@ -26,7 +26,7 @@ void Telemetry::initUarts(){
             break;
         }
         case TELEMETRY_BUS_SRXL2:{
-            SRXL2::init(&sensor, UART_NUM_0, &sensorQueue, &channelQueue);
+            //SRXL2::init(&sensor, UART_NUM_0, &sensorQueue, &channelQueue);
             break;
         }
         case TELEMETRY_BUS_HOBBYWING:{
@@ -47,7 +47,7 @@ void Telemetry::initUarts(){
             break;
         }
         case TELEMETRY_BUS_SRXL2:{
-            SRXL2::init(&sensor, UART_NUM_1, &sensorQueue, &channelQueue);
+            //SRXL2::init(&sensor, UART_NUM_1, &sensorQueue, &channelQueue);
             break;
         }
         case TELEMETRY_BUS_HOBBYWING:{
@@ -68,7 +68,7 @@ void Telemetry::initUarts(){
             break;
         }
         case TELEMETRY_BUS_SRXL2:{
-            SRXL2::init(&sensor, UART_NUM_2, &sensorQueue, &channelQueue);
+            //SRXL2::init(&sensor, UART_NUM_2, &sensorQueue, &channelQueue);
             break;
         }
         case TELEMETRY_BUS_HOBBYWING:{
