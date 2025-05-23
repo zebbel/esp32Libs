@@ -11,7 +11,7 @@ crsf_battery_t battery;
 
 void SRXL2Main(){
     crsf.init(UART_NUM_1, "ZSM", &channels);
-    srxl2.init(UART_NUM_1);
+    srxl2.init(UART_NUM_2);
 
     uint64_t lastSend = esp_timer_get_time();
 
