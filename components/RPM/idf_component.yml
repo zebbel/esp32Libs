@@ -3,5 +3,6 @@ dependencies:
   idf:
     version: '>=4.4'
 
-description: SRXL2
+    
+description: RPM
 version: 1.0.0

@@ -6,10 +6,8 @@ Hobbywing::Hobbywing(){
 
 }
 
-void Hobbywing::init(Sensor *sensorInst, uart_port_t uartNumVal, QueueHandle_t *queue){
-    sensor = sensorInst;
+void Hobbywing::init(uart_port_t uartNumVal){
     uartNum = uartNumVal;
-    extern_queue = queue;
 
     ESP_LOGI(hobbywingTag, "init iBus2 on uart%d", uartNum);
 
@@ -68,7 +66,6 @@ void Hobbywing::uart_event_task(void *pvParameter){
                                     case 0x2C:
                                         if(buffer[5] == 0x24){
                                             hobbywing->connected = true;
-                                            hobbywing->addSensors();
                                         }
                                         if(buffer[5] == 0x25) hobbywing->sendPacket(hobbywing->getEscProfile, 5);
                                         break;
@@ -110,6 +107,7 @@ void Hobbywing::loopTask(void *pvParameter){
 }
 
 void Hobbywing::handelTelemetry(uint8_t *buffer){
+    /*
     sensor_t *sensorInst;
 
     if(sensor->sensors.find("motorRPM") != sensor->sensors.end()){
@@ -141,6 +139,7 @@ void Hobbywing::handelTelemetry(uint8_t *buffer){
         sensorInst->value = (buffer[21]);
         xQueueSend(*extern_queue, sensorInst, portMAX_DELAY);
     }
+    */
 
     escconnectedTimeout = xTaskGetTickCount();
 	connected = true;
@@ -179,16 +178,6 @@ void Hobbywing::sendEscAvailable(){
 		}
 	}
 }
-
-void Hobbywing::addSensors(){
-    ESP_LOGI(hobbywingTag, "add SRXL2 esc sensors");
-    sensor->addSensor(SENSOR_FUNCTION_BAT_VOLT, SENSOR_UNIT_VOLTS, 1, "batVolt");
-    sensor->addSensor(SENSOR_FUNCTION_MOTOR_CURRENT, SENSOR_UNIT_AMPS, 1, "motorA");
-    sensor->addSensor(SENSOR_FUNCTION_MOTOR_RPM, SENSOR_UNIT_RPM, 0, "motorRPM");
-    sensor->addSensor(SENSOR_FUNCTION_ESC_TEMP, SENSOR_UNIT_CELSIUS, 0, "escT");
-    sensor->addSensor(SENSOR_FUNCTION_MOTOR_TEMP, SENSOR_UNIT_CELSIUS, 0, "motorT");
-}
-
 
 void Hobbywing::initCrc16Tab(){
 	uint16_t crc;

@@ -3,10 +3,9 @@
 
 #include "driver/uart.h"
 #include <string.h>
+#include "esp_log.h"
 
-#include "sensor.h"
-
-#define HOBBYWING_UART_BUFFER_SIZE      40
+#define     HOBBYWING_UART_BUFFER_SIZE                          40
 
 #define     HOBBYWING_POLYNOM                                   0xA001
 
@@ -21,9 +20,7 @@
 
 class Hobbywing{
     private:
-        Sensor *sensor;
         uart_port_t uartNum;
-        QueueHandle_t *extern_queue;
         QueueHandle_t uart_queue;
 
         static void uart_event_task(void *pvParameter);
@@ -38,8 +35,6 @@ class Hobbywing{
         uint8_t availableRetryCounter = 10;    
         void sendEscAvailable();
 
-        void addSensors();
-
         uint16_t crcTab16[256];
         void initCrc16Tab();
         uint8_t getChecksum(uint8_t *buffer, uint8_t len, bool send);
@@ -47,7 +42,7 @@ class Hobbywing{
 
     public:
         Hobbywing();
-        void init(Sensor *sensorInst, uart_port_t uartNumVal, QueueHandle_t *queue);
+        void init(uart_port_t uartNumVal);
 
         bool connected = false;
         uint16_t throttle;

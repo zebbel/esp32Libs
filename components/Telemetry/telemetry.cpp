@@ -30,7 +30,7 @@ void Telemetry::initUarts(){
             break;
         }
         case TELEMETRY_BUS_HOBBYWING:{
-            Hobbywing::init(&sensor, UART_NUM_0, &sensorQueue);
+            //Hobbywing::init(&sensor, UART_NUM_0, &sensorQueue);
             break;
         }
         default:
@@ -51,7 +51,7 @@ void Telemetry::initUarts(){
             break;
         }
         case TELEMETRY_BUS_HOBBYWING:{
-            Hobbywing::init(&sensor, UART_NUM_1, &sensorQueue);
+            //Hobbywing::init(&sensor, UART_NUM_1, &sensorQueue);
             break;
         }
         default:
@@ -72,7 +72,7 @@ void Telemetry::initUarts(){
             break;
         }
         case TELEMETRY_BUS_HOBBYWING:{
-            Hobbywing::init(&sensor, UART_NUM_2, &sensorQueue);
+            //Hobbywing::init(&sensor, UART_NUM_2, &sensorQueue);
             break;
         }
         default:

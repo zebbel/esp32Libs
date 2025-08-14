@@ -9,6 +9,7 @@ idf_component_register(
         "SRXL2Main.cpp"
         "telemtryMain.cpp"
         "zBusMain.cpp"
+        "rpmMain.cpp"
     INCLUDE_DIRS
         "."
 )
