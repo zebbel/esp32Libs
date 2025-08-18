@@ -113,16 +113,34 @@ void RPM::configRMT(){
 
 }
 
+void RPM::start_100ms(){
+    ESP_ERROR_CHECK(rmt_disable(tx_chan));
+    ESP_ERROR_CHECK(rmt_enable(tx_chan));
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_100ms, sizeof(raw_symbols_100ms), &tx_config));
+}
+
 void RPM::start_50ms(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_50ms, sizeof(raw_symbols_50ms), &tx_config));
 }
 
-void RPM::start_100ms(){
+void RPM::start_25ms(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
-    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_100ms, sizeof(raw_symbols_100ms), &tx_config));
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_25ms, sizeof(raw_symbols_25ms), &tx_config));
+}
+
+void RPM::start_20ms(){
+    ESP_ERROR_CHECK(rmt_disable(tx_chan));
+    ESP_ERROR_CHECK(rmt_enable(tx_chan));
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_20ms, sizeof(raw_symbols_20ms), &tx_config));
+}
+
+void RPM::start_10ms(){
+    ESP_ERROR_CHECK(rmt_disable(tx_chan));
+    ESP_ERROR_CHECK(rmt_enable(tx_chan));
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_10ms, sizeof(raw_symbols_10ms), &tx_config));
 }
 
 void RPM::configIRQ(){
