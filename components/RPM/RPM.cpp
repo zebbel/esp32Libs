@@ -79,31 +79,50 @@ void RPM::configRMT(){
         .intr_priority = 0,
         .flags = { .invert_out = 0, .with_dma = 0, .io_loop_back = 1, .io_od_mode = 0, .allow_pd = 0 }
     };
-    rmt_channel_handle_t tx_chan = NULL;
+    tx_chan = NULL;
     ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_chan_cfg, &tx_chan));
 
     // 2) Copy-Encoder erstellen
     rmt_copy_encoder_config_t encoder_cfg = {};
-    rmt_encoder_handle_t encoder = NULL;
+    encoder = NULL;
     ESP_ERROR_CHECK(rmt_new_copy_encoder(&encoder_cfg, &encoder));
 
     // 3) Kanal aktivieren
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
+    /*
     // 4) Pattern erstellen (HIGH in 15-Bit Segmenten + LOW)
     rmt_symbol_word_t raw_symbols[] = {
         {.duration0 = 30000, .level0 = 1, .duration1 = 19990, .level1 = 1},
         {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},
     };
 
+    rmt_symbol_word_t raw_symbols[] = {
+        {.duration0 = 5000, .level0 = 1, .duration1 = 19990, .level1 = 1},
+        {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},
+    };
+    */
+
     // 5) Endlos-Wiederholung konfigurieren
-    rmt_transmit_config_t tx_config = {
+    tx_config = {
         .loop_count = -1, // -1 = unendlich
         .flags = { .eot_level = 0, .queue_nonblocking = 0 }
     };
 
-    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
+    //ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 
+}
+
+void RPM::start_50ms(){
+    ESP_ERROR_CHECK(rmt_disable(tx_chan));
+    ESP_ERROR_CHECK(rmt_enable(tx_chan));
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_50ms, sizeof(raw_symbols_50ms), &tx_config));
+}
+
+void RPM::start_100ms(){
+    ESP_ERROR_CHECK(rmt_disable(tx_chan));
+    ESP_ERROR_CHECK(rmt_enable(tx_chan));
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_100ms, sizeof(raw_symbols_100ms), &tx_config));
 }
 
 void RPM::configIRQ(){

@@ -15,13 +15,27 @@ class RPM{
 
         RPM();
         void init(gpio_num_t sensorPin, gpio_num_t rmtPin, uint16_t pulsesPerRev);
+        void start_100ms();
+        void start_50ms();
         float getRpm();
         uint16_t getCount();
     private:
+        rmt_symbol_word_t raw_symbols_50ms[2] = {
+            {.duration0 = 5000, .level0 = 1, .duration1 = 19990, .level1 = 1},
+            {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},
+        };
+        rmt_symbol_word_t raw_symbols_100ms[2] = {
+        {.duration0 = 30000, .level0 = 1, .duration1 = 19990, .level1 = 1},
+        {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},
+    };
+
         int counter = 0;
         float rpm = 0.0;
 
         pcnt_unit_handle_t pcnt_unit = nullptr;
+        rmt_transmit_config_t tx_config;
+        rmt_channel_handle_t tx_chan;
+        rmt_encoder_handle_t encoder;
 
         gpio_num_t sensorGPIO;
         gpio_num_t rmtGPIO;
