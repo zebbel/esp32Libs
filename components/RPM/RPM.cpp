@@ -113,34 +113,59 @@ void RPM::configRMT(){
 
 }
 
-void RPM::start_100ms(){
+void RPM::start_10Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
-    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_100ms, sizeof(raw_symbols_100ms), &tx_config));
+
+    raw_symbols->duration0 = 30000;
+    raw_symbols->level0 = 1;
+    raw_symbols->duration1 = 19990;
+    raw_symbols->level1 = 1;
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_50ms(){
+void RPM::start_20Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
-    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_50ms, sizeof(raw_symbols_50ms), &tx_config));
+
+    raw_symbols->duration0 = 5000;
+    raw_symbols->level0 = 1;
+    raw_symbols->duration1 = 19990;
+    raw_symbols->level1 = 1;
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_25ms(){
+void RPM::start_40Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
-    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_25ms, sizeof(raw_symbols_25ms), &tx_config));
+
+    raw_symbols->duration0 = 12490;
+    raw_symbols->level0 = 1;
+    raw_symbols->duration1 = 0;
+    raw_symbols->level1 = 0;
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_20ms(){
+void RPM::start_50Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
-    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_20ms, sizeof(raw_symbols_20ms), &tx_config));
+
+    raw_symbols->duration0 = 9990;
+    raw_symbols->level0 = 1;
+    raw_symbols->duration1 = 0;
+    raw_symbols->level1 = 0;
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_10ms(){
+void RPM::start_100Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
-    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols_10ms, sizeof(raw_symbols_10ms), &tx_config));
+
+    raw_symbols->duration0 = 4990;
+    raw_symbols->level0 = 1;
+    raw_symbols->duration1 = 0;
+    raw_symbols->level1 = 0;
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
 void RPM::configIRQ(){

@@ -15,25 +15,16 @@ class RPM{
 
         RPM();
         void init(gpio_num_t sensorPin, gpio_num_t rmtPin, uint16_t pulsesPerRev);
-        void start_100ms();
-        void start_50ms();
-        void start_25ms();
-        void start_20ms();
-        void start_10ms();
+        void start_10Hz();
+        void start_20Hz();
+        void start_40Hz();
+        void start_50Hz();
+        void start_100Hz();
         float getRpm();
         uint16_t getCount();
     private:
-        //100Hz
-        rmt_symbol_word_t raw_symbols_10ms[2] = {{.duration0 = 4990, .level0 = 1, .duration1 = 0, .level1 = 1}, {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},};
-        //50Hz
-        rmt_symbol_word_t raw_symbols_20ms[2] = {{.duration0 = 9990, .level0 = 1, .duration1 = 0, .level1 = 1}, {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},};
-        //40Hz
-        rmt_symbol_word_t raw_symbols_25ms[2] = {{.duration0 = 12490, .level0 = 1, .duration1 = 0, .level1 = 1}, {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},};
-        //20Hz
-        rmt_symbol_word_t raw_symbols_50ms[2] = {{.duration0 = 5000, .level0 = 1, .duration1 = 19990, .level1 = 1}, {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},};
-        //10Hz
-        rmt_symbol_word_t raw_symbols_100ms[2] = {{.duration0 = 30000, .level0 = 1, .duration1 = 19990, .level1 = 1}, {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},};
-
+        rmt_symbol_word_t raw_symbols[2];
+        
         int counter = 0;
         float rpm = 0.0;
 
