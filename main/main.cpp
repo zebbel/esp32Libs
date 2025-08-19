@@ -9,7 +9,8 @@
 //#include "SRXL2Main.cpp"
 //#include "telemtryMain.cpp"
 //#include "zBusMain.cpp"
-#include "rpmMain.cpp"
+//#include "rpmMain.cpp"
+#include "rpm2Main.cpp"
 
 extern "C" void app_main(void){
     //buttonMain();
@@ -21,5 +22,6 @@ extern "C" void app_main(void){
     //SRXL2Main();
     //telemetryMain();
     //zBusMain();
-    rpmMain();
+    //rpmMain();
+    rpm2Main();
 }
