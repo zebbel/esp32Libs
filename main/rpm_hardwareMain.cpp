@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "RPM.h"
+#include "RPM2.h"
 
 static const char *TAG = "rpm";
 
@@ -11,7 +11,7 @@ static const char *TAG = "rpm";
 #define WHEEL_DIAMETER_M    0.11f      // 110 mm in Meter
 
 
-RPM rpmSensor;
+RPM2 rpmSensor;
 
 void rpmMain(){
     rpmSensor.init(PULSE_GPIO, RMT_GPIO, PULSES_PER_REV);

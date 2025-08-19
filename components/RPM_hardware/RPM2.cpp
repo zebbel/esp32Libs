@@ -1,19 +1,19 @@
-#include "RPM.h"
+#include "RPM2.h"
 
 // Interrupt-Handler
-void IRAM_ATTR RPM::gpio_isr_handler(void* arg){
-    RPM* rpmClass = reinterpret_cast<RPM*>(arg); //obtain the instance pointer
+void IRAM_ATTR RPM2::gpio_isr_handler(void* arg){
+    RPM2* rpmClass = reinterpret_cast<RPM2*>(arg); //obtain the instance pointer
     ESP_ERROR_CHECK(pcnt_unit_get_count(rpmClass->pcnt_unit, &rpmClass->counter));
     ESP_ERROR_CHECK(pcnt_unit_clear_count(rpmClass->pcnt_unit));
 
     rpmClass->newValue = true;
 }
 
-RPM::RPM(){
+RPM2::RPM2(){
     
 }
 
-void RPM::init(gpio_num_t sensorPin, gpio_num_t rmtPin, uint16_t pulsesPerRev){
+void RPM2::init(gpio_num_t sensorPin, gpio_num_t rmtPin, uint16_t pulsesPerRev){
     sensorGPIO = sensorPin;
     rmtGPIO = rmtPin;
     pulsesPerRevolution = pulsesPerRev;
@@ -23,19 +23,19 @@ void RPM::init(gpio_num_t sensorPin, gpio_num_t rmtPin, uint16_t pulsesPerRev){
     configIRQ();
 }
 
-uint16_t RPM::getCount(){
+uint16_t RPM2::getCount(){
     newValue = false;
     return counter;
 }
 
-float RPM::getRpm(){
+float RPM2::getRpm(){
     newValue = false;
     float revs = static_cast<float>(counter) / pulsesPerRevolution;
-    rpm  = revs * (60000.0f / 100);
-    return rpm;
+    RPM2  = revs * (60000.0f / 100);
+    return RPM2;
 }
 
-void RPM::configPCNT(){
+void RPM2::configPCNT(){
     pcnt_unit_config_t unit_config = {
         .low_limit = -2000,
         .high_limit = 2000,
@@ -68,7 +68,7 @@ void RPM::configPCNT(){
     ESP_ERROR_CHECK(pcnt_unit_start(pcnt_unit));
 }
 
-void RPM::configRMT(){
+void RPM2::configRMT(){
     // 1) RMT TX-Kanal konfigurieren
     rmt_tx_channel_config_t tx_chan_cfg = {
         .gpio_num = rmtGPIO,
@@ -101,7 +101,7 @@ void RPM::configRMT(){
     };
 }
 
-void RPM::start_10Hz(){
+void RPM2::start_10Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
@@ -112,7 +112,7 @@ void RPM::start_10Hz(){
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_20Hz(){
+void RPM2::start_20Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
@@ -123,7 +123,7 @@ void RPM::start_20Hz(){
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_40Hz(){
+void RPM2::start_40Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
@@ -134,7 +134,7 @@ void RPM::start_40Hz(){
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_50Hz(){
+void RPM2::start_50Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
@@ -145,7 +145,7 @@ void RPM::start_50Hz(){
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_75Hz(){
+void RPM2::start_75Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
@@ -153,7 +153,7 @@ void RPM::start_75Hz(){
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::start_100Hz(){
+void RPM2::start_100Hz(){
     ESP_ERROR_CHECK(rmt_disable(tx_chan));
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
@@ -164,7 +164,7 @@ void RPM::start_100Hz(){
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 
-void RPM::configIRQ(){
+void RPM2::configIRQ(){
     // 1. aktiviere interrupt an gpio
     gpio_set_intr_type(rmtGPIO, GPIO_INTR_NEGEDGE);
 
@@ -172,5 +172,5 @@ void RPM::configIRQ(){
     gpio_install_isr_service(0);
 
     // 3. ISR-Handler für GPIO4 registrieren
-    gpio_isr_handler_add(rmtGPIO, &RPM::gpio_isr_handler, this);
+    gpio_isr_handler_add(rmtGPIO, &RPM2::gpio_isr_handler, this);
 }

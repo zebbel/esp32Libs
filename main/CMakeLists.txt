@@ -9,7 +9,6 @@ idf_component_register(
         "SRXL2Main.cpp"
         "telemtryMain.cpp"
         "zBusMain.cpp"
-        "rpm_hardwareMain.cpp"
         "rpm_interruptMain.cpp"
        
     INCLUDE_DIRS

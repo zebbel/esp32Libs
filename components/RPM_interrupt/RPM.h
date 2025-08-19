@@ -1,5 +1,5 @@
-#ifndef RPM2_H
-#define RPM2_H
+#ifndef RPM_H
+#define RPM_H
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"

@@ -42,10 +42,10 @@ private:
     float y;
 };
 
-void rpm2Main(){
+void rpmMain(){
     rpmSensor.init(PULSE_GPIO, PULSES_PER_REV);
 
-    float cutoff = 5.0f;       // Grenzfrequenz in Hz
+    float cutoff = 3.0f;       // Grenzfrequenz in Hz
     float fs = 100.0f;         // Abtastrate in Hz
     LowPassFilter lpf(cutoff, fs);
 

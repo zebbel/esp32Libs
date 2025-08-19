@@ -13,7 +13,7 @@ class RPM{
     public:
         bool newValue = false;
 
-        RPM();
+        RPM2();
         void init(gpio_num_t sensorPin, gpio_num_t rmtPin, uint16_t pulsesPerRev);
         void start_10Hz();
         void start_20Hz();
