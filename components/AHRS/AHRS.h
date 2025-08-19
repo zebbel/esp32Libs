@@ -45,8 +45,9 @@ class AHRS: private LSM9DS1{
 
         FusionQuaternion zeroOffsetQuaternion;
 
+    public:
         uint64_t lastTimeUpdateIMU = esp_timer_get_time();
-
+    private:
         xyzFloat getAverageAccValues(uint16_t samples);
 
     public:
@@ -66,6 +67,7 @@ class AHRS: private LSM9DS1{
         FusionVector gyroscopeCalibrated;
         FusionVector accelerometerCalibrated;
         FusionVector magnetometerCalibrated;
+        bool newData;
 
         bool callibrationNext;
 

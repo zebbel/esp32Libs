@@ -90,27 +90,15 @@ void RPM::configRMT(){
     // 3) Kanal aktivieren
     ESP_ERROR_CHECK(rmt_enable(tx_chan));
 
-    /*
     // 4) Pattern erstellen (HIGH in 15-Bit Segmenten + LOW)
-    rmt_symbol_word_t raw_symbols[] = {
-        {.duration0 = 30000, .level0 = 1, .duration1 = 19990, .level1 = 1},
-        {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},
-    };
-
-    rmt_symbol_word_t raw_symbols[] = {
-        {.duration0 = 5000, .level0 = 1, .duration1 = 19990, .level1 = 1},
-        {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0},
-    };
-    */
+    raw_symbols[0] = {.duration0 = 30000, .level0 = 1, .duration1 = 19990, .level1 = 1};
+    raw_symbols[1] = {.duration0 = 10, .level0 = 0, .duration1 = 0, .level1 = 0};
 
     // 5) Endlos-Wiederholung konfigurieren
     tx_config = {
         .loop_count = -1, // -1 = unendlich
         .flags = { .eot_level = 0, .queue_nonblocking = 0 }
     };
-
-    //ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
-
 }
 
 void RPM::start_10Hz(){
@@ -154,6 +142,14 @@ void RPM::start_50Hz(){
     raw_symbols->level0 = 1;
     raw_symbols->duration1 = 0;
     raw_symbols->level1 = 0;
+    ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
+}
+
+void RPM::start_75Hz(){
+    ESP_ERROR_CHECK(rmt_disable(tx_chan));
+    ESP_ERROR_CHECK(rmt_enable(tx_chan));
+
+    raw_symbols[0] = {.duration0 = 6640, .level0 = 1, .duration1 = 0, .level1 = 0};
     ESP_ERROR_CHECK(rmt_transmit(tx_chan, encoder, raw_symbols, sizeof(raw_symbols), &tx_config));
 }
 

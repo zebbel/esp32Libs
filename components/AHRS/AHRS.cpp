@@ -197,6 +197,9 @@ void AHRS::updateNoMag(){
 
         accelerometerCalibrated = FusionCalibrationInertial({accValue.x, accValue.y, accValue.z}, accelerometerMisalignment, accelerometerSensitivity, accelerometerOffset);
         accelerometerCalibrated.axis.x = -accelerometerCalibrated.axis.x;
+        newData = true;
+    }else{
+        newData = false;
     }
 
     // Calculate delta time (in seconds) to account for gyroscope sample clock error

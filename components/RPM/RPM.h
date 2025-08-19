@@ -19,6 +19,7 @@ class RPM{
         void start_20Hz();
         void start_40Hz();
         void start_50Hz();
+        void start_75Hz();
         void start_100Hz();
         float getRpm();
         uint16_t getCount();
