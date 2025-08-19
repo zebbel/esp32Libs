@@ -8,11 +8,11 @@
 #include "driver/gpio.h"
 #include "esp_timer.h"
 
-class RPM2{
+class RPM{
     public:
         float dt_s;
         float rpm;
-        RPM2();
+        RPM();
         void init(gpio_num_t sensorPin, uint16_t pulsesPerRev);
         void update();
         

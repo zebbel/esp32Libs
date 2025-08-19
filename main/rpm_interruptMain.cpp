@@ -5,7 +5,7 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "esp_timer.h"
-#include "RPM2.h"
+#include "RPM.h"
 
 static const char *TAG = "rpm";
 
@@ -16,7 +16,7 @@ static const char *TAG = "rpm";
 #define WHEEL_DIAMETER_M    0.11f      // 110 mm in Meter
 
 
-RPM2 rpmSensor;
+RPM rpmSensor;
 
 class LowPassFilter {
 public:

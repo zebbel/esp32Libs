@@ -1,8 +1,8 @@
-#include "RPM2.h"
+#include "RPM.h"
 
 // Interrupt-Handler
-void IRAM_ATTR RPM2::gpio_isr_handler(void* arg){
-    RPM2* rpmClass = reinterpret_cast<RPM2*>(arg); //obtain the instance pointer
+void IRAM_ATTR RPM::gpio_isr_handler(void* arg){
+    RPM* rpmClass = reinterpret_cast<RPM*>(arg); //obtain the instance pointer
     uint64_t now = esp_timer_get_time(); // Zeit in Mikrosekunden
     if(now - rpmClass->last_time > 300){
         rpmClass->delta_time = now - rpmClass->last_time;
@@ -10,11 +10,11 @@ void IRAM_ATTR RPM2::gpio_isr_handler(void* arg){
     }
 }
 
-RPM2::RPM2(){
+RPM::RPM(){
 
 }
 
-void RPM2::init(gpio_num_t sensorPin, uint16_t pulsesPerRev){
+void RPM::init(gpio_num_t sensorPin, uint16_t pulsesPerRev){
     sensorGPIO = sensorPin;
     pulsesPerRevolution = pulsesPerRev;
 
@@ -27,10 +27,10 @@ void RPM2::init(gpio_num_t sensorPin, uint16_t pulsesPerRev){
     gpio_config(&io_conf);
 
     gpio_install_isr_service(0); // default ISR service
-    gpio_isr_handler_add(sensorGPIO, &RPM2::gpio_isr_handler, this);
+    gpio_isr_handler_add(sensorGPIO, &RPM::gpio_isr_handler, this);
 }
 
-void RPM2::update(){
+void RPM::update(){
     uint64_t dt_us = delta_time;
     if (dt_us > 0) {
         dt_s = dt_us / 1000000.0f;
