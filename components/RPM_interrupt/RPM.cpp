@@ -41,5 +41,6 @@ void RPM::update(){
         dt_s = dt_us / 1000000.0f;
         rpm = 60.0 / (pulsesPerRevolution * dt_s);
         mps = wheel_circumference * (rpm / 60.0);
+        kmh = mps * 3.6;
     }
 }

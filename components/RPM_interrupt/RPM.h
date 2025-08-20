@@ -13,6 +13,7 @@ class RPM{
         float dt_s;
         float rpm;
         float mps;
+        float kmh;
         RPM();
         void init(gpio_num_t sensorPin, uint16_t pulsesPerRev);
         void init(gpio_num_t sensorPin, uint16_t pulsesPerRev, float diameter);
