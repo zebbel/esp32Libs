@@ -40,6 +40,6 @@ void RPM::update(){
     if (dt_us > 0) {
         dt_s = dt_us / 1000000.0f;
         rpm = 60.0 / (pulsesPerRevolution * dt_s);
-        m_s = wheel_circumference * (rpm / 60.0);
+        mps = wheel_circumference * (rpm / 60.0);
     }
 }

@@ -23,7 +23,7 @@ void rpmMain(){
     while (true){
         rpmSensor.update();
 
-        ESP_LOGI(TAG, "Impulse-Dt: %f s, rpm: %.3f u/min, speed: %.2f m/s", rpmSensor.dt_s, rpmSensor.rpm, rpmSensor.m_s);
+        ESP_LOGI(TAG, "Impulse-Dt: %f s, rpm: %.3f u/min, speed: %.2f m/s", rpmSensor.dt_s, rpmSensor.rpm, rpmSensor.mps);
 
         vTaskDelay(pdMS_TO_TICKS(100)); // 10 ms Delay
     }
