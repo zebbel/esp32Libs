@@ -15,44 +15,15 @@ static const char *TAG = "rpm";
 #define PULSES_PER_REV      36
 #define WHEEL_DIAMETER_M    0.11f      // 110 mm in Meter
 
-
 RPM rpmSensor;
 
-class LowPassFilter {
-public:
-    LowPassFilter(float cutoff, float samplingRate)
-        : y(0.0f)
-    {
-        setCutoff(cutoff, samplingRate);
-    }
-
-    void setCutoff(float cutoff, float samplingRate) {
-        float RC = 1.0f / (2.0f * 3.14159265359f * cutoff);
-        float dt = 1.0f / samplingRate;
-        alpha = dt / (RC + dt);
-    }
-
-    float process(float x) {
-        y = y + alpha * (x - y);  // Rekursive Gleichung
-        return y;
-    }
-
-private:
-    float alpha;
-    float y;
-};
-
 void rpmMain(){
-    rpmSensor.init(PULSE_GPIO, PULSES_PER_REV);
-
-    float cutoff = 3.0f;       // Grenzfrequenz in Hz
-    float fs = 100.0f;         // Abtastrate in Hz
-    LowPassFilter lpf(cutoff, fs);
+    rpmSensor.init(PULSE_GPIO, PULSES_PER_REV, WHEEL_DIAMETER_M);
 
     while (true){
         rpmSensor.update();
-        float filtered = lpf.process(rpmSensor.rpm);
-        ESP_LOGI("ENCODER", "Impulse-Dt: %f s, u=%.3f u/min, u filtered=%.3f", rpmSensor.dt_s, rpmSensor.rpm, filtered);
+
+        ESP_LOGI(TAG, "Impulse-Dt: %f s, rpm: %.3f u/min, speed: %.2f m/s", rpmSensor.dt_s, rpmSensor.rpm, rpmSensor.m_s);
 
         vTaskDelay(pdMS_TO_TICKS(100)); // 10 ms Delay
     }

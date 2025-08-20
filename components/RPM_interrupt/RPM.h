@@ -12,13 +12,16 @@ class RPM{
     public:
         float dt_s;
         float rpm;
+        float m_s;
         RPM();
         void init(gpio_num_t sensorPin, uint16_t pulsesPerRev);
+        void init(gpio_num_t sensorPin, uint16_t pulsesPerRev, float diameter);
         void update();
         
     private:
         gpio_num_t sensorGPIO;
         uint16_t pulsesPerRevolution;
+        float wheel_circumference = 0;
         volatile uint64_t last_time;
         volatile uint64_t delta_time;
 

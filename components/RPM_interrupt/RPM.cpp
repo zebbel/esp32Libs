@@ -30,10 +30,16 @@ void RPM::init(gpio_num_t sensorPin, uint16_t pulsesPerRev){
     gpio_isr_handler_add(sensorGPIO, &RPM::gpio_isr_handler, this);
 }
 
+void RPM::init(gpio_num_t sensorPin, uint16_t pulsesPerRev, float diameter){
+    wheel_circumference = 3.1416f * diameter;
+    init(sensorPin, pulsesPerRev);
+}
+
 void RPM::update(){
     uint64_t dt_us = delta_time;
     if (dt_us > 0) {
         dt_s = dt_us / 1000000.0f;
         rpm = 60.0 / (pulsesPerRevolution * dt_s);
+        m_s = wheel_circumference * (rpm / 60.0);
     }
 }
