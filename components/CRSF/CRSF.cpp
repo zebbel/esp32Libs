@@ -141,7 +141,7 @@ void CRSF::rx_task(void *pvParameter){
                                 //ESP_LOGI("crsf", "respond to ping from: 0x%X", frame.payload[1]);
                                 crsf->send_device_info(frame.payload[1], 0xC8);
                             }else if(frame.type == CRSF_FRAMETYPE_PARAMETER_READ && frame.payload[0] == 0xC8){
-                                ESP_LOGI("crsf", "respond to parameter read from: 0x%X, parameter: %i, chunk: %i", frame.payload[1], frame.payload[2], frame.payload[3]);
+                                //ESP_LOGI("crsf", "respond to parameter read from: 0x%X, parameter: %i, chunk: %i", frame.payload[1], frame.payload[2], frame.payload[3]);
                                 if(frame.payload[2] < crsf->deviceInfo.parameterTotal){
                                     crsf->send_parameter(frame.payload[1], 0xC8, &crsf->parameters[frame.payload[2]]);
                                 }

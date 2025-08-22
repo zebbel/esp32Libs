@@ -8,3 +8,5 @@ idf_component_register(
     REQUIRES
         
 )
+
+target_compile_options(${COMPONENT_LIB} PRIVATE -O3 -ffast-math -fno-math-errno)

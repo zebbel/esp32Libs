@@ -31,16 +31,32 @@ void RPM::init(gpio_num_t sensorPin, uint16_t pulsesPerRev){
 }
 
 void RPM::init(gpio_num_t sensorPin, uint16_t pulsesPerRev, float diameter){
-    wheel_circumference = 3.1416f * diameter;
+    wheel_circumference = 3.1415926f * diameter;
     init(sensorPin, pulsesPerRev);
 }
 
 void RPM::update(){
+    /*
     uint64_t dt_us = delta_time;
     if (dt_us > 0) {
         dt_s = dt_us / 1000000.0f;
         rpm = 60.0 / (pulsesPerRevolution * dt_s);
         mps = wheel_circumference * (rpm / 60.0);
         kmh = mps * 3.6;
+    }
+    */
+    
+    const uint64_t dt_us = delta_time;
+    if (dt_us > 0) {
+        // precomputed reciprocals
+        static constexpr float INV_US  = 1.0f / 1000000.0f;  // 1e-6
+        static constexpr float INV_60  = 1.0f / 60.0f;
+        static constexpr float KMH_PER_MPS = 3.6f;
+
+        dt_s = float(dt_us) * INV_US;                        // multiply instead of divide
+        const float rev_per_sec = INV_60 * (60.0f / pulsesPerRevolution) / dt_s; // constant folding happens
+        rpm = rev_per_sec / INV_60;                          // == rev_per_sec * 60
+        mps = wheel_circumference * (rpm * INV_60);          // rpm/60 via multiply
+        kmh = mps * KMH_PER_MPS;
     }
 }

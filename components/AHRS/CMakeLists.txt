@@ -10,3 +10,5 @@ idf_component_register(
         "Fusion"
         "LowPassFilter"
 )
+
+target_compile_options(${COMPONENT_LIB} PRIVATE -O3)
