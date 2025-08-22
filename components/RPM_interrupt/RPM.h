@@ -25,6 +25,7 @@ class RPM{
         float wheel_circumference = 0;
         volatile uint64_t last_time;
         volatile uint64_t delta_time;
+        uint32_t adaptive_timeout = 1000000;       // default 1s timeout (1,000,000 µs)
 
         static void IRAM_ATTR gpio_isr_handler(void* arg);
 };

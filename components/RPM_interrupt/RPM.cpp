@@ -46,7 +46,16 @@ void RPM::update(){
     }
     */
     
-    const uint64_t dt_us = delta_time;
+    const uint32_t dt_us = delta_time;
+
+    // Check if timeout passed since last pulse
+    if(esp_timer_get_time() - last_time > adaptive_timeout) {
+        rpm = 0.0f;
+        mps = 0.0f;
+        kmh = 0.0f;
+        return;
+    }
+
     if (dt_us > 0) {
         // precomputed reciprocals
         static constexpr float INV_US  = 1.0f / 1000000.0f;  // 1e-6
@@ -58,5 +67,7 @@ void RPM::update(){
         rpm = rev_per_sec / INV_60;                          // == rev_per_sec * 60
         mps = wheel_circumference * (rpm * INV_60);          // rpm/60 via multiply
         kmh = mps * KMH_PER_MPS;
+
+        adaptive_timeout = dt_us * 2;
     }
 }
