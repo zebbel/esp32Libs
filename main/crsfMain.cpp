@@ -20,16 +20,7 @@ crsf_command_status_t commandCallback(){
     return CRSF_COMMAND_READY;
 }
 
-void crsfMain(){
-    crsf_channels_t channels;
-    crsf_temp_t tempSensor = {
-        .temp_source_id = 0,
-        .temperature = {255},
-        .num_sensors = 1
-    };
-
-    crsf.init(UART_NUM_1, "ZSM", &channels);
-
+void init_parameter(){
     crsf_parameter_uint8_t uint8Parameter = {
         .name = "uint8 ",
         .value = &uint8Data,
@@ -153,19 +144,32 @@ void crsfMain(){
         .hidden = 0
     };
     crsf.register_parameter(&commandParameter, subFolderParameter);
+}
+
+void crsfMain(){
+    crsf_channels_t channels;
+    crsf_temp_t tempSensor = {
+        .temp_source_id = 0,
+        .temperature = {255},
+        .num_sensors = 1
+    };
+
+    crsf.init(UART_NUM_1, "ZSM", &channels);
+
+    //init_parameter();
 
     uint64_t lastSend = esp_timer_get_time();
 
     while(1){
-        //ESP_LOGI("main", "CH1: %d", crsf.channel_Mikroseconds(channels.ch1));
+        ESP_LOGI("main", "CH1: %i", crsf.channel_Mikroseconds(channels.ch1));
 
-        if((lastSend + 1000) < esp_timer_get_time()){
-            lastSend = esp_timer_get_time();
-            crsf.send_temp(&tempSensor);
-        }
+        //if((lastSend + 1000) < esp_timer_get_time()){
+        //    lastSend = esp_timer_get_time();
+        //    crsf.send_temp(&tempSensor);
+        //}
 
-        folderParameter.hidden = textSelelctData;
+        //folderParameter.hidden = textSelelctData;
 
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
     }
 }

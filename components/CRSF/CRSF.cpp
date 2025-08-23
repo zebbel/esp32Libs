@@ -133,7 +133,7 @@ void CRSF::rx_task(void *pvParameter){
                         if(frame.type < 0x27){
                             if(frame.type == CRSF_TYPE_CHANNELS){
                                 xSemaphoreTake(crsf->xMutex, portMAX_DELAY);
-                                crsf->channels = (crsf_channels_t*)frame.payload;
+                                memcpy(crsf->channels, frame.payload, sizeof(crsf_channels_t));
                                 xSemaphoreGive(crsf->xMutex);
                             }
                         }else{

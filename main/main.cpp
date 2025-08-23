@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 //#include "buttonMain.cpp"
-//#include "crsfMain.cpp"
+#include "crsfMain.cpp"
 //#include "hobbywingMain.cpp"
 //#include "imuMain.cpp"
 //#include "pidMain.cpp"
@@ -10,11 +10,11 @@
 //#include "telemtryMain.cpp"
 //#include "zBusMain.cpp"
 //#include "rpm_hardwareMain.cpp"
-#include "rpm_interruptMain.cpp"
+//#include "rpm_interruptMain.cpp"
 
 extern "C" void app_main(void){
     //buttonMain();
-    //crsfMain();
+    crsfMain();
     //hobbywingMain();
     //imuMain();
     //pidMain();
@@ -22,5 +22,5 @@ extern "C" void app_main(void){
     //SRXL2Main();
     //telemetryMain();
     //zBusMain();
-    rpmMain();
+    //rpmMain();
 }
