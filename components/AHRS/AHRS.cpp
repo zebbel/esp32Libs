@@ -158,14 +158,14 @@ void AHRS::update(){
     // Calculate delta time (in seconds) to account for gyroscope sample clock error
     //float period = float(esp_timer_get_time() - lastTimeUpdateIMU) / 1000000.0;
     static constexpr float kInvUs = 1.0f / 1000000.0f; // compile-time constant
-    float period = float(esp_timer_get_time() - lastTimeUpdateIMU) * kInvUs;
+    int64_t now = esp_timer_get_time();
+    float period = float(now - lastTimeUpdateIMU) * kInvUs;
 
     // Update gyroscope AHRS algorithm
-    FusionAhrsUpdate(&fusion, gyroscopeCalibrated, accelerometerCalibrated, magnetometerCalibrated, period);
-    //FusionAhrsUpdateNoMagnetometer(&fusion, gyroscopeCalibrated, accelerometerCalibrated, period);
+    FusionAhrsUpdateNoMagnetometer(&fusion, gyroscopeCalibrated, accelerometerCalibrated, period);
 
     // save time from last ahrs update
-    lastTimeUpdateIMU = esp_timer_get_time();
+    lastTimeUpdateIMU = now;
 
     // get difference between fusion qaternion and zero quaternio
     // normelise quaternion
@@ -204,13 +204,14 @@ void AHRS::updateNoMag(){
     // Calculate delta time (in seconds) to account for gyroscope sample clock error
     //float period = float(esp_timer_get_time() - lastTimeUpdateIMU) / 1000000.0;
     static constexpr float kInvUs = 1.0f / 1000000.0f; // compile-time constant
-    float period = float(esp_timer_get_time() - lastTimeUpdateIMU) * kInvUs;
+    int64_t now = esp_timer_get_time();
+    float period = float(now - lastTimeUpdateIMU) * kInvUs;
 
     // Update gyroscope AHRS algorithm
     FusionAhrsUpdateNoMagnetometer(&fusion, gyroscopeCalibrated, accelerometerCalibrated, period);
 
     // save time from last ahrs update
-    lastTimeUpdateIMU = esp_timer_get_time();
+    lastTimeUpdateIMU = now;
 
     // get difference between fusion qaternion and zero quaternio
     // normelise quaternion
