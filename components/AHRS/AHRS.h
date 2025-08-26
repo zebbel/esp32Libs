@@ -67,7 +67,6 @@ class AHRS: private LSM9DS1{
         FusionVector gyroscopeCalibrated;
         FusionVector accelerometerCalibrated;
         FusionVector magnetometerCalibrated;
-        bool newData;
 
         bool callibrationNext;
 
