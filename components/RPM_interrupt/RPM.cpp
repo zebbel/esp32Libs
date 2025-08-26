@@ -50,6 +50,7 @@ void RPM::update(){
 
     // Check if timeout passed since last pulse
     if(esp_timer_get_time() - last_time > adaptive_timeout) {
+        dt_s = 0.0f;
         rpm = 0.0f;
         mps = 0.0f;
         kmh = 0.0f;
@@ -68,6 +69,6 @@ void RPM::update(){
         mps = wheel_circumference * (rpm * INV_60);          // rpm/60 via multiply
         kmh = mps * KMH_PER_MPS;
 
-        adaptive_timeout = dt_us * 2;
+        adaptive_timeout = dt_us * 6;
     }
 }
