@@ -69,6 +69,6 @@ void RPM::update(){
         mps = wheel_circumference * (rpm * INV_60);          // rpm/60 via multiply
         kmh = mps * KMH_PER_MPS;
 
-        adaptive_timeout = dt_us * 6;
+        //adaptive_timeout = dt_us * 6;
     }
 }
