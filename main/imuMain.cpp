@@ -49,9 +49,12 @@ void imuMain(){
     ahrs.saveSettings();
     */
 
+    float rpmDummy = 0.0f;
+
     while(1){
         //ahrs.update();
-        ahrs.updateNoMag();
+        //ahrs.updateNoMag();
+        ahrs.updateNoMag(rpmDummy);
 
 
         if((lastPrint + 1000000) < esp_timer_get_time()){

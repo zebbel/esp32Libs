@@ -449,6 +449,23 @@ FusionVector FusionAhrsGetEarthAcceleration(const FusionAhrs *const ahrs) {
 }
 
 /**
+ * @brief rotates sensor values fm body to frame.
+ * @param ahrs AHRS algorithm structure.
+ * @param sensor sensor values.
+ * @return sensor FusionVector in Earth frame.
+ */
+FusionVector FusionRotateSensorToEarth(FusionAhrs *const ahrs, const FusionVector sensor){
+    // get quaternion from FusionAhrs
+    const FusionQuaternion q = FusionAhrsGetQuaternion(ahrs);
+
+    // calculate rotation matrix
+    const FusionMatrix R = FusionQuaternionToMatrix(q);
+
+    // matrix * vector = Earth frame data
+    return FusionMatrixMultiplyVector(R, sensor);
+}
+
+/**
  * @brief Returns the AHRS algorithm internal states.
  * @param ahrs AHRS algorithm structure.
  * @return AHRS algorithm internal states.

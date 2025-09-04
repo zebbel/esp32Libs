@@ -10,7 +10,6 @@
 #include "esp_timer.h"
 #include "nvs_flash.h"
 
-//#include "MPU9250.h"
 #include "LSM9DS1.h"
 #include "Fusion.h"
 #include "LowPassFilter.h"
@@ -44,6 +43,14 @@ class AHRS: private LSM9DS1{
         FusionAhrs fusion;
 
         FusionQuaternion zeroOffsetQuaternion;
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! just for debug, needs to be private or made to local variable!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public:
+        FusionVector accelerometerEarth;
+        FusionVector gyroscopeEarth;
+        float lastSpeed;
+        float longitudinalAcceleration;
+        float lateralAcceleration;
 
     public:
         uint64_t lastTimeUpdateIMU = esp_timer_get_time();
@@ -89,6 +96,7 @@ class AHRS: private LSM9DS1{
 
         void update();
         void updateNoMag();
+        void updateNoMag(float mps);
 
         void zero();
 

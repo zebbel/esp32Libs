@@ -203,6 +203,66 @@ void AHRS::updateNoMag(){
 }
 
 /**
+ * @brief update sensor fusion without mag
+ * @brief correct accelerometer for longitudinal and lateral acceleration
+ * @param mps: speed in m/s
+ */
+void AHRS::updateNoMag(float mps){
+    uint8_t status = LSM9DS1::status();
+
+    if(status & 0x06){
+        xyzFloat gyrData;
+        LSM9DS1::getGyrValues(&gyrData);
+
+        if(gyrFilterSettings.enabled) gyrValue = gyrFilter.update(gyrData);
+        else gyrValue = gyrData;
+
+        gyroscopeCalibrated = FusionCalibrationInertial({gyrValue.x, gyrValue.y, gyrValue.z}, gyroscopeMisalignment, gyroscopeSensitivity, gyroscopeOffset);
+        gyroscopeCalibrated.axis.x = -gyroscopeCalibrated.axis.x;
+
+        xyzFloat accData;
+        LSM9DS1::getAccValues(&accData);
+
+        if(accFilterSettings.enabled) accValue = accFilter.update(accData);
+        else accValue = accData;
+
+        accelerometerCalibrated = FusionCalibrationInertial({accValue.x, accValue.y, accValue.z}, accelerometerMisalignment, accelerometerSensitivity, accelerometerOffset);
+        accelerometerCalibrated.axis.x = -accelerometerCalibrated.axis.x;
+    }
+
+    // Calculate delta time (in seconds) to account for gyroscope sample clock error
+    //float period = float(esp_timer_get_time() - lastTimeUpdateIMU) / 1000000.0;
+    static constexpr float kInvUs = 1.0f / 1000000.0f; // compile-time constant
+    int64_t now = esp_timer_get_time();
+    float period = float(now - lastTimeUpdateIMU) * kInvUs;
+
+
+
+
+    accelerometerEarth = FusionRotateSensorToEarth(&fusion, accelerometerCalibrated);
+    gyroscopeEarth = FusionRotateSensorToEarth(&fusion, gyroscopeCalibrated);
+
+    longitudinalAcceleration = ((mps - lastSpeed) / period) / 9.81;
+    lastSpeed = mps;
+
+    lateralAcceleration = (mps * gyroscopeEarth.axis.z) / 9.81;
+
+
+
+
+    // Update gyroscope AHRS algorithm
+    FusionAhrsUpdateNoMagnetometer(&fusion, gyroscopeCalibrated, accelerometerCalibrated, period);
+
+    // save time from last ahrs update
+    lastTimeUpdateIMU = now;
+
+    // get difference between fusion qaternion and zero quaternio
+    // normelise quaternion
+    // convert quaternion to euler angles
+    euler = FusionQuaternionToEuler(FusionQuaternionNormalise(FusionQuaternionDivide(fusion.quaternion, zeroOffsetQuaternion)));
+}
+
+/**
  * @brief zero pitch, roll and yaw
  */
 void AHRS::zero(){

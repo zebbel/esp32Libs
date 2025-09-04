@@ -97,6 +97,8 @@ FusionVector FusionAhrsGetLinearAcceleration(const FusionAhrs *const ahrs);
 
 FusionVector FusionAhrsGetEarthAcceleration(const FusionAhrs *const ahrs);
 
+FusionVector FusionRotateSensorToEarth(FusionAhrs *const ahrs, const FusionVector sensor);
+
 FusionAhrsInternalStates FusionAhrsGetInternalStates(const FusionAhrs *const ahrs);
 
 FusionAhrsFlags FusionAhrsGetFlags(const FusionAhrs *const ahrs);
