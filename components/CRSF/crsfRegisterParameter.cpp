@@ -1,5 +1,11 @@
 #include "crsf.h"
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_uint8_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_uint8_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -9,6 +15,12 @@ void CRSF::register_parameter(crsf_parameter_uint8_t *parameter, crsf_parameter_
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_int8_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_int8_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -18,6 +30,12 @@ void CRSF::register_parameter(crsf_parameter_int8_t *parameter, crsf_parameter_f
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_uint16_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_uint16_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -27,6 +45,12 @@ void CRSF::register_parameter(crsf_parameter_uint16_t *parameter, crsf_parameter
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_int16_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_int16_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -36,6 +60,12 @@ void CRSF::register_parameter(crsf_parameter_int16_t *parameter, crsf_parameter_
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_uint32_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_uint32_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -45,6 +75,12 @@ void CRSF::register_parameter(crsf_parameter_uint32_t *parameter, crsf_parameter
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_int32_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_int32_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -54,6 +90,12 @@ void CRSF::register_parameter(crsf_parameter_int32_t *parameter, crsf_parameter_
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_float_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_float_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -63,6 +105,12 @@ void CRSF::register_parameter(crsf_parameter_float_t *parameter, crsf_parameter_
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_text_selection_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_text_selection_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -72,6 +120,12 @@ void CRSF::register_parameter(crsf_parameter_text_selection_t *parameter, crsf_p
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_string_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_string_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -81,6 +135,12 @@ void CRSF::register_parameter(crsf_parameter_string_t *parameter, crsf_parameter
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_folder_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_folder_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -91,6 +151,12 @@ void CRSF::register_parameter(crsf_parameter_folder_t *parameter, crsf_parameter
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_info_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_info_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
@@ -100,6 +166,12 @@ void CRSF::register_parameter(crsf_parameter_info_t *parameter, crsf_parameter_f
     deviceInfo.parameterTotal ++;
 }
 
+/**
+ * @brief register a parameter
+ *
+ * @param parameter pointer to crsf_parameter_command_t parameter
+ * @param folder subfolder of parameter, default = rootFolder
+ */
 void CRSF::register_parameter(crsf_parameter_command_t *parameter, crsf_parameter_folder_t folder){
     parameters[deviceInfo.parameterTotal].parameterNumber = deviceInfo.parameterTotal ;
     parameters[deviceInfo.parameterTotal].chunksRemaining = 0;
