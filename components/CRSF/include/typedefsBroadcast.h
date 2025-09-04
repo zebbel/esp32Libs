@@ -39,22 +39,22 @@ typedef struct{
  * @return typedef struct 
  */
 typedef struct __attribute__((packed)){
-    uint16_t ch1 : 11;
-    uint16_t ch2 : 11;
-    uint16_t ch3 : 11;
-    uint16_t ch4 : 11;
-    uint16_t ch5 : 11;
-    uint16_t ch6 : 11;
-    uint16_t ch7 : 11;
-    uint16_t ch8 : 11;
-    uint16_t ch9 : 11;
-    uint16_t ch10 : 11;
-    uint16_t ch11 : 11;
-    uint16_t ch12 : 11;
-    uint16_t ch13 : 11;
-    uint16_t ch14 : 11;
-    uint16_t ch15 : 11;
-    uint16_t ch16 : 11;
+    uint16_t ch1 : 11 = 992;
+    uint16_t ch2 : 11 = 992;
+    uint16_t ch3 : 11 = 992;
+    uint16_t ch4 : 11 = 992;
+    uint16_t ch5 : 11 = 992;
+    uint16_t ch6 : 11 = 992;
+    uint16_t ch7 : 11 = 992;
+    uint16_t ch8 : 11 = 992;
+    uint16_t ch9 : 11 = 992;
+    uint16_t ch10 : 11 = 992;
+    uint16_t ch11 : 11 = 992;
+    uint16_t ch12 : 11 = 992;
+    uint16_t ch13 : 11 = 992;
+    uint16_t ch14 : 11 = 992;
+    uint16_t ch15 : 11 = 992;
+    uint16_t ch16 : 11 = 992;
 } crsf_channels_t;
 
 /**

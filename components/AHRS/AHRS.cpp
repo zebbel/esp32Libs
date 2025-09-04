@@ -4,7 +4,6 @@ static const char *ahrsTag = "ahrs";
 
 /**
  * @brief ahrs constructor
- * @param None
  */
 AHRS::AHRS(){
     // Initialize NVS
@@ -19,8 +18,8 @@ AHRS::AHRS(){
 
 /**
  * @brief init ahrs
- * @param None
- * @return None
+ * @param sampleRate: sample rate of AHRS
+ * @param settings: pointer to AHRS settings
  */
 void AHRS::init(unsigned int sampleRate, FusionAhrsSettings *settings){
     vTaskDelay(200 / portTICK_PERIOD_MS);
@@ -42,7 +41,6 @@ void AHRS::init(unsigned int sampleRate, FusionAhrsSettings *settings){
 /**
  * @brief enable gyro lowpass filter
  * @param cutoffFrequency: cutoff frequency in HZ
- * @return None
  */
 void AHRS::setGyrFilter(float cutoffFrequency){
     gyrFilterSettings.cutoffFrequency = cutoffFrequency;
@@ -51,7 +49,6 @@ void AHRS::setGyrFilter(float cutoffFrequency){
 
 /**
  * @brief get gyro filter data
- * @param None
  * @return filter_t filter data
  */
 filter_t AHRS::getGyrFilter(){
@@ -61,8 +58,6 @@ filter_t AHRS::getGyrFilter(){
 
 /**
  * @brief disable gyro lowpass filter
- * @param None
- * @return None
  */
 void AHRS::disableGyrFilter(){
     gyrFilterSettings.enabled = false;
@@ -71,7 +66,6 @@ void AHRS::disableGyrFilter(){
 /**
  * @brief enable acclerometer lowpass filter
  * @param cutoffFrequency: cutoff frequency in HZ
- * @return None
  */
 void AHRS::setAccFilter(float cutoffFrequency){
     accFilterSettings.cutoffFrequency = cutoffFrequency;
@@ -80,7 +74,6 @@ void AHRS::setAccFilter(float cutoffFrequency){
 
 /**
  * @brief get acclerometer filter data
- * @param None
  * @return filter_t filter data
  */
 filter_t AHRS::getAccFilter(){
@@ -89,8 +82,6 @@ filter_t AHRS::getAccFilter(){
 
 /**
  * @brief disable acclerometer lowpass filter
- * @param None
- * @return None
  */
 void AHRS::disableAccFilter(){
     accFilterSettings.enabled = false;
@@ -99,7 +90,6 @@ void AHRS::disableAccFilter(){
 /**
  * @brief enable magnetometer lowpass filter
  * @param cutoffFrequency: cutoff frequency in HZ
- * @return None
  */
 void AHRS::setMagFilter(float cutoffFrequency){
     magFilterSettings.cutoffFrequency = cutoffFrequency;
@@ -108,7 +98,6 @@ void AHRS::setMagFilter(float cutoffFrequency){
 
 /**
  * @brief get magnetometer filter data
- * @param None
  * @return filter_t filter data
  */
 filter_t AHRS::getMagFilter(){
@@ -117,8 +106,6 @@ filter_t AHRS::getMagFilter(){
 
 /**
  * @brief disable magnetometer lowpass filter
- * @param None
- * @return None
  */
 void AHRS::disableMagFilter(){
     magFilterSettings.enabled = false;
@@ -127,8 +114,6 @@ void AHRS::disableMagFilter(){
 
 /**
  * @brief update sensor fusion
- * @param None
- * @return None
  */
 void AHRS::update(){
     uint8_t status = LSM9DS1::status();
@@ -175,8 +160,6 @@ void AHRS::update(){
 
 /**
  * @brief update sensor fusion without mag
- * @param None
- * @return None
  */
 void AHRS::updateNoMag(){
     uint8_t status = LSM9DS1::status();
@@ -221,8 +204,6 @@ void AHRS::updateNoMag(){
 
 /**
  * @brief zero pitch, roll and yaw
- * @param None
- * @return None
  */
 void AHRS::zero(){
     zeroOffsetQuaternion = fusion.quaternion;                                                                     // save actuall quaternion as zero offset
@@ -230,7 +211,6 @@ void AHRS::zero(){
 
 /**
  * @brief return fusion euler
- * @param None
  * @return fusion euler
  */
 FusionEuler AHRS::getFusionEuler(){
@@ -239,8 +219,6 @@ FusionEuler AHRS::getFusionEuler(){
 
 /**
  * @brief print gyro values to console
- * @param None
- * @return None
  */
 void AHRS::printGyro(){
     ESP_LOGI(ahrsTag, " gyro x: %f, y: %f, z: %f", gyroscopeCalibrated.axis.x, gyroscopeCalibrated.axis.y, gyroscopeCalibrated.axis.z);
@@ -248,8 +226,6 @@ void AHRS::printGyro(){
 
 /**
  * @brief print acc values to console
- * @param None
- * @return None
  */
 void AHRS::printAcc(){
     ESP_LOGI(ahrsTag, " acc x: %f, y: %f, z: %f", accelerometerCalibrated.axis.x, accelerometerCalibrated.axis.y, accelerometerCalibrated.axis.z);
@@ -257,8 +233,6 @@ void AHRS::printAcc(){
 
 /**
  * @brief print mag values to console
- * @param None
- * @return None
  */
 void AHRS::printMag(){
     ESP_LOGI(ahrsTag, " mag x: %f, y: %f, z: %f", magnetometerCalibrated.axis.x, magnetometerCalibrated.axis.y, magnetometerCalibrated.axis.z);
@@ -266,8 +240,6 @@ void AHRS::printMag(){
 
 /**
  * @brief print gyro, acc, mag and euler values to console
- * @param None
- * @return None
  */
 void AHRS::printString(){
     printf("%+11.6f;%+11.6f;%+11.6F@%+11.6f;%+11.6f;%+11.6F@%+11.6f;%+11.6f;%+11.6F@%+11.6f;%+11.6f;%+11.6F\n",
@@ -280,7 +252,6 @@ void AHRS::printString(){
 /**
  * @brief calibrate gyro
  * @param samples: number of samples for calibration
- * @return None
  */
 void AHRS::gyroCalibration(uint16_t samples){
     //imu.setGyrDLPF(MPU9250_DLPF_6);  // lowest noise
@@ -313,8 +284,6 @@ void AHRS::gyroCalibration(uint16_t samples){
 
 /**
  * @brief calibrate acc
- * @param None
- * @return None
  */
 void AHRS::accCalibration(){
     xTaskCreate(doAccCalibration, "accCalibration", 3048, this, 4, NULL);
@@ -391,7 +360,6 @@ void AHRS::doAccCalibration(void *pvParameter){
 /**
  * @brief takes samples from acc and returns the average
  * @param samples: number of samples
- * @return None
  */
 xyzFloat AHRS::getAverageAccValues(uint16_t samples){
     xyzFloat accumulator{0.f, 0.f, 0.f};
@@ -408,8 +376,6 @@ xyzFloat AHRS::getAverageAccValues(uint16_t samples){
 
 /**
  * @brief calibrate mag
- * @param None
- * @return None
  */
 void AHRS::magCalibration(){
     xTaskCreate(doMagCalibration, "magCalibration", 3048, this, 4, NULL);
@@ -452,8 +418,6 @@ void AHRS::doMagCalibration(void *pvParameter){
 
 /**
  * @brief save calibration values to NVS
- * @param None
- * @return None
  */
 void AHRS::saveSettings(){
     // open nvs
@@ -481,8 +445,6 @@ void AHRS::saveSettings(){
 
 /**
  * @brief load calibration values to NVS
- * @param None
- * @return None
  */
 void AHRS::loadSettings(){
     // open nvs

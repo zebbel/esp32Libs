@@ -28,6 +28,7 @@ void CRSF::send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t t
 
 /**
 * @brief convert crsf channel value to microseconds
+* @brief 1500us = 992
 * 
 * @param value: channel value
 * @returns channel value in microseconds
