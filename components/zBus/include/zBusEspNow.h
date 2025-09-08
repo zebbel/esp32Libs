@@ -66,7 +66,7 @@ class zBusEspNow{
 
     private:
         static std::map<std::string, espNow_peer_struct_t*> peers;
-        static void sendCallback(const uint8_t *mac_addr, esp_now_send_status_t sendStatus);
+        static void sendCallback(const wifi_tx_info_t *info, esp_now_send_status_t sendStatus);
         static void recvCallback(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len);
         static int checkCRC(espnow_data_t *data, uint16_t data_len);
 

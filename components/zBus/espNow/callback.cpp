@@ -5,8 +5,8 @@ static const char *espNowTag = "espnow";
 /* ESPNOW sending or receiving callback function is called in WiFi task.
  * Users should not do lengthy operations from this task. Instead, post
  * necessary data to a queue and handle it from a lower priority task. */
-void zBusEspNow::sendCallback(const uint8_t *mac_addr, esp_now_send_status_t sendStatus){
-    std::string macString = MAC2STRING(mac_addr);
+void zBusEspNow::sendCallback(const wifi_tx_info_t *info, esp_now_send_status_t sendStatus){
+    std::string macString = MAC2STRING(info->des_addr);
 
     // if zBusEspNow is connected and send messaged doesn´t reached the peer
     if(peers.find(macString) != peers.end()){
