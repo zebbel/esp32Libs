@@ -10,7 +10,7 @@
 
 class RPM{
     public:
-        float dt_s;
+        float dts;
         float rpm;
         float mps;
         float kmh;
@@ -26,6 +26,11 @@ class RPM{
         volatile uint64_t last_time;
         volatile uint64_t delta_time;
         uint32_t adaptive_timeout = 1000000;       // default 1s timeout (1,000,000 µs)
+
+        #define RPM_AVERAGE_SIZE 10
+        volatile uint64_t ringbuffer[RPM_AVERAGE_SIZE];
+        volatile uint64_t sum = 0;
+        uint8_t head = 0;
 
         static void IRAM_ATTR gpio_isr_handler(void* arg);
 };

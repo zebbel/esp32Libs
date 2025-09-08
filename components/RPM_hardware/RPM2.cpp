@@ -31,8 +31,8 @@ uint16_t RPM2::getCount(){
 float RPM2::getRpm(){
     newValue = false;
     float revs = static_cast<float>(counter) / pulsesPerRevolution;
-    RPM2  = revs * (60000.0f / 100);
-    return RPM2;
+    revs = revs * (60000.0f / 100);
+    return revs;
 }
 
 void RPM2::configPCNT(){

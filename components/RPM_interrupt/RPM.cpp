@@ -4,10 +4,16 @@
 void IRAM_ATTR RPM::gpio_isr_handler(void* arg){
     RPM* rpmClass = reinterpret_cast<RPM*>(arg); //obtain the instance pointer
     uint64_t now = esp_timer_get_time(); // Zeit in Mikrosekunden
-    if(now - rpmClass->last_time > 300){
-        rpmClass->delta_time = now - rpmClass->last_time;
-        rpmClass->last_time = now;
+
+    if(now - rpmClass->last_time > 300 && now - rpmClass->last_time < 20000){
+        //rpmClass->delta_time = now - rpmClass->last_time;
+        rpmClass->sum -= rpmClass->ringbuffer[rpmClass->head];
+        rpmClass->ringbuffer[rpmClass->head] = now - rpmClass->last_time;
+        rpmClass->head = (rpmClass->head + 1) % RPM_AVERAGE_SIZE;
+        rpmClass->sum += now - rpmClass->last_time;
     }
+
+    rpmClass->last_time = now;
 }
 
 RPM::RPM(){
@@ -17,6 +23,10 @@ RPM::RPM(){
 void RPM::init(gpio_num_t sensorPin, uint16_t pulsesPerRev){
     sensorGPIO = sensorPin;
     pulsesPerRevolution = pulsesPerRev;
+
+    for(uint8_t i=0; i<RPM_AVERAGE_SIZE; i++){
+        ringbuffer[i] = 0;
+    }
 
     gpio_config_t io_conf = {};
     io_conf.intr_type = GPIO_INTR_POSEDGE; // steigende Flanke
@@ -46,14 +56,25 @@ void RPM::update(){
     }
     */
     
-    const uint32_t dt_us = delta_time;
+    //const uint64_t dt_us = delta_time;
+
+    uint64_t dt_us = sum / RPM_AVERAGE_SIZE;
+    /*
+    for(size_t i=0; i<RPM_AVERAGE_SIZE; i++){
+        dt_us += ringbuffer[i];
+    }
+    dt_us /= RPM_AVERAGE_SIZE;
+    */
 
     // Check if timeout passed since last pulse
     if(esp_timer_get_time() - last_time > adaptive_timeout) {
-        dt_s = 0.0f;
+        dts = 0.0f;
         rpm = 0.0f;
         mps = 0.0f;
         kmh = 0.0f;
+        for(uint8_t i=0; i<RPM_AVERAGE_SIZE; i++){
+        ringbuffer[i] = 0;
+    }
         return;
     }
 
@@ -63,12 +84,12 @@ void RPM::update(){
         static constexpr float INV_60  = 1.0f / 60.0f;
         static constexpr float KMH_PER_MPS = 3.6f;
 
-        dt_s = float(dt_us) * INV_US;                        // multiply instead of divide
-        const float rev_per_sec = INV_60 * (60.0f / pulsesPerRevolution) / dt_s; // constant folding happens
+        dts = float(dt_us) * INV_US;                        // multiply instead of divide
+        const float rev_per_sec = INV_60 * (60.0f / pulsesPerRevolution) / dts; // constant folding happens
         rpm = rev_per_sec / INV_60;                          // == rev_per_sec * 60
         mps = wheel_circumference * (rpm * INV_60);          // rpm/60 via multiply
         kmh = mps * KMH_PER_MPS;
 
-        //adaptive_timeout = dt_us * 6;
+        adaptive_timeout = dt_us * 6;
     }
 }

@@ -1,5 +1,5 @@
-#ifndef RPM_H
-#define RPM_H
+#ifndef RPM2_H
+#define RPM2_H
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
@@ -9,7 +9,7 @@
 #include "driver/pulse_cnt.h"
 #include "driver/rmt_tx.h"
 
-class RPM{
+class RPM2{
     public:
         bool newValue = false;
 

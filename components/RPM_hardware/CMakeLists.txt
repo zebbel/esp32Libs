@@ -1,6 +1,6 @@
 idf_component_register(
     SRCS
-        
+        "RPM2.cpp"
     INCLUDE_DIRS
         "."
     REQUIRES
