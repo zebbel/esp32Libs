@@ -1,6 +1,6 @@
 idf_component_register(
     SRCS 
-       "crsf.cpp"
+       "CRSF.cpp"
        "crsfBroadcast.cpp"
        "crsfExtended.cpp"
        "crsfRegisterParameter.cpp"

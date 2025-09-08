@@ -70,7 +70,7 @@ void zBusEspNow::initEspNow(){
 
     /* Initialize ESPNOW and register sending and receiving callback function. */
     ESP_ERROR_CHECK(esp_now_init());
-    ESP_ERROR_CHECK(esp_now_register_send_cb(sendCallback));
+    //ESP_ERROR_CHECK(esp_now_register_send_cb(sendCallback));
     ESP_ERROR_CHECK(esp_now_register_recv_cb(recvCallback));
     #if CONFIG_ESPNOW_ENABLE_POWER_SAVE
         ESP_ERROR_CHECK( esp_now_set_wake_window(CONFIG_ESPNOW_WAKE_WINDOW) );

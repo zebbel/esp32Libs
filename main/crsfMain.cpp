@@ -1,6 +1,6 @@
 #include "esp_timer.h"
 
-#include "crsf.h"
+#include "CRSF.h"
 
 CRSF crsf;
 crsf_channels_t channels;
