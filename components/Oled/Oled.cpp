@@ -13,11 +13,12 @@ void Oled::init(){
 void Oled::oledInit(){
     ESP_LOGI("LVGL", "Initialization");
     const lvgl_port_cfg_t lvgl_cfg = {
-        .task_priority = 2,         /* LVGL task priority */
-        .task_stack = 8096,         /* LVGL task stack size */
-        .task_affinity = -1,        /* LVGL task pinned to core (-1 is no affinity) */
-        .task_max_sleep_ms = 500,   /* Maximum sleep in LVGL task */
-        .timer_period_ms = 2        /* LVGL timer tick period in ms */
+        .task_priority = 2,                                             /* LVGL task priority */
+        .task_stack = 8096,                                             /* LVGL task stack size */
+        .task_affinity = -1,                                            /* LVGL task pinned to core (-1 is no affinity) */
+        .task_max_sleep_ms = 500,                                       /* Maximum sleep in LVGL task */
+        .task_stack_caps = MALLOC_CAP_INTERNAL | MALLOC_CAP_DEFAULT,    /*!< LVGL task stack memory capabilities (see esp_heap_caps.h) */
+        .timer_period_ms = 2                                            /* LVGL timer tick period in ms */
     };
     ESP_ERROR_CHECK(lvgl_port_init(&lvgl_cfg));
 
