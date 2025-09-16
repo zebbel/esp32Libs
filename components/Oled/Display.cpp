@@ -36,7 +36,7 @@ void Oled::displayInit(){
     buscfg.data6_io_num = -1;
     buscfg.data7_io_num = -1;
     buscfg.data_io_default_level = 0;
-    buscfg.max_transfer_sz = OLED_LCD_H_RES * OLED_LCD_V_RES * OLED_BIT_PER_PIXEL / 8;
+    buscfg.max_transfer_sz = 0;
     buscfg.flags = SPICOMMON_BUSFLAG_MASTER;
     buscfg.isr_cpu_id = ESP_INTR_CPU_AFFINITY_AUTO;
     buscfg.intr_flags = 0;
