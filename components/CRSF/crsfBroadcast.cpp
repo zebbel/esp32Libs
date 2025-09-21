@@ -8,22 +8,23 @@
  * @param type type of data contained in payload
  * @param payload pointer to payload of given crsf_type_t
  */
-void CRSF::send_broadcast_packet(uint8_t payload_length, crsf_broadcast_type_t type, const void* payload){
-    uint8_t packet[payload_length+4]; //payload + dest + len + type + crc
+void CRSF::send_broadcast_frame(uint8_t payload_length, crsf_broadcast_type_t type, const void* payload){
+    uint8_t frame[payload_length+4]; //payload + dest + len + type + crc
 
-    packet[0] = CRSF_SYNC;
-    packet[1] = payload_length+2; // size of payload + type + crc
-    packet[2] = type;
+    frame[0] = CRSF_SYNC;
+    frame[1] = payload_length+2; // size of payload + type + crc
+    frame[2] = type;
 
-    memcpy(&packet[3], payload, payload_length);
+    memcpy(&frame[3], payload, payload_length);
 
     //calculate crc
-    unsigned char checksum = crc8(&packet[2], payload_length+1);
+    unsigned char checksum = crc8(&crc8_table_crsf[0], &frame[2], payload_length+1);
     
-    packet[payload_length+3] = checksum;
+    frame[payload_length+3] = checksum;
 
     //send frame
-    uart_write_bytes(uartNum, &packet, payload_length+4);
+    if(uartDefined) CRSF_UART::send((uint8_t*) &frame, frame[1]);
+    if(espNowDefined) CRSF_ESPNOW::send((uint8_t*) &frame, frame[1]);
 }
 
 /**
@@ -49,7 +50,7 @@ void CRSF::send_gps(crsf_gps_t* payload){
     payload->heading = __bswap16(payload->heading);
     payload->altitude = __bswap16(payload->altitude);
 
-    send_broadcast_packet(sizeof(crsf_gps_t), CRSF_TYPE_GPS, payload);
+    send_broadcast_frame(sizeof(crsf_gps_t), CRSF_TYPE_GPS, payload);
 }
 
 /**
@@ -61,7 +62,7 @@ void CRSF::send_gps_time(crsf_gps_time_t* payload){
     payload->year = __bswap16(payload->year);
     payload->millisecond = __bswap16(payload->millisecond);
 
-    send_broadcast_packet(sizeof(crsf_gps_time_t), CRSF_TYPE_GPS_TIME, payload);
+    send_broadcast_frame(sizeof(crsf_gps_time_t), CRSF_TYPE_GPS_TIME, payload);
 }
 
 /**
@@ -79,7 +80,7 @@ void CRSF::send_gps_extended(crsf_gps_extended_t* payload){
     payload->h_acc = __bswap16(payload->h_acc);
     payload->v_acc = __bswap16(payload->v_acc);
 
-    send_broadcast_packet(sizeof(crsf_gps_extended_t), CRSF_TYPE_GPS_EXT, payload);
+    send_broadcast_frame(sizeof(crsf_gps_extended_t), CRSF_TYPE_GPS_EXT, payload);
 }
 
 /**
@@ -90,7 +91,7 @@ void CRSF::send_gps_extended(crsf_gps_extended_t* payload){
 void CRSF::send_vertical_speed(crsf_vario_t* payload){
     payload->v_speed = __bswap16(payload->v_speed);
 
-    send_broadcast_packet(sizeof(crsf_vario_t), CRSF_TYPE_VARIO, payload);
+    send_broadcast_frame(sizeof(crsf_vario_t), CRSF_TYPE_VARIO, payload);
 }
 
 /**
@@ -103,7 +104,7 @@ void CRSF::send_battery(crsf_battery_t* payload){
     payload->current = __bswap16(payload->current);
     payload->capacity_used = __bswap16(payload->capacity_used) << 8;
 
-    send_broadcast_packet(sizeof(crsf_battery_t), CRSF_TYPE_BATTERY, payload);
+    send_broadcast_frame(sizeof(crsf_battery_t), CRSF_TYPE_BATTERY, payload);
 }
 
 /**
@@ -115,7 +116,7 @@ void CRSF::send_altitute(crsf_altitude_t* payload){
     payload->altitude = __bswap16(payload->altitude);
     payload->verticalSpeed = __bswap16(payload->verticalSpeed);
 
-    send_broadcast_packet(sizeof(crsf_altitude_t), CRSF_TYPE_ALTITUDE, payload);
+    send_broadcast_frame(sizeof(crsf_altitude_t), CRSF_TYPE_ALTITUDE, payload);
 }
 
 /**
@@ -126,7 +127,7 @@ void CRSF::send_altitute(crsf_altitude_t* payload){
 void CRSF::send_airspeed(crsf_airspeed_t* payload){
     payload->speed = __bswap16(payload->speed);
 
-    send_broadcast_packet(sizeof(crsf_airspeed_t), CRSF_TYPE_AIRSPEED, payload);
+    send_broadcast_frame(sizeof(crsf_airspeed_t), CRSF_TYPE_AIRSPEED, payload);
 }
 
 /**
@@ -137,7 +138,7 @@ void CRSF::send_airspeed(crsf_airspeed_t* payload){
 void CRSF::send_heartbeat(crsf_heartbeat_t* payload){
     payload->origin_address = __bswap16(payload->origin_address);
 
-    send_broadcast_packet(sizeof(crsf_heartbeat_t), CRSF_TYPE_HEARTBEAT, payload);
+    send_broadcast_frame(sizeof(crsf_heartbeat_t), CRSF_TYPE_HEARTBEAT, payload);
 }
 
 /**
@@ -153,7 +154,7 @@ void CRSF::send_rpm(crsf_rmp_t* payload){
         payload->rpm[i] = __bswap32(payload->rpm[i]);
     }
 
-    send_broadcast_packet((payload->num_sensors*4)+1, CRSF_TYPE_RPM, payload);
+    send_broadcast_frame((payload->num_sensors*4)+1, CRSF_TYPE_RPM, payload);
 }
 
 /**
@@ -169,8 +170,8 @@ void CRSF::send_temp(crsf_temp_t* payload){
         payload->temperature[i] = __bswap16(payload->temperature[i]);
     }
 
-    //CRSF_send_packet(sizeof(crsf_temp_t), CRSF_TYPE_TEMP, payload);
-    send_broadcast_packet((payload->num_sensors*2)+1, CRSF_TYPE_TEMP, payload);
+    //CRSF_send_frame(sizeof(crsf_temp_t), CRSF_TYPE_TEMP, payload);
+    send_broadcast_frame((payload->num_sensors*2)+1, CRSF_TYPE_TEMP, payload);
 }
 
 /**
@@ -183,5 +184,5 @@ void CRSF::send_attitude(crsf_attitude_t* payload){
     payload->roll = __bswap16(payload->roll);
     payload->yaw = __bswap16(payload->yaw);
 
-    send_broadcast_packet(sizeof(crsf_attitude_t), CRSF_TYPE_ATTITUDE, payload);
+    send_broadcast_frame(sizeof(crsf_attitude_t), CRSF_TYPE_ATTITUDE, payload);
 }

@@ -1,9 +1,4 @@
-/*
- * Copyright (c) 2010 Espressif System
- */
-
-#ifndef BYTESWAP_H
-#define BYTESWAP_H
+#pragma once
 
 #include <machine/endian.h>
 
@@ -69,5 +64,3 @@ __bswap_32 (unsigned int __bsx)
 	 __r.__ll; }))
 #endif
 #endif // __bswap_64
-
-#endif /* BYTESWAP_H */

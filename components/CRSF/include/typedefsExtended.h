@@ -1,3 +1,5 @@
+#pragma once
+
 
 /**
  * @brief enum with broadcast type
@@ -6,8 +8,9 @@ typedef enum{
     CRSF_TYPE_PING = 0x28,
     CRSF_TYPE_DEVICE_INFO = 0x29,
     CRSF_TYPE_PARAMETER_SETTINGS = 0x2B,
-    CRSF_FRAMETYPE_PARAMETER_READ = 0x2C,
-    CRSF_FRAMETYPE_PARAMETER_WRITE = 0x2D
+    CRSF_TYPE_PARAMETER_READ = 0x2C,
+    CRSF_TYPE_PARAMETER_WRITE = 0x2D,
+    CRSF_TYPE_DIRECT_COMMANDS = 0x32,
 } crsf_extended_type_t;
 
 
@@ -21,13 +24,13 @@ typedef struct __attribute__((packed)){
     uint8_t dest;
     uint8_t src = 0xC8;
     uint8_t payload[58];
-} crsf_extended_t;
+} crsf_extended_frame_t;
 
 /**
  * @brief structure for holding device info
  */
 typedef struct __attribute__((packed)){
-    const char* deviceName;   // display name
+    const char *deviceName;   // display name
     uint32_t serialNumber = 0;
     uint32_t hardwareId = 0;
     uint32_t firmwareId = 0;
@@ -180,3 +183,26 @@ typedef struct __attribute__((packed)){
     crsf_command_status_t (*callback)();
     bool hidden;
 }crsf_parameter_command_t;
+
+typedef enum{
+    CRSF_DIRECT_COMAND_FC = 0x01,
+    CRSF_DIRECT_COMMAND_BLUETOOTH = 0x03,
+    CRSF_DIRECT_COMMAND_OSD = 0x05,
+    CRSF_DIRECT_COMMAND_VTX = 0x08,
+    CRSF_DIRECT_COMMAND_LED = 0x09,
+    CRSF_DIRECT_COMMAND_GENERAL = 0x0A,
+    CRSF_DIRECT_COMMAND_CROSSFIRE = 0x10,
+    CRSF_DIRECT_COMMAND_FLOW_CONTROLL = 0x20,
+    CRSF_DIRECT_COMMAND_SCREEN = 0x22,
+    CRSF_DIRECT_COMMAND_TELEMETRY = 0x55,
+    CRSF_DIRECT_COMMAND_ACK = 0xFF
+}crsf_direct_commands_t;
+
+/**
+ * @brief structure for holding direct command telemetry
+ */
+typedef struct{
+    uint8_t commandId = CRSF_DIRECT_COMMAND_TELEMETRY;
+    uint8_t startStop;                                  // 0=stop, 1=start
+    uint8_t commandCRC;
+}crsf_direct_command_telemetry_t;

@@ -1,12 +1,23 @@
 idf_component_register(
     SRCS 
        "CRSF.cpp"
+       "crsfInit.cpp"
        "crsfBroadcast.cpp"
        "crsfExtended.cpp"
        "crsfRegisterParameter.cpp"
+       "crsfDirectCommand.cpp"
+       "CRSF_CRC/CRSF_CRC.cpp"
+       "CRSF_ESPNOW/CRSF_ESPNOW.cpp"
+       "CRSF_UART/CRSF_UART.cpp"
     INCLUDE_DIRS 
         "."
         "include"
-    REQUIRES 
+        "CRSF_UART"
+        "CRSF_ESPNOW"
+        "CRSF_CRC"
+    REQUIRES
         "driver"
+        "esp_timer"
+        "esp_wifi"
+        "nvs_flash"
 )

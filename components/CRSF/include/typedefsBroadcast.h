@@ -1,3 +1,5 @@
+#pragma once
+
 #define CRSF_SYNC 0xC8
 #define CRSF_PAYLOAD_SIZE 60
 
@@ -20,7 +22,10 @@ typedef enum{
     CRSF_TYPE_CHANNELS = 0x16,
     CRSF_TYPE_ATTITUDE = 0x1E,
     CRSF_TYPE_FLIGHT_MODE = 0x21,
-    CRSF_TYPE_ESP_NOW = 0x22
+    CRSF_TYPE_ESP_NOW = 0x22,
+    CRSF_TYPE_ESPNOW_CONNECT = 0x23,
+    CRSF_TYPE_ESPNOW_WATCHDOG = 0x24,
+    CRSF_TYPE_ESPNOW_DIRECT = 0x25
 } crsf_broadcast_type_t;
 
 /**
