@@ -39,6 +39,16 @@ typedef struct{
 } crsf_broadcast_frame_t;
 
 /**
+ * @brief structure for esp now direct Frame
+ */
+typedef struct{
+    uint8_t sync = CRSF_SYNC;
+    uint8_t len;
+    uint8_t type;
+    uint8_t payload[200];
+} crsf_espnow_direct_frame_t;
+
+/**
  * @brief structure for handling 16 channels of data, 11 bits each. Which channel is used depends on transmitter setting
  * 
  * @return typedef struct 

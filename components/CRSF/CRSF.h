@@ -113,5 +113,7 @@ extern "C"{
             // direct command
             void set_telemetry_start_stop_var(uint8_t* startStop);
             void send_direct_command(crsf_device_address_t deviceAddr, uint8_t commandType, uint8_t* data);
+
+            void send_esp_now_direct(uint8_t* data, uint8_t len);
     };
 }

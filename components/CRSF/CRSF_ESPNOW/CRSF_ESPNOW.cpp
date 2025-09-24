@@ -205,7 +205,7 @@ void CRSF_ESPNOW::task(void *pvParameter){
 
                     case CRSF_TYPE_ESPNOW_DIRECT:
                         ESP_LOGI("CRSF_ESPNOW", "received espNow direct message");
-                        espnow->espNowDirectFunction((uint8_t*) &recvframe.frame.frame);
+                        if(espnow->espNowDirectFunction != NULL) espnow->espNowDirectFunction((uint8_t*) &recvframe.frame.frame);
                         break;
                     
                     default:

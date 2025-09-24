@@ -49,7 +49,7 @@ extern "C"{
     } crsf_espNow_role_t;
 
     typedef struct{
-        uint8_t frame[60];
+        uint8_t frame[200];
         int8_t rssi;
     } espNowframe;
 

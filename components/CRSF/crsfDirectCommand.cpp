@@ -49,3 +49,19 @@ void CRSF::send_direct_command(crsf_device_address_t deviceAddr, uint8_t command
         ESP_LOGI("crsf direct command", "direct command 0x%X not implemented...", commandType);
     }
 }
+
+/**
+ * @brief send a direct frame over esp now
+ * 
+ * @param data: pointer to data to be send
+ * @param len: number of bytes to be send
+ */
+void CRSF::send_esp_now_direct(uint8_t* data, uint8_t len){
+    crsf_espnow_direct_frame_t frame;
+    frame.len = len + 2;
+    frame.type = CRSF_TYPE_ESPNOW_DIRECT;
+    memcpy(&frame.payload[0], data, len);
+    frame.payload[len] = crc8(&crc8_table_crsf[0], &frame.type, frame.len-1);
+
+    if(espNowDefined) CRSF_ESPNOW::send((uint8_t*) &frame, frame.len + 2);
+}
