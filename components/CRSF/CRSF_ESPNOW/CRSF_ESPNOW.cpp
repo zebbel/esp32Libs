@@ -103,8 +103,8 @@ void CRSF_ESPNOW::initEspNow(){
  * 
  * @param function: pointer to function
  */
-void CRSF_ESPNOW::setEspNowDirectFunction(void (*function)){
-    //espNowDirectFunction = function;
+void CRSF_ESPNOW::setEspNowDirectFunction(void (*function)(uint8_t*)){
+    espNowDirectFunction = function;
 }
 
 /**
@@ -204,8 +204,8 @@ void CRSF_ESPNOW::task(void *pvParameter){
                         break;
 
                     case CRSF_TYPE_ESPNOW_DIRECT:
-                        ESP_LOGI("CRSF_ESPNOW", "received espNow direct message");
-                        if(espnow->espNowDirectFunction != NULL) espnow->espNowDirectFunction((uint8_t*) &recvframe.frame.frame);
+                        //ESP_LOGI("CRSF_ESPNOW", "received espNow direct message");
+                        if(espnow->espNowDirectFunction != NULL) espnow->espNowDirectFunction((uint8_t*) &recvframe.frame.frame[3]);
                         break;
                     
                     default:

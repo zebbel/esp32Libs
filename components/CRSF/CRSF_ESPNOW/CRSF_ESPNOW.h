@@ -84,7 +84,7 @@ extern "C"{
             CRSF_ESPNOW();
             void init(crsf_espNow_role_t espNowRole);
             void deInit();
-            void setEspNowDirectFunction(void (*function));
+            void setEspNowDirectFunction(void (*function)(uint8_t*));
             void connectDevice();
             void send(uint8_t *data, size_t len);
 
