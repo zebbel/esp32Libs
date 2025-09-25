@@ -2,6 +2,21 @@
 
 #include "CRSF.h"
 
+crsf_direct_command_telemetry_t telemetryStartStop;
+
+typedef struct{
+    char deviceName[10];
+    uint8_t parameterTotal;
+    crsf_device_address_t addr;
+} ui_device_info_t;
+typedef std::vector<ui_device_info_t> device_info_vector;
+device_info_vector devices;
+
+typedef struct{
+    uint8_t number;
+    char name[10];
+} ui_crsf_parameter_t;
+
 CRSF crsf;
 crsf_channels_t channels;
 int16_t temperatur = 255;
@@ -15,10 +30,42 @@ int32_t int32Data = 51;
 float floatData = 6.4;
 uint8_t textSelelctData = 0;
 
+bool send = true;
+
 crsf_command_status_t commandCallback(){
     ESP_LOGI("testCallback", "juup, %f", floatData);
     return CRSF_COMMAND_READY;
 }
+
+/*
+void crsfCallback(crsf_extended_frame_t* frame){
+    if(frame->type == CRSF_TYPE_DEVICE_INFO){
+        ui_device_info_t device;
+        uint8_t nameLen = strlen((const char*) frame->payload)+1;
+
+        memcpy(device.deviceName, &frame->payload[0], nameLen);
+        device.parameterTotal = frame->payload[nameLen+12];
+        device.addr = (crsf_device_address_t) frame->src;
+        devices.push_back(device);
+
+        ESP_LOGI("main", "name: %s, parameters total: %d", device.deviceName, device.parameterTotal);
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+        crsf.read_paramter(CRSF_ADDR_FLIGHT_CONTROLLER, 1);
+    }else if(frame->type == CRSF_TYPE_PARAMETER_SETTINGS){
+        ui_crsf_parameter_t parameter;
+        uint8_t nameLen = strlen((const char*) &frame->payload[4])+1;
+
+        parameter.number = frame->payload[0];
+        memcpy(parameter.name, &frame->payload[4], nameLen);
+
+        ESP_LOGI("main", "parameter number: %d, name: %s", parameter.number, parameter.name);
+        
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+        crsf.write_parameter(CRSF_ADDR_FLIGHT_CONTROLLER, 1, (uint8_t) 1);
+    }
+}
+*/
 
 void init_parameter(){
     crsf_parameter_uint8_t uint8Parameter = {
@@ -169,6 +216,21 @@ void crsfMain(){
         //}
 
         //folderParameter.hidden = textSelelctData;
+
+        /*
+        if(send && crsf.espNowStatus == ESPNOW_STATUS_CONNECTED){
+            vTaskDelay(100 / portTICK_PERIOD_MS);
+            //crsf.send_direct_command(CRSF_ADDR_FLIGHT_CONTROLLER, CRSF_DIRECT_COMMAND_TELEMETRY, (uint8_t*) &telemetryStartStop);
+            //crsf.ping_device();
+            send = false;
+        }
+        */
+
+        /*
+        if(ui.crsf.espNowStatus == ESPNOW_STATUS_CONNECTED && xQueueReceive(ui.crsf.CRSF_ESPNOW::queue, &telemetryData, 0) == pdTRUE){
+            ESP_LOGI("main", "got data");
+        }
+        */
 
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
