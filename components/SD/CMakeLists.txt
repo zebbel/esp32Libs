@@ -1,0 +1,10 @@
+idf_component_register(
+    SRCS
+        "SD.cpp"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        fatfs
+        vfs
+        sdmmc
+)

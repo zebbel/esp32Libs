@@ -1,0 +1,11 @@
+idf_component_register(
+    SRCS
+        "FTP.cpp"
+        "server/ftpServer.c"
+    INCLUDE_DIRS
+        "."
+        "server/"
+    REQUIRES
+        nvs_flash
+        esp_wifi
+)
