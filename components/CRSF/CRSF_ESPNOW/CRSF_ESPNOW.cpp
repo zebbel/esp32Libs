@@ -214,46 +214,9 @@ void CRSF_ESPNOW::task(void *pvParameter){
                         break;
                 }
             }
-
-
-
-            /*
-            if(recvframe.frame.frame.type != CRSF_TYPE_ESPNOW_WATCHDOG){
-                ESP_LOGI("crsf", "crc: 0x%X, crc calc: 0x%X, len: %d", recvframe.frame.frame.payload[recvframe.frame.frame.len-2], espnow->crc8((uint8_t*) &espnow->crc8_table_crsf, &recvframe.frame.frame.type, recvframe.frame.frame.len-1), recvframe.frame.frame.len);
-
-                if(recvframe.frame.frame.type == CRSF_TYPE_DIRECT_COMMANDS){
-                    ESP_LOGI("crsf", "0x%X, 0x%X, 0x%X, 0x%X, 0x%X, 0x%X", recvframe.frame.frame.payload[0], recvframe.frame.frame.payload[1], recvframe.frame.frame.payload[2], recvframe.frame.frame.payload[3], recvframe.frame.frame.payload[4], recvframe.frame.frame.payload[5]);
-                }
-            }
-
-            if(recvframe.frame.frame.payload[recvframe.frame.frame.len-2] == espnow->crc8((uint8_t*) &espnow->crc8_table_crsf, &recvframe.frame.frame.type, recvframe.frame.frame.len-1)){
-                espnow->watchdogTime = esp_timer_get_time();
-                espnow->rssi = recvframe.frame.rssi;
-                
-                switch(recvframe.frame.frame.type){
-                    case CRSF_TYPE_ESPNOW_CONNECT:
-                        ESP_LOGI("CRSF_ESPNOW", "received espNow connect message");
-                        espnow->handleConnectingframe(&recvframe);;
-                        break;
-
-                    case CRSF_TYPE_ESPNOW_WATCHDOG:
-                        break;
-
-                    case CRSF_TYPE_ESPNOW_DIRECT:
-                        ESP_LOGI("CRSF_ESPNOW", "received espNow direct message");
-                        espnow->espNowDirectFunction((uint8_t*) &recvframe.frame.frame);
-                        break;
-                    
-                    default:
-                        ESP_LOGI("CRSF_ESPNOW", "received espNow message");
-                        xQueueSend(espnow->queue, &recvframe.frame.frame, ESPNOW_MAXDELAY);
-                        break;
-                }
-            }
-            */
         }
 
-        vTaskDelay(10 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
 
