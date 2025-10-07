@@ -98,9 +98,9 @@ esp_err_t FTP::init_wifi(){
 	/* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually happened. */
 	esp_err_t ret_value = ESP_OK;
 	if (bits & WIFI_CONNECTED_BIT) {
-		ESP_LOGI("FTP", "connected to ap SSID:%s password:%s", CONFIG_ESP_WIFI_ST_SSID, CONFIG_ESP_WIFI_ST_PASSWORD);
+		ESP_LOGI("FTP", "connected to ap SSID:%s", CONFIG_ESP_WIFI_ST_SSID);
 	} else if (bits & WIFI_FAIL_BIT) {
-		ESP_LOGE("FTP", "Failed to connect to SSID:%s, password:%s", CONFIG_ESP_WIFI_ST_SSID, CONFIG_ESP_WIFI_ST_PASSWORD);
+		ESP_LOGE("FTP", "Failed to connect to SSID:%s", CONFIG_ESP_WIFI_ST_SSID);
 		ret_value = ESP_FAIL;
 	} else {
 		ESP_LOGE("FTP", "UNEXPECTED EVENT");
@@ -128,6 +128,7 @@ void FTP::wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t eve
 			ESP_LOGI("FTP", "retry to connect to the AP");
 		} else {
 			xEventGroupSetBits(ftp->s_wifi_event_group, WIFI_FAIL_BIT);
+			ftp->wifi_connected = false;
 		}
 		ESP_LOGI("FTP","connect to the AP fail");
 	} else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
@@ -135,6 +136,8 @@ void FTP::wifi_event_handler(void* arg, esp_event_base_t event_base, int32_t eve
 		ESP_LOGI("FTP", "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
 		ftp->s_retry_num = 0;
 		xEventGroupSetBits(ftp->s_wifi_event_group, WIFI_CONNECTED_BIT);
+		ftp->ip = event->ip_info.ip;
+		ftp->wifi_connected = true;
 	}
 }
 

@@ -31,6 +31,8 @@ class FTP{
         void initialise_mdns();
 
     public:
+        bool wifi_connected = false;
+        esp_ip4_addr_t ip;
         FTP();
         void init();
         void deinit();
