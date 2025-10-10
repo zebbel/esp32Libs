@@ -33,7 +33,7 @@
 #define ESPNOW_QUEUE_SIZE           6
 #define ESPNOW_MAXDELAY             512
 #define ESPNOW_WATCHDOG_TIME        1000000
-#define ESPNOW_WATCHDOG_DELAY       1000
+#define ESPNOW_WATCHDOG_DELAY       100000
 
 enum{
     ESPNOW_STATUS_DISCONNECTED,
@@ -71,6 +71,7 @@ extern "C"{
             TaskHandle_t esp_now_task;
             void (*espNowDirectFunction)(uint8_t* data);
             crsf_broadcast_frame_t watchdogFrame;
+            uint64_t lastTimeWatchdogSend;
 
             void initWifi();
             void initEspNow();
