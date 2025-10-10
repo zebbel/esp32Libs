@@ -216,7 +216,7 @@ void CRSF_ESPNOW::task(void *pvParameter){
             }
         }
 
-        vTaskDelay(100 / portTICK_PERIOD_MS);
+        vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
 
