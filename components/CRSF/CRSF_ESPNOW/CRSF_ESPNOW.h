@@ -32,6 +32,8 @@
 
 #define ESPNOW_QUEUE_SIZE           6
 #define ESPNOW_MAXDELAY             512
+#define ESPNOW_WATCHDOG_TIME        1000000
+#define ESPNOW_WATCHDOG_DELAY       1000
 
 enum{
     ESPNOW_STATUS_DISCONNECTED,

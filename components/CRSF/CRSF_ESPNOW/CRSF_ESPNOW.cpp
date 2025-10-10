@@ -259,14 +259,17 @@ void CRSF_ESPNOW::handleConnectingframe(espNowRecvframe *recvframe){
  * @brief send a watchdog frame to ESP Now device
  */
 void CRSF_ESPNOW::sendWatchdog(){
-    esp_now_send(deviceMAC, (uint8_t*) &watchdogFrame, 4);
+    if(esp_timer_get_time() > lastTimeWatchdogSend + ESPNOW_WATCHDOG_DELAY){
+        esp_now_send(deviceMAC, (uint8_t*) &watchdogFrame, 4);
+        lastTimeWatchdogSend = esp_timer_get_time();
+    }
 }
 
 /**
  * @brief check if watchdog is triggered
  */
 void CRSF_ESPNOW::checkWatchdog(){
-    if(esp_timer_get_time() - watchdogTime > 1000000){
+    if(esp_timer_get_time() - watchdogTime > ESPNOW_WATCHDOG_TIME){
         ESP_LOGI("CRSF_ESPNOW", "watchdog triggered");
         espNowStatus = ESPNOW_STATUS_CONNECTING;
         if(role == CRSF_ESPNOW_MASTER) xTaskCreate(connectTask, "connect_task", 3048, this, 12, NULL);
